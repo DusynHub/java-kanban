@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public abstract class TaskStorage {
 
-    private HashMap<Integer, Task> storage;
+    protected HashMap<Integer, Task> storage = new HashMap<>();
     public abstract HashMap<Integer, Task> getStorage();
 
     public abstract void saveInStorage(int id, Task taskToSave);

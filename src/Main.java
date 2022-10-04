@@ -30,6 +30,9 @@ public class Main{
                 System.out.println(taskManager.createRegularTask(name, description, statusId));
             } else if(command == 4){
                 taskManager.getRegularTaskStorage();
+                taskManager.printRegularTaskStorage();
+            } else if(command == 7){
+                System.out.println(taskManager.clearRegularTaskStorage());
             }else if(command == 0){
                 System.out.println("Программа завершена");
                 break;
@@ -44,6 +47,7 @@ public class Main{
         System.out.println("4 - Получить и распечатать весь список обычных задач");
         System.out.println("5 - Получить весь список эпик задач");
         System.out.println("6 - Получить весь список подзадач");
+        System.out.println("7 - Удалить весь список обычных задач");
         System.out.println("0 - Выход из программы");
     }
 

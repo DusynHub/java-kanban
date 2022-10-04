@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class TaskManager {
     TaskCreator taskCreator = new TaskCreator();
-    RegularTaskStorage regularTaskStorage;
+    RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
 
     public String createRegularTask(String name, String description, int statusId){
         Task taskToSave = taskCreator.createRegularTask(name, description, statusId);
@@ -21,14 +21,13 @@ public class TaskManager {
         return "Обычная задача создана";
     }
     public HashMap<Integer, Task> getRegularTaskStorage(){
-        regularTaskStorage.printRegularTaskStorage();
         return regularTaskStorage.getStorage();
     }
+    public void printRegularTaskStorage(){
+        regularTaskStorage.printRegularTaskStorage();
+    }
 
-
-
-//    public TaskStorage getRegularStorage(){
-//
-//    }
-
+    public String clearRegularTaskStorage(){
+        return regularTaskStorage.clearStorage();
+    }
 }
