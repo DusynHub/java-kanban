@@ -1,5 +1,6 @@
 package kanban.service;
 
+import kanban.module.RegularTask;
 import kanban.module.Task;
 import kanban.service.storage.RegularTaskStorage;
 
@@ -20,6 +21,19 @@ public class TaskManager {
         }
         return "Обычная задача создана";
     }
+
+    public String createRegularTask(RegularTask task){
+        Task taskToSave = taskCreator.createRegularTask(task);
+//        System.out.println(taskToSave.getClass());
+        if(regularTaskStorage == null) {
+            regularTaskStorage = new RegularTaskStorage();
+            regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
+        } else {
+            regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
+        }
+        return "Обычная задача создана";
+    }
+
     public HashMap<Integer, Task> getRegularTaskStorage(){
         return regularTaskStorage.getStorage();
     }

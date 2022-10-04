@@ -13,4 +13,11 @@ public class TaskCreator {
         return newTask;
     }
 
+    public Task createRegularTask(RegularTask task){
+        RegularTask newTask = new RegularTask(task);
+        newTask.setId(countId);
+        countId++;
+        return newTask;
+    }
+
 }

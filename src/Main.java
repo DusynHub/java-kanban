@@ -1,3 +1,4 @@
+import kanban.module.RegularTask;
 import kanban.service.TaskManager;
 
 import java.util.Scanner;
@@ -27,7 +28,8 @@ public class Main{
                         break;
                     }
                 }
-                System.out.println(taskManager.createRegularTask(name, description, statusId));
+                RegularTask newTask = new RegularTask(name, description,0, statusId);
+                System.out.println(taskManager.createRegularTask(newTask));
             } else if(command == 4){
                 taskManager.getRegularTaskStorage();
                 taskManager.printRegularTaskStorage();
