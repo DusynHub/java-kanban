@@ -3,12 +3,14 @@ package kanban.service;
 import kanban.module.Task;
 import kanban.service.storage.RegularTaskStorage;
 
+import java.util.HashMap;
+
 public class TaskManager {
     TaskCreator taskCreator = new TaskCreator();
     RegularTaskStorage regularTaskStorage;
 
-    public Task createRegularTask(String name, String description, int statusId){
-        Task taskToSave = taskCreator.createTask(name, description, statusId);
+    public String createRegularTask(String name, String description, int statusId){
+        Task taskToSave = taskCreator.createRegularTask(name, description, statusId);
 //        System.out.println(taskToSave.getClass());
         if(regularTaskStorage == null) {
             regularTaskStorage = new RegularTaskStorage();
@@ -16,8 +18,14 @@ public class TaskManager {
         } else {
             regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
         }
-        return taskToSave;
+        return "Обычная задача создана";
     }
+    public HashMap<Integer, Task> getRegularTaskStorage(){
+        regularTaskStorage.printRegularTaskStorage();
+        return regularTaskStorage.getStorage();
+    }
+
+
 
 //    public TaskStorage getRegularStorage(){
 //
