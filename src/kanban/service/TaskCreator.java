@@ -8,8 +8,9 @@ public class TaskCreator {
     private int countId = 0;
 
     public Task createTask(String name, String description, int statusId){
+        RegularTask newTask = new RegularTask(name, description, countId, statusId);
         countId++;
-        return new RegularTask(name, description, countId, statusId);
+        return newTask;
     }
 
 }
