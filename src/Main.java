@@ -33,7 +33,11 @@ public class Main{
             } else if(command == 4){
                 taskManager.getRegularTaskStorage();
                 taskManager.printRegularTaskStorage();
-            } else if(command == 7){
+
+            } else if(command == 5){
+                taskManager.getRegularTask(0);
+            }
+            else if(command == 8){
                 System.out.println(taskManager.clearRegularTaskStorage());
             }else if(command == 0){
                 System.out.println("Программа завершена");
@@ -47,9 +51,10 @@ public class Main{
         System.out.println("2 - Создать эпик задачу");
         System.out.println("3 - Создать подзадачу в эпике");
         System.out.println("4 - Получить и распечатать весь список обычных задач");
-        System.out.println("5 - Получить весь список эпик задач");
-        System.out.println("6 - Получить весь список подзадач");
-        System.out.println("7 - Удалить весь список обычных задач");
+        System.out.println("5 - Получить и распечатать обычныую задачу по id");
+        System.out.println("6 - Получить весь список эпик задач");
+        System.out.println("7 - Получить весь список подзадач");
+        System.out.println("8 - Удалить весь список обычных задач");
         System.out.println("0 - Выход из программы");
     }
 
