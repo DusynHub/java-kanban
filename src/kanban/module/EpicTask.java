@@ -15,9 +15,7 @@ public class EpicTask extends Task{
         super.setId(task.getId());
         super.setStatus(STATUS_NAME_STORAGE.get(1));
     }
-    private String statusUpdater(){
 
-    }
 
 
     public SubTaskStorage getSubTaskStorageForEpic() {
