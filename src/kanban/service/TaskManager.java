@@ -3,6 +3,7 @@ package kanban.service;
 import kanban.module.RegularTask;
 import kanban.module.Task;
 import kanban.service.storage.RegularTaskStorage;
+import kanban.service.storage.SubTaskStorage;
 
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ public class TaskManager {
     private TaskGetter taskGetter = new TaskGetter();
     private TaskUpdater taskUpdater = new TaskUpdater();
     private RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
-
+    private SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
 //    public String createRegularTask(String name, String description, int statusId){
 //        Task taskToSave = taskCreator.createRegularTask(name, description, statusId);
 ////        System.out.println(taskToSave.getClass());

@@ -20,6 +20,11 @@ public abstract class Task {
         this.id = id;
         this.status = STATUS_NAME_STORAGE.get(statusId);
     }
+    public Task(String name, String description, int id) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+    }
     public Task(){
 
     }
