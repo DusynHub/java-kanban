@@ -10,6 +10,7 @@ public class TaskManager {
     private TaskCreator taskCreator = new TaskCreator();
     private TaskRemover taskRemover = new TaskRemover();
     private TaskGetter taskGetter = new TaskGetter();
+    private TaskUpdater taskUpdater = new TaskUpdater();
     private RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
 
 //    public String createRegularTask(String name, String description, int statusId){
@@ -26,14 +27,10 @@ public class TaskManager {
 
     public String createRegularTask(RegularTask task) {
         Task taskToSave = taskCreator.createRegularTask(task);
-//        System.out.println(taskToSave.getClass());
-        if (regularTaskStorage == null) {
-            regularTaskStorage = new RegularTaskStorage();
-            regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
-        } else {
-            regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
-        }
-        return "Обычная задача создана";
+//      System.out.println(taskToSave.getClass());
+        regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
+
+        return "Обычная задача c id = " + taskToSave.getId();
     }
     public HashMap<Integer, Task> getRegularTaskStorage() {
         return regularTaskStorage.getStorage();
@@ -47,4 +44,11 @@ public class TaskManager {
     public Task getRegularTask(int id){
         return taskGetter.getRegularTask(id, regularTaskStorage);
     }
+    public String updateRegularTask(RegularTask regularTaskToUpdate){
+        return taskUpdater.updateRegularTask(regularTaskToUpdate, regularTaskStorage);
+    }
+    public String removeRegularTask(int id){
+        return taskRemover.removeRegularTask(id, regularTaskStorage);
+    }
 }
+

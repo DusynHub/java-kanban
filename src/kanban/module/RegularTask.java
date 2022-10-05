@@ -11,7 +11,7 @@ public class RegularTask extends Task{
         super.setName(task.getName());
         super.setDescription(task.getDescription());
         super.setId(task.getId());
-        super.setStatus(getStatus());
+        super.setStatus(task.getStatus());
     }
     @Override
     public String toString() {
