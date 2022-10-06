@@ -55,6 +55,12 @@ public class TaskManager {
     public String clearEpicTaskStorage() {
         return taskRemover.removeAllEpicTasks(epicTaskStorage, subTaskStorageForTaskManager);
     }
+    public Task getEpicTask(int id){
+        return taskGetter.getEpicTask(id, epicTaskStorage);
+    }
+    public String updateEpicTask (EpicTask epicTaskToUpdate){
+        return taskUpdater.updateEpicTask(epicTaskToUpdate, epicTaskStorage);
+    }
     public HashMap<Integer, Task> getSubTaskStorage() {
         return taskGetter.getSubTaskStorage(subTaskStorageForTaskManager);
     }
@@ -71,6 +77,28 @@ public class TaskManager {
     }
     public void printSubTaskStorage() {
         subTaskStorageForTaskManager.printStorage();
+    }
+    public String clearSubTaskStorage() {
+        HashMap<Integer, Task> storage = epicTaskStorage.getStorage();
+        for(Integer epicId : storage.keySet()){
+            EpicTask epicTask = (EpicTask) storage.get(epicId);
+            epicTask.getSubTaskStorageForEpic().clearStorage();
+            taskUpdater.epicStatusUpdater(epicTask);
+        }
+        return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager);
+    }
+    public Task getSubTask(int id){
+        return taskGetter.getSubTask(id, subTaskStorageForTaskManager);
+    }
+    public String updateSubTask (SubTask subTaskToUpdate){
+        String result = taskUpdater.updateSubTask(subTaskToUpdate, subTaskStorageForTaskManager, epicTaskStorage);
+        EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(subTaskToUpdate.getEpicId());
+        if(epic == null){
+            return result;
+        }
+        epic.getSubTaskStorageForEpic().saveInStorage(subTaskToUpdate.getId(), subTaskToUpdate);
+        taskUpdater.epicStatusUpdater(epic);
+        return result;
     }
 }
 

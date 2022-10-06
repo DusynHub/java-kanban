@@ -46,11 +46,22 @@ public class TaskGetter {
         }
         return storage.get(id);
     }
-
     public HashMap<Integer, Task> getSubTaskStorage(SubTaskStorage subTaskStorage) {
         if(subTaskStorage.getStorage().isEmpty()){
             System.out.println("Ни одной эпик задачи не было создано. Возвращено null");
         }
         return subTaskStorage.getStorage();
+    }
+    public Task getSubTask(int id, SubTaskStorage subTaskStorage){
+
+        HashMap<Integer, Task> storage = subTaskStorage.getStorage();
+        if(storage.isEmpty()){
+            System.out.println("Не создана ни одна подзадача. Возвращено пустое значение");
+            return storage.get(id);
+        }
+        if(storage.get(id) == null) {
+            System.out.println("Подзадача с указанным id = " + id + " отсутствует. Возвращено пустое значение.");
+        }
+        return storage.get(id);
     }
 }

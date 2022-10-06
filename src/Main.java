@@ -45,6 +45,7 @@ public class Main{
         }
         EpicTask cookRice;
         EpicTask doPracticumHomework;
+        EpicTask updateDoPracticumHomework;
         EpicTask doTraining;
         {
             cookRice = new EpicTask(
@@ -55,6 +56,10 @@ public class Main{
                     "Выполнить домашнее задание практикума",
                     "Нужно успеть до 09.10.2022",
                     0);
+            updateDoPracticumHomework = new EpicTask(
+                    "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
+                    "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
+                    0);
             doTraining = new EpicTask(
                     "Выполнить треннировку",
                     "Выполнить 3 упражнения по 10 подходов",
@@ -62,6 +67,7 @@ public class Main{
         }
         SubTask subTaskCookRice1;
         SubTask subTaskCookRice2;
+        SubTask updateSubTaskCookRice2;
         {
             subTaskCookRice1 = new SubTask(
                     "Промыть рис",
@@ -69,15 +75,19 @@ public class Main{
                     0,
                     0,
                     3);
-
             subTaskCookRice2 = new SubTask(
                     "Варить 10 минут",
                     "Не уходить с кухни",
                     0,
                     0,
                     1);
+            updateSubTaskCookRice2 = new SubTask(
+                    "Кто проживает на дне океана?",
+                    "Заклятые враги Дона Корлеоне",
+                    0,
+                    4,
+                    3);
         }
-
 
         TaskManager taskManager = new TaskManager();
         Random random = new Random();
@@ -127,12 +137,26 @@ public class Main{
                 System.out.println(taskManager.clearRegularTaskStorage());
             } else if(command == 8){
                 System.out.println(taskManager.clearEpicTaskStorage());
+            } else if(command == 9){
+                System.out.println(taskManager.clearSubTaskStorage());
             } else if(command == 10){
                 for (int i = 0; i < 5; i++) {
                     System.out.println(taskManager.getRegularTask(random.nextInt(15)));
                 }
+            } else if(command == 11){
+                for (int i = 0; i < 15; i++) {
+                    System.out.println(taskManager.getEpicTask(random.nextInt(15)));
+                }
+            } else if(command == 12){
+                for (int i = 0; i < 15; i++) {
+                    System.out.println(taskManager.getSubTask(random.nextInt(15)));
+                }
             } else if(command == 13){
                 System.out.println(taskManager.updateRegularTask(updatedResentmentTask));
+            } else if(command == 14){
+                System.out.println(taskManager.updateEpicTask(updateDoPracticumHomework));
+            } else if(command == 15){
+                System.out.println(taskManager.updateSubTask(updateSubTaskCookRice2));
             } else if(command == 16){
                 for (int i = 0; i < 5; i++) {
                     System.out.println(taskManager.removeRegularTask(random.nextInt(15)));
@@ -140,6 +164,8 @@ public class Main{
             } else if(command == 0){
                 System.out.println("Программа завершена");
                 break;
+            } else {
+                System.out.println("Такой команды нет. Повторите ввод");
             }
         }
     }
