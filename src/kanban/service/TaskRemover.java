@@ -1,7 +1,9 @@
 package kanban.service;
 
 import kanban.module.Task;
+import kanban.service.storage.EpicTaskStorage;
 import kanban.service.storage.RegularTaskStorage;
+import kanban.service.storage.SubTaskStorage;
 
 import java.util.HashMap;
 
@@ -9,7 +11,6 @@ public class TaskRemover {
     public String removeAllRegularTasks(RegularTaskStorage regularTaskStorage){
         return regularTaskStorage.clearStorage();
     }
-
     public String removeRegularTask(int id, RegularTaskStorage regularTaskStorage){
 
         HashMap<Integer, Task> storage = regularTaskStorage.getStorage();
@@ -21,4 +22,8 @@ public class TaskRemover {
         }
     }
 
+    public String removeAllEpicTasks(EpicTaskStorage epicTaskStorage, SubTaskStorage subTaskStorageForTaskManager){
+        subTaskStorageForTaskManager.clearStorage();
+        return epicTaskStorage.clearStorage();
+    }
 }

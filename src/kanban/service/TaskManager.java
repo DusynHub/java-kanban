@@ -1,7 +1,10 @@
 package kanban.service;
 
+import kanban.module.EpicTask;
 import kanban.module.RegularTask;
+import kanban.module.SubTask;
 import kanban.module.Task;
+import kanban.service.storage.EpicTaskStorage;
 import kanban.service.storage.RegularTaskStorage;
 import kanban.service.storage.SubTaskStorage;
 
@@ -13,28 +16,15 @@ public class TaskManager {
     private TaskGetter taskGetter = new TaskGetter();
     private TaskUpdater taskUpdater = new TaskUpdater();
     private RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
+    private EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
     private SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
-//    public String createRegularTask(String name, String description, int statusId){
-//        Task taskToSave = taskCreator.createRegularTask(name, description, statusId);
-////        System.out.println(taskToSave.getClass());
-//        if(regularTaskStorage == null) {
-//            regularTaskStorage = new RegularTaskStorage();
-//            regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
-//        } else {
-//            regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
-//        }
-//        return "Обычная задача создана";
-//    }
-
+    public HashMap<Integer, Task> getRegularTaskStorage() {
+        return taskGetter.getRegularTaskStorage(regularTaskStorage);
+    }
     public String createRegularTask(RegularTask task) {
         Task taskToSave = taskCreator.createRegularTask(task);
-//      System.out.println(taskToSave.getClass());
         regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
-
-        return "Обычная задача c id = " + taskToSave.getId();
-    }
-    public HashMap<Integer, Task> getRegularTaskStorage() {
-        return regularTaskStorage.getStorage();
+        return "Обычная задача c id = " + taskToSave.getId() + "создана";
     }
     public void printRegularTaskStorage() {
         regularTaskStorage.printStorage();
@@ -50,6 +40,37 @@ public class TaskManager {
     }
     public String removeRegularTask(int id){
         return taskRemover.removeRegularTask(id, regularTaskStorage);
+    }
+    public HashMap<Integer, Task> getEpicTaskStorage() {
+        return taskGetter.getEpicTaskStorage(epicTaskStorage);
+    }
+    public String createEpicTask(EpicTask task) {
+        Task taskToSave = taskCreator.createEpicTask(task);
+        epicTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
+        return "Эпик задача c id = " + taskToSave.getId() + " создана";
+    }
+    public void printEpicTaskStorage() {
+        epicTaskStorage.printStorage();
+    }
+    public String clearEpicTaskStorage() {
+        return taskRemover.removeAllEpicTasks(epicTaskStorage, subTaskStorageForTaskManager);
+    }
+    public HashMap<Integer, Task> getSubTaskStorage() {
+        return taskGetter.getSubTaskStorage(subTaskStorageForTaskManager);
+    }
+    public String createSubTask(SubTask task) {
+        SubTask taskToSave = taskCreator.createSubTask(task, epicTaskStorage);
+        if(taskToSave == null){
+            return "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
+        }
+        subTaskStorageForTaskManager.saveInStorage(taskToSave.getId(), taskToSave);
+        EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToSave.getEpicId());
+        epic.getSubTaskStorageForEpic().saveInStorage(taskToSave.getId(), taskToSave);
+        taskUpdater.epicStatusUpdater(epic);
+        return "Подзача задача c id = " + taskToSave.getId() + "создана";
+    }
+    public void printSubTaskStorage() {
+        subTaskStorageForTaskManager.printStorage();
     }
 }
 

@@ -1,4 +1,6 @@
+import kanban.module.EpicTask;
 import kanban.module.RegularTask;
+import kanban.module.SubTask;
 import kanban.service.TaskManager;
 import java.util.Random;
 
@@ -41,6 +43,42 @@ public class Main{
                     2,
                     2);
         }
+        EpicTask cookRice;
+        EpicTask doPracticumHomework;
+        EpicTask doTraining;
+        {
+            cookRice = new EpicTask(
+                    "Приготовить рис",
+                    "Нужен гарнир из коричневого риса",
+                    0);
+            doPracticumHomework = new EpicTask(
+                    "Выполнить домашнее задание практикума",
+                    "Нужно успеть до 09.10.2022",
+                    0);
+            doTraining = new EpicTask(
+                    "Выполнить треннировку",
+                    "Выполнить 3 упражнения по 10 подходов",
+                    0);
+        }
+        SubTask subTaskCookRice1;
+        SubTask subTaskCookRice2;
+        {
+            subTaskCookRice1 = new SubTask(
+                    "Промыть рис",
+                    "Желательно 400 гр",
+                    0,
+                    0,
+                    3);
+
+            subTaskCookRice2 = new SubTask(
+                    "Варить 10 минут",
+                    "Не уходить с кухни",
+                    0,
+                    0,
+                    1);
+        }
+
+
         TaskManager taskManager = new TaskManager();
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
@@ -68,22 +106,34 @@ public class Main{
                 System.out.println(taskManager.createRegularTask(deathTask));
                 System.out.println(taskManager.createRegularTask(resentmentTask));
                 System.out.println(taskManager.createRegularTask(importantTask));
-            } else if(command == 4){
+            } else if(command == 2){
+                System.out.println(taskManager.createEpicTask(cookRice));
+                System.out.println(taskManager.createEpicTask(doPracticumHomework));
+                System.out.println(taskManager.createEpicTask(doTraining));
+            } else if(command == 3){
+                System.out.println(taskManager.createSubTask(subTaskCookRice1));
+                System.out.println(taskManager.createSubTask(subTaskCookRice2));
+            }
+            else if(command == 4){
                 taskManager.getRegularTaskStorage();
                 taskManager.printRegularTaskStorage();
-
             } else if(command == 5){
-
-            }
-            else if(command == 8){
+                taskManager.getEpicTaskStorage();
+                taskManager.printEpicTaskStorage();
+            }else if(command == 6){
+                taskManager.getSubTaskStorage();
+                taskManager.printSubTaskStorage();
+            } else if(command == 7){
                 System.out.println(taskManager.clearRegularTaskStorage());
-            } else if(command == 11){
+            } else if(command == 8){
+                System.out.println(taskManager.clearEpicTaskStorage());
+            } else if(command == 10){
                 for (int i = 0; i < 5; i++) {
                     System.out.println(taskManager.getRegularTask(random.nextInt(15)));
                 }
-            } else if(command == 14){
+            } else if(command == 13){
                 System.out.println(taskManager.updateRegularTask(updatedResentmentTask));
-            } else if(command == 17){
+            } else if(command == 16){
                 for (int i = 0; i < 5; i++) {
                     System.out.println(taskManager.removeRegularTask(random.nextInt(15)));
                 }
@@ -99,21 +149,26 @@ public class Main{
         System.out.println("1 - Создать обычную задачу");
         System.out.println("2 - Создать эпик задачу");
         System.out.println("3 - Создать подзадачу в эпике");
+        System.out.println();
         System.out.println("4 - Получить и распечатать весь список обычных задач");
-        System.out.println("6 - Получить и распечатать весь список эпик задач");
-        System.out.println("7 - Получить и распечатать весь список подзадач");
-        System.out.println("8 - Удалить весь список обычных задач");
-        System.out.println("9 - Удалить весь список эпик задач");
-        System.out.println("10 - Удалить весь список подзадач");
-        System.out.println("11 - Получить и распечатать обычную задачу");
-        System.out.println("12 - Получить и распечатать эпик задачу");
-        System.out.println("13 - Получить и распечатать подзадачу");
-        System.out.println("14 - Обновить обычную задачу");
-        System.out.println("15 - Обновить эпик задачу");
-        System.out.println("16 - Обновить подзадачу");
-        System.out.println("17 - Удалить обычную задачу по id");
-        System.out.println("18 - Удалить эпик задачу по id");
-        System.out.println("19 - Удалить подзадачу по id");
+        System.out.println("5 - Получить и распечатать весь список эпик задач");
+        System.out.println("6 - Получить и распечатать весь список подзадач");
+        System.out.println();
+        System.out.println("7 - Удалить весь список обычных задач");
+        System.out.println("8 - Удалить весь список эпик задач");
+        System.out.println("9 - Удалить весь список подзадач");
+        System.out.println();
+        System.out.println("10 - Получить и распечатать обычную задачу");
+        System.out.println("11 - Получить и распечатать эпик задачу");
+        System.out.println("12 - Получить и распечатать подзадачу");
+        System.out.println();
+        System.out.println("13 - Обновить обычную задачу");
+        System.out.println("14 - Обновить эпик задачу");
+        System.out.println("15 - Обновить подзадачу");
+        System.out.println();
+        System.out.println("16 - Удалить обычную задачу по id");
+        System.out.println("17 - Удалить эпик задачу по id");
+        System.out.println("18 - Удалить подзадачу по id");
         System.out.println("0 - Выход из программы");
     }
     public static void printStatusOption(){

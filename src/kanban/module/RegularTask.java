@@ -15,13 +15,12 @@ public class RegularTask extends Task{
     }
     @Override
     public String toString() {
-        String content = "RegularTask { \n";
-        content = content + "id задачи = '" + getId() + "'\n";
-        content = content + "Задача = '" + getName() + "'\n";
-        content = content + "Длина описания = '" + getDescription().length() + "'\n";
-        content = content + "Cтатус задачи = '" + getStatus() + "'\n";
-        content = content + "}";
-        return content;
+        return "RegularTask { \n" +
+         "id задачи = '" + getId() + "'\n" +
+         "Задача = '" + getName() + "'\n" +
+         "Длина описания = '" + getDescription().length() + "'\n" +
+         "Cтатус задачи = '" + getStatus() + "'\n" +
+        "}";
     }
     @Override
     public int hashCode() {

@@ -52,6 +52,9 @@ public abstract class Task {
     public void setStatus(String status) {
         this.status = status;
     }
+    public void setStatus(int statusId) {
+        this.status = STATUS_NAME_STORAGE.get(statusId);
+    }
     @Override
     public int hashCode() {
         return Objects.hash(name, description, id, status);
