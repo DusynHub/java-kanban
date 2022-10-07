@@ -14,14 +14,6 @@ public class SubTask extends Task{
         super(name, description, id, statusId);
         this.epicId = epicId;
     }
-    public SubTask(SubTask task) {
-        super();
-        super.setName(task.getName());
-        super.setDescription(task.getDescription());
-        super.setId(task.getId());
-        super.setStatus(task.getStatus());
-        this.epicId = task.getEpicId();
-    }
     @Override
     public String toString() {
         String content = "SubTask { \n";

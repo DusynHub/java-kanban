@@ -7,9 +7,6 @@ import java.util.HashMap;
 public class RegularTaskStorage extends TaskStorage {
     @Override
     public HashMap<Integer, Task> getStorage() {
-//        if(storage.isEmpty()){
-//            System.out.println("Ни одной задачи не было создано. Данные о задачах отсутсвуют. Необходимо сначала создать задачу.");
-//        }
         return storage;
     }
     @Override

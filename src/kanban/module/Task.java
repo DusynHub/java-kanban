@@ -3,6 +3,10 @@ package kanban.module;
 import java.util.HashMap;
 import java.util.Objects;
 
+
+/**
+ * The type Task.
+ */
 public abstract class Task {
     private String name;
     private String description;
@@ -26,19 +30,13 @@ public abstract class Task {
         this.id = id;
     }
     public Task(){
-
     }
+
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
     public String getDescription() {
         return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
     }
     public int getId() {
         return id;

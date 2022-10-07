@@ -1,17 +1,8 @@
 package kanban.module;
 
-import java.util.Objects;
-
 public class RegularTask extends Task{
     public RegularTask(String name, String description, int id, int statusId) {
         super(name, description, id, statusId);
-    }
-    public RegularTask(RegularTask task) {
-        super();
-        super.setName(task.getName());
-        super.setDescription(task.getDescription());
-        super.setId(task.getId());
-        super.setStatus(task.getStatus());
     }
     @Override
     public String toString() {

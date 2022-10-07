@@ -1,7 +1,6 @@
 package kanban.module;
 
 import kanban.service.storage.SubTaskStorage;
-
 import java.util.Objects;
 
 public class EpicTask extends Task{
@@ -10,18 +9,8 @@ public class EpicTask extends Task{
     public EpicTask(String name, String description, int id) {
         super(name, description, id, 1);
     }
-    public EpicTask(EpicTask task) {
-        super();
-        super.setName(task.getName());
-        super.setDescription(task.getDescription());
-        super.setId(task.getId());
-        super.setStatus(STATUS_NAME_STORAGE.get(1));
-    }
     public SubTaskStorage getSubTaskStorageForEpic() {
         return subTaskStorageForEpic;
-    }
-    public void setSubTaskStorageForEpic(SubTaskStorage subTaskStorageForEpic) {
-        this.subTaskStorageForEpic = subTaskStorageForEpic;
     }
     @Override
     public int hashCode() {

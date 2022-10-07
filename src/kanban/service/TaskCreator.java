@@ -5,7 +5,6 @@ import kanban.module.RegularTask;
 import kanban.module.SubTask;
 import kanban.module.Task;
 import kanban.service.storage.EpicTaskStorage;
-import kanban.service.storage.SubTaskStorage;
 
 public class TaskCreator {
     private int countId = 0;
@@ -27,6 +26,4 @@ public class TaskCreator {
         countId++;
         return task;
     }
-
-
 }

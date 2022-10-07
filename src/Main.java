@@ -2,6 +2,8 @@ import kanban.module.EpicTask;
 import kanban.module.RegularTask;
 import kanban.module.SubTask;
 import kanban.service.TaskManager;
+import kanban.service.storage.TaskStorage;
+
 import java.util.Random;
 
 import java.util.Scanner;
@@ -98,20 +100,6 @@ public class Main{
             printMenu();
             command = Integer.parseInt(scanner.nextLine());
             if(command == 1){
-//                System.out.println("Введите название обычной задачи");
-//                String name = scanner.nextLine();
-//                System.out.println("Введите описание обычной задачи");
-//                String description = scanner.nextLine();
-//                int statusId;
-//                while(true) {
-//                    printStatusOption();
-//                    statusId = Integer.parseInt(scanner.nextLine());
-//                    if(statusId < 1 || statusId > 3){
-//                        System.out.println("Неверный выбор статуса.Введите числа 1, 2 или 3.");
-//                    } else {
-//                        break;
-//                    }
-//                }
                 System.out.println(taskManager.createRegularTask(theBigLebowskiTask));
                 System.out.println(taskManager.createRegularTask(deathTask));
                 System.out.println(taskManager.createRegularTask(resentmentTask));
@@ -161,6 +149,19 @@ public class Main{
                 for (int i = 0; i < 5; i++) {
                     System.out.println(taskManager.removeRegularTask(random.nextInt(15)));
                 }
+            } else if(command == 17){
+                for (int i = 0; i < 5; i++) {
+                    System.out.println(taskManager.removeEpicTask(random.nextInt(15)));
+                }
+            } else if(command == 18){
+                for (int i = 0; i < 5; i++) {
+                    System.out.println(taskManager.removeSubTask(4));
+                }
+            } else if(command == 19) {
+                    TaskStorage task = taskManager.getSubTaskStorageFromEpic(0);
+                    taskManager.printStorage(task);
+                    TaskStorage task2 = taskManager.getSubTaskStorageFromEpic(6);
+                    taskManager.printStorage(task2);
             } else if(command == 0){
                 System.out.println("Программа завершена");
                 break;
@@ -169,7 +170,6 @@ public class Main{
             }
         }
     }
-
     public static void printMenu(){
         System.out.println("Выберите требуемую функцию:");
         System.out.println("1 - Создать обычную задачу");
@@ -195,13 +195,9 @@ public class Main{
         System.out.println("16 - Удалить обычную задачу по id");
         System.out.println("17 - Удалить эпик задачу по id");
         System.out.println("18 - Удалить подзадачу по id");
+        System.out.println();
+        System.out.println("19 - Получить список подзадач эпика по id");
         System.out.println("0 - Выход из программы");
-    }
-    public static void printStatusOption(){
-        System.out.println("Выберите статус задачи:");
-        System.out.println("1 - To do");
-        System.out.println("2 - In Progress");
-        System.out.println("3 - Done");
     }
 }
 
