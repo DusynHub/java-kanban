@@ -1,6 +1,8 @@
 import kanban.module.EpicTask;
 import kanban.module.RegularTask;
+import kanban.module.StatusNames;
 import kanban.module.SubTask;
+import kanban.service.InMemoryTaskManager;
 import kanban.service.TaskManager;
 import kanban.service.storage.TaskStorage;
 
@@ -21,29 +23,29 @@ public class Main{
                     "Задача Лебовски",
                     "Где деньги, Лебовски?",
                     0,
-                    1);
+                    StatusNames.NEW);
             deathTask = new RegularTask(
                     "Что такое Смерть?",
                     "Смерть — это то, что бывает с другими",
                     0,
-                    2);
+                    StatusNames.IN_PROGRESS);
             resentmentTask = new RegularTask(
                     "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     0,
-                    1);
+                    StatusNames.NEW);
             updatedResentmentTask = new RegularTask(
                     "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     0,
-                    3);
+                    StatusNames.DONE);
             importantTask = new RegularTask(
                     "Найти ответ на главный вопрос жизни, вселенной и всего такого",
                     "Может быть это 6 х 9 ?",
                     2,
-                    2);
+                    StatusNames.IN_PROGRESS);
         }
         EpicTask cookRice;
         EpicTask doPracticumHomework;
@@ -76,22 +78,22 @@ public class Main{
                     "Желательно 400 гр",
                     0,
                     0,
-                    3);
+                    StatusNames.DONE);
             subTaskCookRice2 = new SubTask(
                     "Варить 10 минут",
                     "Не уходить с кухни",
                     0,
                     0,
-                    1);
+                    StatusNames.NEW);
             updateSubTaskCookRice2 = new SubTask(
                     "Кто проживает на дне океана?",
                     "Заклятые враги Дона Корлеоне",
                     0,
                     4,
-                    3);
+                    StatusNames.DONE);
         }
 
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
         int command;

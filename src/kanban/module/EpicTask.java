@@ -7,7 +7,7 @@ public class EpicTask extends Task{
 
     private SubTaskStorage subTaskStorageForEpic = new SubTaskStorage();
     public EpicTask(String name, String description, int id) {
-        super(name, description, id, 1);
+        super(name, description, id, StatusNames.NEW);
     }
     public SubTaskStorage getSubTaskStorageForEpic() {
         return subTaskStorageForEpic;
@@ -33,7 +33,7 @@ public class EpicTask extends Task{
                 "id эпик задачи = '" + getId() + "'\n" +
                 "Эпик задача = '" + getName() + "'\n" +
                 "Длина описания = '" + getDescription().length() + "'\n" +
-                "Cтатус эпик задачи = '" + getStatus() + "'\n" +
+                "Cтатус эпик задачи = '" + getStatus().getStatusName() + "'\n" +
                 "Количество подзадач в эпик задаче '" + subTaskStorageForEpic.getStorage().size() + "'\n" +
         "}";
     }

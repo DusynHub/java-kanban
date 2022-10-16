@@ -1,9 +1,6 @@
 package kanban.service;
 
-import kanban.module.EpicTask;
-import kanban.module.RegularTask;
-import kanban.module.SubTask;
-import kanban.module.Task;
+import kanban.module.*;
 import kanban.service.storage.EpicTaskStorage;
 import kanban.service.storage.RegularTaskStorage;
 import kanban.service.storage.SubTaskStorage;
@@ -53,11 +50,11 @@ public class TaskUpdater {
         HashMap<Integer, Task> storage = epicTask.getSubTaskStorageForEpic().getStorage();
 
         if(storage.isEmpty()){
-            epicTask.setStatus(1);
+            epicTask.setStatus(StatusNames.NEW);
             return;
         }
 
-        String value = null;
+        StatusNames value = null;
 
         Iterator<Integer> iterator = storage.keySet().iterator();
         if(iterator.hasNext()){
@@ -66,9 +63,9 @@ public class TaskUpdater {
 
         for(Integer subTaskId : storage.keySet()){
 
-            String subTaskStatus = storage.get(subTaskId).getStatus();
+            StatusNames subTaskStatus = storage.get(subTaskId).getStatus();
             if(!value.equals(subTaskStatus)){
-                epicTask.setStatus(2);
+                epicTask.setStatus(StatusNames.IN_PROGRESS);
                 return;
             }
         }

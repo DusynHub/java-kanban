@@ -11,18 +11,18 @@ public abstract class Task {
     private String name;
     private String description;
     private int id;
-    private String status;
+    private StatusNames status;
     protected static final HashMap<Integer, String> STATUS_NAME_STORAGE = new HashMap<>();
     static {
         STATUS_NAME_STORAGE.put(1, "NEW");
         STATUS_NAME_STORAGE.put(2, "IN_PROGRESS");
         STATUS_NAME_STORAGE.put(3, "DONE");
     }
-    public Task(String name, String description, int id, int statusId) {
+    public Task(String name, String description, int id, StatusNames status) {
         this.name = name;
         this.description = description;
         this.id = id;
-        this.status = STATUS_NAME_STORAGE.get(statusId);
+        this.status = status;
     }
     public Task(String name, String description, int id) {
         this.name = name;
@@ -44,14 +44,11 @@ public abstract class Task {
     public void setId(int id) {
         this.id = id;
     }
-    public String getStatus() {
+    public StatusNames getStatus() {
         return status;
     }
-    public void setStatus(String status) {
+    public void setStatus(StatusNames status) {
         this.status = status;
-    }
-    public void setStatus(int statusId) {
-        this.status = STATUS_NAME_STORAGE.get(statusId);
     }
     @Override
     public int hashCode() {

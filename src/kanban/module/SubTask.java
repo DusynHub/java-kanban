@@ -10,8 +10,8 @@ public class SubTask extends Task{
     public void setEpicId(int epicId) {
         this.epicId = epicId;
     }
-    public SubTask(String name, String description, int epicId, int id, int statusId) {
-        super(name, description, id, statusId);
+    public SubTask(String name, String description, int epicId, int id, StatusNames status) {
+        super(name, description, id, status);
         this.epicId = epicId;
     }
     @Override
@@ -21,7 +21,7 @@ public class SubTask extends Task{
         content = content + "id подзадачи =  '" + getId() + "'\n";
         content = content + "Подзадача = '" + getName() + "'\n";
         content = content + "Длина описания = '" + getDescription().length() + "'\n";
-        content = content + "Cтатус подзадачи = '" + getStatus() + "'\n";
+        content = content + "Cтатус подзадачи = '" + getStatus().getStatusName() + "'\n";
         content = content + "}";
         return content;
     }

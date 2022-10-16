@@ -1,8 +1,8 @@
 package kanban.module;
 
 public class RegularTask extends Task{
-    public RegularTask(String name, String description, int id, int statusId) {
-        super(name, description, id, statusId);
+    public RegularTask(String name, String description, int id, StatusNames status) {
+        super(name, description, id, status);
     }
     @Override
     public String toString() {
@@ -10,7 +10,7 @@ public class RegularTask extends Task{
          "id задачи = '" + getId() + "'\n" +
          "Задача = '" + getName() + "'\n" +
          "Длина описания = '" + getDescription().length() + "'\n" +
-         "Cтатус задачи = '" + getStatus() + "'\n" +
+         "Cтатус задачи = '" + getStatus().getStatusName() + "'\n" +
         "}";
     }
     @Override
