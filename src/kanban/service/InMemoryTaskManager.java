@@ -9,6 +9,7 @@ import kanban.service.storage.RegularTaskStorage;
 import kanban.service.storage.SubTaskStorage;
 import kanban.service.storage.TaskStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -22,6 +23,8 @@ public class InMemoryTaskManager implements TaskManager{
     private RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
     private EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
     private SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
+
+    private HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     /**
      * Возвращает список всех обычных задач
@@ -76,7 +79,9 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public Task getRegularTask(int regularId){
-        return taskGetter.getRegularTask(regularId, regularTaskStorage);
+        Task regularTask = taskGetter.getRegularTask(regularId, regularTaskStorage);
+        inMemoryHistoryManager.add(regularTask);
+        return regularTask;
     }
 
     /**
@@ -151,7 +156,9 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public Task getEpicTask(int epicId){
-        return taskGetter.getEpicTask(epicId, epicTaskStorage);
+        Task epicTask = taskGetter.getEpicTask(epicId, epicTaskStorage);
+        inMemoryHistoryManager.add(epicTask);
+        return epicTask;
     }
 
     /**
@@ -263,7 +270,10 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public Task getSubTask(int id){
-        return taskGetter.getSubTask(id, subTaskStorageForTaskManager);
+
+        Task subTask = taskGetter.getSubTask(id, subTaskStorageForTaskManager);
+        inMemoryHistoryManager.add(subTask);
+        return subTask;
     }
 
     /**
@@ -293,6 +303,13 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public String removeSubTask(int subId){
         return taskRemover.removeSubTask(subId, epicTaskStorage, subTaskStorageForTaskManager);
+    }
+
+// Методы HistoryManager
+    @Override
+    public ArrayList<Task> getHistoryOfTasks(){
+        inMemoryHistoryManager.printHistory();
+        return inMemoryHistoryManager.getHistory();
     }
 }
 

@@ -31,7 +31,6 @@ public abstract class Task {
     }
     public Task(){
     }
-
     public String getName() {
         return name;
     }

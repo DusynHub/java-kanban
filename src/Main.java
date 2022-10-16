@@ -2,7 +2,7 @@ import kanban.module.EpicTask;
 import kanban.module.RegularTask;
 import kanban.module.StatusNames;
 import kanban.module.SubTask;
-import kanban.service.InMemoryTaskManager;
+import kanban.service.Managers;
 import kanban.service.TaskManager;
 import kanban.service.storage.TaskStorage;
 
@@ -93,7 +93,7 @@ public class Main{
                     StatusNames.DONE);
         }
 
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        TaskManager taskManager = Managers.getDefault();
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
         int command;
@@ -130,9 +130,11 @@ public class Main{
             } else if(command == 9){
                 System.out.println(taskManager.clearSubTaskStorage());
             } else if(command == 10){
-                for (int i = 0; i < 5; i++) {
-                    System.out.println(taskManager.getRegularTask(random.nextInt(15)));
-                }
+//                for (int i = 0; i < 5; i++) {
+//                    //System.out.println(taskManager.getRegularTask(random.nextInt(15)));
+//                }
+                System.out.println(taskManager.getRegularTask(5));
+                System.out.println(taskManager.getRegularTask(6));
             } else if(command == 11){
                 for (int i = 0; i < 15; i++) {
                     System.out.println(taskManager.getEpicTask(random.nextInt(15)));
@@ -164,6 +166,8 @@ public class Main{
                     taskManager.printStorage(task);
                     TaskStorage task2 = taskManager.getSubTaskStorageFromEpic(6);
                     taskManager.printStorage(task2);
+            } else if(command == 20) {
+                    taskManager.getHistoryOfTasks();
             } else if(command == 0){
                 System.out.println("Программа завершена");
                 break;
@@ -199,6 +203,8 @@ public class Main{
         System.out.println("18 - Удалить подзадачу по id");
         System.out.println();
         System.out.println("19 - Получить список подзадач эпика по id");
+
+        System.out.println("20 - Получить историю вызова задач");
         System.out.println("0 - Выход из программы");
     }
 }
