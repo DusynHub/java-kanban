@@ -12,12 +12,6 @@ public abstract class Task {
     private String description;
     private int id;
     private StatusNames status;
-    protected static final HashMap<Integer, String> STATUS_NAME_STORAGE = new HashMap<>();
-    static {
-        STATUS_NAME_STORAGE.put(1, "NEW");
-        STATUS_NAME_STORAGE.put(2, "IN_PROGRESS");
-        STATUS_NAME_STORAGE.put(3, "DONE");
-    }
     public Task(String name, String description, int id, StatusNames status) {
         this.name = name;
         this.description = description;

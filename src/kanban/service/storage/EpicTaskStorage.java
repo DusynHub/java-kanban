@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class EpicTaskStorage extends TaskStorage {
     @Override
     public HashMap<Integer, Task> getStorage() {
-        return storage;
+        return (HashMap<Integer, Task>) storage;
     }
     @Override
     public void saveInStorage(int id, Task taskToSave){

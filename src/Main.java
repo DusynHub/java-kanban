@@ -76,19 +76,19 @@ public class Main{
             subTaskCookRice1 = new SubTask(
                     "Промыть рис",
                     "Желательно 400 гр",
-                    0,
+                    cookRice.getId(),
                     0,
                     StatusNames.DONE);
             subTaskCookRice2 = new SubTask(
                     "Варить 10 минут",
                     "Не уходить с кухни",
-                    0,
+                    cookRice.getId(),
                     0,
                     StatusNames.NEW);
             updateSubTaskCookRice2 = new SubTask(
                     "Кто проживает на дне океана?",
                     "Заклятые враги Дона Корлеоне",
-                    0,
+                    cookRice.getId(),
                     4,
                     StatusNames.DONE);
         }

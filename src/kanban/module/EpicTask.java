@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class EpicTask extends Task{
 
-    private SubTaskStorage subTaskStorageForEpic = new SubTaskStorage();
+    private final SubTaskStorage subTaskStorageForEpic = new SubTaskStorage();
     public EpicTask(String name, String description, int id) {
         super(name, description, id, StatusNames.NEW);
     }

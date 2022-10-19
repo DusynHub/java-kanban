@@ -3,24 +3,22 @@ package kanban.service;
 import kanban.module.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager{
 
     private ArrayList<Task> taskHistory = new ArrayList<>();
+    private final int defaultHistorySize = 10;
 
     @Override
     public void add(Task task) {
-        if(taskHistory.size() < 10) {
+        if(taskHistory.size() < defaultHistorySize) {
             taskHistory.add(task);
         }
 
-        if(taskHistory.size() == 10){
-            ArrayList<Task> newHistory = new ArrayList<>();
-            for(int i = 1; i < 10; i++){
-                newHistory.add(taskHistory.get(i));
-            }
-            newHistory.add(task);
-            taskHistory = newHistory;
+        if(taskHistory.size() == defaultHistorySize){
+            taskHistory.remove(0);
+            taskHistory.add(task);
         }
     }
 

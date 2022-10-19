@@ -64,7 +64,7 @@ public class TaskUpdater {
         for(Integer subTaskId : storage.keySet()){
 
             StatusNames subTaskStatus = storage.get(subTaskId).getStatus();
-            if(!value.equals(subTaskStatus)){
+            if(!value.equals(subTaskStatus) && (value != null)){
                 epicTask.setStatus(StatusNames.IN_PROGRESS);
                 return;
             }
