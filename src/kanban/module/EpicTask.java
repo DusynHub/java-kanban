@@ -1,6 +1,6 @@
 package kanban.module;
 
-import kanban.service.storage.SubTaskStorage;
+import kanban.module.storage.SubTaskStorage;
 import java.util.Objects;
 
 public class EpicTask extends Task{

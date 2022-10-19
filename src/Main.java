@@ -4,7 +4,7 @@ import kanban.module.StatusNames;
 import kanban.module.SubTask;
 import kanban.service.Managers;
 import kanban.service.TaskManager;
-import kanban.service.storage.TaskStorage;
+import kanban.module.storage.TaskStorage;
 
 import java.util.Random;
 
@@ -72,26 +72,6 @@ public class Main{
         SubTask subTaskCookRice1;
         SubTask subTaskCookRice2;
         SubTask updateSubTaskCookRice2;
-        {
-            subTaskCookRice1 = new SubTask(
-                    "Промыть рис",
-                    "Желательно 400 гр",
-                    cookRice.getId(),
-                    0,
-                    StatusNames.DONE);
-            subTaskCookRice2 = new SubTask(
-                    "Варить 10 минут",
-                    "Не уходить с кухни",
-                    cookRice.getId(),
-                    0,
-                    StatusNames.NEW);
-            updateSubTaskCookRice2 = new SubTask(
-                    "Кто проживает на дне океана?",
-                    "Заклятые враги Дона Корлеоне",
-                    cookRice.getId(),
-                    4,
-                    StatusNames.DONE);
-        }
 
         TaskManager taskManager = Managers.getDefault();
         Random random = new Random();
@@ -111,6 +91,18 @@ public class Main{
                 System.out.println(taskManager.createEpicTask(doPracticumHomework));
                 System.out.println(taskManager.createEpicTask(doTraining));
             } else if(command == 3){
+                    subTaskCookRice1 = new SubTask(
+                            "Промыть рис",
+                            "Желательно 400 гр",
+                            cookRice.getId(),
+                            0,
+                            StatusNames.DONE);
+                    subTaskCookRice2 = new SubTask(
+                            "Варить 10 минут",
+                            "Не уходить с кухни",
+                            cookRice.getId(),
+                            0,
+                            StatusNames.NEW);
                 System.out.println(taskManager.createSubTask(subTaskCookRice1));
                 System.out.println(taskManager.createSubTask(subTaskCookRice2));
             }
@@ -130,9 +122,6 @@ public class Main{
             } else if(command == 9){
                 System.out.println(taskManager.clearSubTaskStorage());
             } else if(command == 10){
-//                for (int i = 0; i < 5; i++) {
-//                    //System.out.println(taskManager.getRegularTask(random.nextInt(15)));
-//                }
                 System.out.println(taskManager.getRegularTask(5));
                 System.out.println(taskManager.getRegularTask(6));
             } else if(command == 11){
@@ -148,6 +137,12 @@ public class Main{
             } else if(command == 14){
                 System.out.println(taskManager.updateEpicTask(updateDoPracticumHomework));
             } else if(command == 15){
+                    updateSubTaskCookRice2 = new SubTask(
+                            "Кто проживает на дне океана?",
+                            "Заклятые враги Дона Корлеоне",
+                            cookRice.getId(),
+                            cookRice.getSubTaskStorageForEpic().getStorage().keySet().iterator().next(),
+                            StatusNames.DONE);
                 System.out.println(taskManager.updateSubTask(updateSubTaskCookRice2));
             } else if(command == 16){
                 for (int i = 0; i < 5; i++) {

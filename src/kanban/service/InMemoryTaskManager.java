@@ -4,10 +4,10 @@ import kanban.module.EpicTask;
 import kanban.module.RegularTask;
 import kanban.module.SubTask;
 import kanban.module.Task;
-import kanban.service.storage.EpicTaskStorage;
-import kanban.service.storage.RegularTaskStorage;
-import kanban.service.storage.SubTaskStorage;
-import kanban.service.storage.TaskStorage;
+import kanban.module.storage.EpicTaskStorage;
+import kanban.module.storage.RegularTaskStorage;
+import kanban.module.storage.SubTaskStorage;
+import kanban.module.storage.TaskStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager{
     public String createRegularTask(RegularTask task) {
         Task taskToSave = taskCreator.createRegularTask(task);
         regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
-        return "Обычная задача c id = " + taskToSave.getId() + "создана";
+        return "Обычная задача c id = " + taskToSave.getId() + " создана";
     }
 
     /**
@@ -235,7 +235,7 @@ public class InMemoryTaskManager implements TaskManager{
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToSave.getEpicId());
         epic.getSubTaskStorageForEpic().saveInStorage(taskToSave.getId(), taskToSave);
         taskUpdater.epicStatusUpdater(epic);
-        return "Подзача задача c id = " + taskToSave.getId() + "создана";
+        return "Подзача задача c id = " + taskToSave.getId() + " создана";
     }
 
     /**

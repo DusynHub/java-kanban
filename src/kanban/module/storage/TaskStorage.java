@@ -1,4 +1,4 @@
-package kanban.service.storage;
+package kanban.module.storage;
 
 import kanban.module.Task;
 

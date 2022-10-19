@@ -2,9 +2,9 @@ package kanban.service;
 
 import kanban.module.EpicTask;
 import kanban.module.Task;
-import kanban.service.storage.EpicTaskStorage;
-import kanban.service.storage.RegularTaskStorage;
-import kanban.service.storage.SubTaskStorage;
+import kanban.module.storage.EpicTaskStorage;
+import kanban.module.storage.RegularTaskStorage;
+import kanban.module.storage.SubTaskStorage;
 
 import java.util.HashMap;
 

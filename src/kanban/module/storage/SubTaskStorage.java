@@ -1,4 +1,4 @@
-package kanban.service.storage;
+package kanban.module.storage;
 
 import kanban.module.Task;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class SubTaskStorage extends TaskStorage {
     @Override
     public HashMap<Integer, Task> getStorage() {
-        return storage;
+        return (HashMap<Integer, Task>) storage;
     }
     @Override
     public void saveInStorage(int id, Task taskToSave){
