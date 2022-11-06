@@ -30,11 +30,11 @@ public class EpicTask extends Task{
     @Override
     public String toString() {
         return "EpicTask { \n" +
-                "id эпик задачи = '" + getId() + "'\n" +
+                "id эпик задачи = '" + getId() + "'\n" + /*
                 "Эпик задача = '" + getName() + "'\n" +
                 "Длина описания = '" + getDescription().length() + "'\n" +
                 "Cтатус эпик задачи = '" + getStatus().getStatusName() + "'\n" +
-                "Количество подзадач в эпик задаче '" + subTaskStorageForEpic.getStorage().size() + "'\n" +
+                "Количество подзадач в эпик задаче '" + subTaskStorageForEpic.getStorage().size() + "'\n" + */
         "}";
     }
 }

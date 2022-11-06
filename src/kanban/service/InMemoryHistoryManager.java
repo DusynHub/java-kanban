@@ -7,26 +7,33 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager{
 
+    private List<Task> taskHistory = new ArrayList<>();
+    private CustomLinkedList linkedStorage = new CustomLinkedList();
 
-
-    private ArrayList<Task> taskHistory = new ArrayList<>();
-    private final int defaultHistorySize = 10;
+    //private final int defaultHistorySize = 10;
 
     @Override
     public void add(Task task) {
-        if(taskHistory.size() < defaultHistorySize) {
-            taskHistory.add(task);
-        }
 
-        if(taskHistory.size() == defaultHistorySize){
-            taskHistory.remove(0);
-            taskHistory.add(task);
-        }
+          linkedStorage.addLast(task);
+//        if(taskHistory.size() < defaultHistorySize) {
+//            taskHistory.add(task);
+//        }
+//
+//        if(taskHistory.size() == defaultHistorySize){
+//            taskHistory.remove(0);
+//            taskHistory.add(task);
+//        }
+    }
+    @Override
+    public void remove(Task task){
+        linkedStorage.remove(linkedStorage.getNode(task));
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
-        return taskHistory;
+    public List<Task> getHistory() {
+
+        return taskHistory = linkedStorage.getHistoryInList();
     }
 
     @Override
