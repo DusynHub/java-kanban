@@ -125,11 +125,11 @@ public class Main{
                 System.out.println(taskManager.getRegularTask(deathTask.getId()));
                 System.out.println(taskManager.getRegularTask(resentmentTask.getId()));
             } else if(command == 11){
-                for (int i = 0; i < 15; i++) {
+                for (int i = 0; i < 3; i++) {
                     System.out.println(taskManager.getEpicTask(random.nextInt(15)));
                 }
             } else if(command == 12){
-                for (int i = 0; i < 15; i++) {
+                for (int i = 0; i < 3; i++) {
                     System.out.println(taskManager.getSubTask(random.nextInt(15)));
                 }
             } else if(command == 13){

@@ -13,13 +13,16 @@ public class SubTask extends Task{
     }
     @Override
     public String toString() {
-        String content = "SubTask { \n";
-        content = content + "Epic id подзадачи = '" + epicId + "'\n";
-        content = content + "id подзадачи =  '" + getId() + "'\n";
-        content = content + "Подзадача = '" + getName() + "'\n";
-        content = content + "Длина описания = '" + getDescription().length() + "'\n";
-        content = content + "Cтатус подзадачи = '" + getStatus().getStatusName() + "'\n";
-        content = content + "}";
+        String content = "SubTask { \n"
+         + "Epic id подзадачи = '" + epicId + "'\n"
+         + "id подзадачи =  '" + getId() + "'\n"
+         /*
+         + "Подзадача = '" + getName() + "'\n"
+         + "Длина описания = '" + getDescription().length() + "'\n"
+         + "Cтатус подзадачи = '" + getStatus().getStatusName() + "'\n"
+         */
+         + "}";
+
         return content;
     }
     @Override
@@ -34,7 +37,7 @@ public class SubTask extends Task{
         return getId() == otherTask.getId()
                 && getName().equals(otherTask.getName())
                 && getDescription().equals(otherTask.getDescription())
-                && getStatus().equals(otherTask.getStatus())
-                && epicId == otherTask.getEpicId();
+                && epicId == otherTask.getEpicId()
+                && getStatus().equals(otherTask.getStatus());
     }
 }

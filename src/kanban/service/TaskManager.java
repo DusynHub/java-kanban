@@ -7,8 +7,8 @@ import kanban.module.Task;
 import kanban.module.storage.SubTaskStorage;
 import kanban.module.storage.TaskStorage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -38,6 +38,6 @@ public interface TaskManager {
     Task getSubTask(int id);
     String updateSubTask (SubTask subTaskToUpdate);
     String removeSubTask(int subId);
-    ArrayList<Task> getHistoryOfTasks();
+    List<Task> getHistoryOfTasks();
 }
 

@@ -9,8 +9,8 @@ import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
 import kanban.module.storage.TaskStorage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Класс TaskManager для управления трекером задач
@@ -67,7 +67,7 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public String clearRegularTaskStorage() {
-        return taskRemover.removeAllRegularTasks(regularTaskStorage);
+        return taskRemover.removeAllRegularTasks(regularTaskStorage, inMemoryHistoryManager);
     }
 
     /**
@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public String removeRegularTask(int regularId){
-        return taskRemover.removeRegularTask(regularId, regularTaskStorage);
+        return taskRemover.removeRegularTask(regularId, regularTaskStorage, inMemoryHistoryManager);
     }
 
     /**
@@ -145,7 +145,7 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public String clearEpicTaskStorage() {
-        return taskRemover.removeAllEpicTasks(epicTaskStorage, subTaskStorageForTaskManager);
+        return taskRemover.removeAllEpicTasks(epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 
     /**
@@ -180,7 +180,7 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public String removeEpicTask(int epicId){
-        return taskRemover.removeEpicTask(epicId, epicTaskStorage, subTaskStorageForTaskManager);
+        return taskRemover.removeEpicTask(epicId, epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 
     /**
@@ -259,7 +259,7 @@ public class InMemoryTaskManager implements TaskManager{
             epicTask.getSubTaskStorageForEpic().clearStorage();
             taskUpdater.epicStatusUpdater(epicTask);
         }
-        return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager, epicTaskStorage);
+        return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager, epicTaskStorage,inMemoryHistoryManager );
     }
 
     /**
@@ -302,14 +302,15 @@ public class InMemoryTaskManager implements TaskManager{
      */
     @Override
     public String removeSubTask(int subId){
-        return taskRemover.removeSubTask(subId, epicTaskStorage, subTaskStorageForTaskManager);
+        return taskRemover.removeSubTask(subId, epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 
 // Методы HistoryManager
     @Override
-    public ArrayList<Task> getHistoryOfTasks(){
+    public List<Task> getHistoryOfTasks(){
+        List<Task> listToReturn = inMemoryHistoryManager.getHistory();
         inMemoryHistoryManager.printHistory();
-        return inMemoryHistoryManager.getHistory();
+        return listToReturn;
     }
 }
 

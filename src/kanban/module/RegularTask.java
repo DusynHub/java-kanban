@@ -7,10 +7,12 @@ public class RegularTask extends Task{
     @Override
     public String toString() {
         return "RegularTask { \n" +
-         "id задачи = '" + getId() + "'\n" +
+         "id задачи = '" + getId() + "'\n"  +
+         /*
          "Задача = '" + getName() + "'\n" +
          "Длина описания = '" + getDescription().length() + "'\n" +
          "Cтатус задачи = '" + getStatus().getStatusName() + "'\n" +
+         */
         "}";
     }
     @Override
