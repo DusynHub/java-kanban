@@ -122,8 +122,8 @@ public class Main{
             } else if(command == 9){
                 System.out.println(taskManager.clearSubTaskStorage());
             } else if(command == 10){
-                System.out.println(taskManager.getRegularTask(5));
-                System.out.println(taskManager.getRegularTask(6));
+                System.out.println(taskManager.getRegularTask(deathTask.getId()));
+                System.out.println(taskManager.getRegularTask(resentmentTask.getId()));
             } else if(command == 11){
                 for (int i = 0; i < 15; i++) {
                     System.out.println(taskManager.getEpicTask(random.nextInt(15)));
