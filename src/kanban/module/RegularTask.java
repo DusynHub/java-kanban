@@ -1,19 +1,17 @@
 package kanban.module;
 
 public class RegularTask extends Task{
-    public RegularTask(String name, String description, int id, StatusNames status) {
+    public RegularTask(String name, String description, int id, StatusName status) {
         super(name, description, id, status);
     }
     @Override
     public String toString() {
-        return "RegularTask { \n" +
-         "id задачи = '" + getId() + "'\n"  +
-         /*
-         "Задача = '" + getName() + "'\n" +
-         "Длина описания = '" + getDescription().length() + "'\n" +
-         "Cтатус задачи = '" + getStatus().getStatusName() + "'\n" +
-         */
-        "}";
+        return "RegularTask { \n"
+        + "id задачи = '" + getId() + "'\n"
+        + "Задача = '" + getName() + "'\n"
+        + "Длина описания = '" + getDescription().length() + "'\n"
+        + "Cтатус задачи = '" + getStatus().getStatusName() + "'\n"
+        + "}";
     }
     @Override
     public int hashCode() {

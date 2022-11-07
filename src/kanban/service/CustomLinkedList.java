@@ -14,13 +14,13 @@ public class CustomLinkedList {
 
     private final Map<Integer, Node> nodeStorage = new HashMap<>();
 
-    public void addLast(Task taskToAdd){
+    public void addLast(Task taskToAdd) {
 
         Node oldLast = last;
         Node newNode = new Node(last, taskToAdd, null);
         last = newNode;
 
-        if(oldLast == null){
+        if (oldLast == null) {
             first = newNode;
         } else {
             oldLast.next = newNode;
@@ -28,35 +28,35 @@ public class CustomLinkedList {
 
         int idToTaskIfDoNotExist = -1;
 
-        int taslIdToAdd = idToTaskIfDoNotExist;
-        if(taskToAdd != null){
-            taslIdToAdd = taskToAdd.getId();
+        int taskIfDoNotExist = idToTaskIfDoNotExist;
+        if (taskToAdd != null) {
+            taskIfDoNotExist = taskToAdd.getId();
         }
 
-        if(nodeStorage.containsKey(taslIdToAdd)){
-            remove(nodeStorage.getOrDefault(taslIdToAdd, null));
-            nodeStorage.put(taslIdToAdd, newNode);
+        if (nodeStorage.containsKey(taskIfDoNotExist)) {
+            remove(nodeStorage.getOrDefault(taskIfDoNotExist, null));
+            nodeStorage.put(taskIfDoNotExist, newNode);
         } else {
-            nodeStorage.put(taslIdToAdd, newNode);
+            nodeStorage.put(taskIfDoNotExist, newNode);
         }
         size++;
     }
 
-    public void remove(Node e){
-        if(e == null){
+    public void remove(Node e) {
+        if (e == null) {
             return;
         }
         Node prevNode = e.prev;
         Node nextNode = e.next;
 
-        if(prevNode == null){
+        if (prevNode == null) {
             first = nextNode;
         } else {
             prevNode.next = nextNode;
             e.prev = null;
         }
 
-        if(nextNode == null){
+        if (nextNode == null) {
             last = prevNode;
         } else {
             nextNode.prev = prevNode;
@@ -65,10 +65,10 @@ public class CustomLinkedList {
         size--;
     }
 
-    public ArrayList<Task> getHistoryInList(){
+    public ArrayList<Task> getHistoryInList() {
 
         ArrayList<Task> historyInList = new ArrayList<>(size);
-        if(size == 0){
+        if (size == 0) {
             System.out.println("Не было ни одного вызова задачи");
             return historyInList;
         }
@@ -82,15 +82,17 @@ public class CustomLinkedList {
 
         return historyInList;
     }
-    public Node getNode(Task task){
+
+    public Node getNode(Task task) {
         return nodeStorage.get(task.getId());
     }
+
     private static class Node {
         Task item;
         Node next;
         Node prev;
 
-        Node(Node prev, Task item, Node next){
+        Node(Node prev, Task item, Node next) {
             this.item = item;
             this.prev = prev;
             this.next = next;

@@ -1,6 +1,6 @@
 import kanban.module.EpicTask;
 import kanban.module.RegularTask;
-import kanban.module.StatusNames;
+import kanban.module.StatusName;
 import kanban.module.SubTask;
 import kanban.service.Managers;
 import kanban.service.TaskManager;
@@ -23,29 +23,29 @@ public class Main{
                     "Задача Лебовски",
                     "Где деньги, Лебовски?",
                     0,
-                    StatusNames.NEW);
+                    StatusName.NEW);
             deathTask = new RegularTask(
                     "Что такое Смерть?",
                     "Смерть — это то, что бывает с другими",
                     0,
-                    StatusNames.IN_PROGRESS);
+                    StatusName.IN_PROGRESS);
             resentmentTask = new RegularTask(
                     "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     0,
-                    StatusNames.NEW);
+                    StatusName.NEW);
             updatedResentmentTask = new RegularTask(
                     "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     0,
-                    StatusNames.DONE);
+                    StatusName.DONE);
             importantTask = new RegularTask(
                     "Найти ответ на главный вопрос жизни, вселенной и всего такого",
                     "Может быть это 6 х 9 ?",
                     2,
-                    StatusNames.IN_PROGRESS);
+                    StatusName.IN_PROGRESS);
         }
         EpicTask cookRice;
         EpicTask doPracticumHomework;
@@ -79,6 +79,11 @@ public class Main{
         int command;
 
         while(true){
+
+            System.out.println("\nНажмите любую клавишу и \"enter\" для печати меню");
+            scanner.nextLine();
+
+
             printMenu();
             command = Integer.parseInt(scanner.nextLine());
             if(command == 1){
@@ -96,13 +101,13 @@ public class Main{
                             "Желательно 400 гр",
                             cookRice.getId(),
                             0,
-                            StatusNames.DONE);
+                            StatusName.DONE);
                     subTaskCookRice2 = new SubTask(
                             "Варить 10 минут",
                             "Не уходить с кухни",
                             cookRice.getId(),
                             0,
-                            StatusNames.NEW);
+                            StatusName.NEW);
                 System.out.println(taskManager.createSubTask(subTaskCookRice1));
                 System.out.println(taskManager.createSubTask(subTaskCookRice2));
             }
@@ -142,7 +147,7 @@ public class Main{
                             "Заклятые враги Дона Корлеоне",
                             cookRice.getId(),
                             cookRice.getSubTaskStorageForEpic().getStorage().keySet().iterator().next(),
-                            StatusNames.DONE);
+                            StatusName.DONE);
                 System.out.println(taskManager.updateSubTask(updateSubTaskCookRice2));
             } else if(command == 16){
                 for (int i = 0; i < 5; i++) {

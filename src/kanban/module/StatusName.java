@@ -1,15 +1,14 @@
 package kanban.module;
 
-public enum StatusNames {
+public enum StatusName {
 
     NEW("To Do"), // index = 0
     IN_PROGRESS("In Progress"), // index = 1
     DONE("Done") // index = 2
     ;
-
     private final String statusName;
 
-    StatusNames(String statusName) {
+    StatusName(String statusName) {
         this.statusName = statusName;
     }
 
@@ -19,7 +18,7 @@ public enum StatusNames {
 
     @Override
     public String toString() {
-        return "StatusNames{" +
+        return "StatusName{" +
                 "statusName='" + statusName + '\'' +
                 '}';
     }

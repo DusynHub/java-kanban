@@ -7,24 +7,21 @@ public class SubTask extends Task{
     public int getEpicId() {
         return epicId;
     }
-    public SubTask(String name, String description, int epicId, int id, StatusNames status) {
+    public SubTask(String name, String description, int epicId, int id, StatusName status) {
         super(name, description, id, status);
         this.epicId = epicId;
     }
     @Override
-    public String toString() {
-        String content = "SubTask { \n"
+    public  String toString() {
+        return "SubTask { \n"
          + "Epic id подзадачи = '" + epicId + "'\n"
          + "id подзадачи =  '" + getId() + "'\n"
-         /*
          + "Подзадача = '" + getName() + "'\n"
          + "Длина описания = '" + getDescription().length() + "'\n"
          + "Cтатус подзадачи = '" + getStatus().getStatusName() + "'\n"
-         */
          + "}";
-
-        return content;
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getEpicId());

@@ -16,15 +16,15 @@ import java.util.List;
  * Класс TaskManager для управления трекером задач
  */
 public class InMemoryTaskManager implements TaskManager{
-    private TaskCreator taskCreator = new TaskCreator();
-    private TaskRemover taskRemover = new TaskRemover();
-    private TaskGetter taskGetter = new TaskGetter();
-    private TaskUpdater taskUpdater = new TaskUpdater();
-    private RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
-    private EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
-    private SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
+    private final TaskCreator taskCreator = new TaskCreator();
+    private final TaskRemover taskRemover = new TaskRemover();
+    private final TaskGetter taskGetter = new TaskGetter();
+    private final TaskUpdater taskUpdater = new TaskUpdater();
+    private final RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
+    private final EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
+    private final SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
 
-    private HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     /**
      * Возвращает список всех обычных задач

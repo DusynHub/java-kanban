@@ -1,6 +1,5 @@
 package kanban.module;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 
@@ -11,8 +10,8 @@ public abstract class Task {
     private String name;
     private String description;
     private int id;
-    private StatusNames status;
-    public Task(String name, String description, int id, StatusNames status) {
+    private StatusName status;
+    public Task(String name, String description, int id, StatusName status) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -37,10 +36,10 @@ public abstract class Task {
     public void setId(int id) {
         this.id = id;
     }
-    public StatusNames getStatus() {
+    public StatusName getStatus() {
         return status;
     }
-    public void setStatus(StatusNames status) {
+    public void setStatus(StatusName status) {
         this.status = status;
     }
     @Override

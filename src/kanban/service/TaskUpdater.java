@@ -50,11 +50,11 @@ public class TaskUpdater {
         HashMap<Integer, Task> storage = epicTask.getSubTaskStorageForEpic().getStorage();
 
         if(storage.isEmpty()){
-            epicTask.setStatus(StatusNames.NEW);
+            epicTask.setStatus(StatusName.NEW);
             return;
         }
 
-        StatusNames value = null;
+        StatusName value = null;
 
         Iterator<Integer> iterator = storage.keySet().iterator();
         if(iterator.hasNext()){
@@ -63,9 +63,9 @@ public class TaskUpdater {
 
         for(Integer subTaskId : storage.keySet()){
 
-            StatusNames subTaskStatus = storage.get(subTaskId).getStatus();
+            StatusName subTaskStatus = storage.get(subTaskId).getStatus();
             if(!value.equals(subTaskStatus) && (value != null)){
-                epicTask.setStatus(StatusNames.IN_PROGRESS);
+                epicTask.setStatus(StatusName.IN_PROGRESS);
                 return;
             }
         }
