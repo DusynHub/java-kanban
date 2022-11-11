@@ -27,18 +27,21 @@ public class CustomLinkedList {
         }
 
         int idToTaskIfDoNotExist = -1;
+        int taskIdToAdd;
 
-        int taskIfDoNotExist = idToTaskIfDoNotExist;
-        if (taskToAdd != null) {
-            taskIfDoNotExist = taskToAdd.getId();
-        }
-
-        if (nodeStorage.containsKey(taskIfDoNotExist)) {
-            remove(nodeStorage.getOrDefault(taskIfDoNotExist, null));
-            nodeStorage.put(taskIfDoNotExist, newNode);
+        if (taskToAdd == null) {
+            taskIdToAdd = idToTaskIfDoNotExist;
         } else {
-            nodeStorage.put(taskIfDoNotExist, newNode);
+            taskIdToAdd = taskToAdd.getId();
         }
+
+        if (nodeStorage.containsKey(taskIdToAdd)) {
+            remove(nodeStorage.getOrDefault(taskIdToAdd, null));
+            nodeStorage.put(taskIdToAdd, newNode);
+        } else {
+            nodeStorage.put(taskIdToAdd, newNode);
+        }
+
         size++;
     }
 
