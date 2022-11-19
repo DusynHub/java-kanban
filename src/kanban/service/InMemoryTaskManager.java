@@ -13,10 +13,10 @@ import java.util.List;
  * Класс TaskManager для управления трекером задач
  */
 public class InMemoryTaskManager implements TaskManager{
-    private final TaskCreator taskCreator = new TaskCreator();
-    private final TaskRemover taskRemover = new TaskRemover();
-    private final TaskGetter taskGetter = new TaskGetter();
-    private final TaskUpdater taskUpdater = new TaskUpdater();
+    protected final TaskCreator taskCreator = new TaskCreator();
+    protected final TaskRemover taskRemover = new TaskRemover();
+    protected final TaskGetter taskGetter = new TaskGetter();
+    protected final TaskUpdater taskUpdater = new TaskUpdater();
     protected final RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
     protected final EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
     protected final SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();

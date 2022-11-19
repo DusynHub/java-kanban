@@ -22,11 +22,18 @@ public class TaskUpdater {
     public String updateEpicTask(EpicTask epicTaskToUpdate, EpicTaskStorage epicTaskStorage) {
 
         HashMap<Integer, Task> storage = epicTaskStorage.getStorage();
+
+        if(storage == null){
+            return "Эпик задача отсутствует c id = " + epicTaskToUpdate.getId()
+                    + ". Сначала создайте задачу с соответвующим id. Обновление невозможно.";
+        }
+
         if(storage.containsKey(epicTaskToUpdate.getId())){
             storage.put(epicTaskToUpdate.getId(), epicTaskToUpdate);
             return "Эпик задача c id = " + epicTaskToUpdate.getId() + " обновлена";
         } else {
-            return "Эпик задача отсутствует c id = " + epicTaskToUpdate.getId() + ". Сначала создайте задачу с соответвующим id. Обновление невозможно.";
+            return "Эпик задача отсутствует c id = " + epicTaskToUpdate.getId()
+                    + ". Сначала создайте задачу с соответвующим id. Обновление невозможно.";
         }
     }
 

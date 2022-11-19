@@ -6,8 +6,8 @@ import java.util.Objects;
 public class EpicTask extends Task{
 
     private final SubTaskStorage subTaskStorageForEpic = new SubTaskStorage();
-    public EpicTask(String name, String description, int id, TaskType type) {
-        super(name, description, id, StatusName.NEW, type);
+    public EpicTask(int id, String name, String description, TaskType type) {
+        super(id, name, description, StatusName.NEW, type);
     }
     public SubTaskStorage getSubTaskStorageForEpic() {
         return subTaskStorageForEpic;
@@ -41,7 +41,7 @@ public class EpicTask extends Task{
 
     @Override
     public String toStringForCSV() {
-        String delimiter = " | ";
+        String delimiter = "|";
         return getId() + delimiter
                 + getType().name() + delimiter
                 + getName() + delimiter

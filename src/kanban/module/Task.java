@@ -12,7 +12,7 @@ public abstract class Task {
     private int id;
     private StatusName status;
     private TaskType type;
-    public Task(String name, String description, int id, StatusName status, TaskType type) {
+    public Task(int id, String name, String description, StatusName status, TaskType type) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -63,7 +63,7 @@ public abstract class Task {
     }
 
     public String toStringForCSV() {
-        String delimiter = " | ";
+        String delimiter = "|";
         return getId() + delimiter
                 + "Task" + delimiter
                 + getName() + delimiter

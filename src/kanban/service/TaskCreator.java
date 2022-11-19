@@ -26,4 +26,10 @@ public class TaskCreator {
         countId++;
         return task;
     }
+    public int getCountId() {
+        return countId;
+    }
+    public void setCountId(int countId) {
+        this.countId = countId;
+    }
 }

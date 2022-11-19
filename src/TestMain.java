@@ -5,8 +5,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class TestMain {
@@ -64,35 +62,30 @@ public class TestMain {
         RegularTask importantTask;
         {
             theBigLebowskiTask = new RegularTask(
-                    "Задача Лебовски",
+                    0, "Задача Лебовски",
                     "Где деньги, Лебовски?",
-                    0,
                     StatusName.NEW,
                     TaskType.REGULAR_TASK);
             deathTask = new RegularTask(
-                    "Что такое Смерть?",
+                    1, "Что такое Смерть?",
                     "Смерть — это то, что бывает с другими",
-                    1,
                     StatusName.IN_PROGRESS,
                     TaskType.REGULAR_TASK);
             resentmentTask = new RegularTask(
-                    "Как обижать людей?",
+                    2, "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
-                    2,
                     StatusName.NEW,
                     TaskType.REGULAR_TASK);
             updatedResentmentTask = new RegularTask(
-                    "Как обижать людей?",
+                    3, "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
-                    3,
                     StatusName.DONE,
                     TaskType.REGULAR_TASK);
             importantTask = new RegularTask(
-                    "Найти ответ на главный вопрос жизни, вселенной и всего такого",
+                    4, "Найти ответ на главный вопрос жизни, вселенной и всего такого",
                     "Может быть это 6 х 9 ?",
-                    4,
                     StatusName.IN_PROGRESS,
                     TaskType.REGULAR_TASK);
         }
@@ -109,24 +102,20 @@ public class TestMain {
         EpicTask doTraining;
         {
             cookRice = new EpicTask(
-                    "Приготовить рис",
+                    0, "Приготовить рис",
                     "Нужен гарнир из коричневого риса",
-                    0,
                     TaskType.EPIC_TASK);
             doPracticumHomework = new EpicTask(
-                    "Выполнить домашнее задание практикума",
+                    0, "Выполнить домашнее задание практикума",
                     "Нужно успеть до 09.10.2022",
-                    0,
                     TaskType.EPIC_TASK);
             updateDoPracticumHomework = new EpicTask(
+                    0, "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
                     "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
-                    "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
-                    0,
                     TaskType.EPIC_TASK);
             doTraining = new EpicTask(
-                    "Выполнить треннировку",
+                    0, "Выполнить треннировку",
                     "Выполнить 3 упражнения по 10 подходов",
-                    0,
                     TaskType.EPIC_TASK);
         }
 
@@ -139,19 +128,15 @@ public class TestMain {
         SubTask subTaskCookRice2;
         {
             subTaskCookRice1 = new SubTask(
-                    "Промыть рис",
+                    0, "Промыть рис",
                     "Желательно 400 гр",
-                    cookRice.getId(),
-                    0,
-                    StatusName.DONE,
-                    TaskType.SUBTASK);
+                    StatusName.DONE, TaskType.SUBTASK, cookRice.getId()
+            );
             subTaskCookRice2 = new SubTask(
-                    "Варить 10 минут",
+                    0, "Варить 10 минут",
                     "Не уходить с кухни",
-                    cookRice.getId(),
-                    0,
-                    StatusName.NEW,
-                    TaskType.SUBTASK);
+                    StatusName.NEW, TaskType.SUBTASK, cookRice.getId()
+            );
         }
 
         fileBackedTaskManager.createSubTask(subTaskCookRice1);
@@ -169,6 +154,8 @@ public class TestMain {
         fileBackedTaskManager.getRegularTask(1);
         fileBackedTaskManager.getRegularTask(2);
         fileBackedTaskManager.getRegularTask(3);
+        fileBackedTaskManager.getRegularTask(0);
+        fileBackedTaskManager.getRegularTask(77);
         fileBackedTaskManager.getRegularTask(0);
     }
 }

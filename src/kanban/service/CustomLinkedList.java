@@ -25,30 +25,35 @@ public class CustomLinkedList {
         } else {
             oldLast.next = newNode;
         }
-
-        int idToTaskIfDoNotExist = -1;
+        int idFotTaskIfDoNotExist = -1;
         int taskIdToAdd;
 
         if (taskToAdd == null) {
-            taskIdToAdd = idToTaskIfDoNotExist;
+            taskIdToAdd = idFotTaskIfDoNotExist;
         } else {
             taskIdToAdd = taskToAdd.getId();
         }
-
-        if (nodeStorage.containsKey(taskIdToAdd)) {
-            remove(nodeStorage.getOrDefault(taskIdToAdd, null));
-            nodeStorage.put(taskIdToAdd, newNode);
-        } else {
-            nodeStorage.put(taskIdToAdd, newNode);
-        }
-
+//        if (nodeStorage.containsKey(taskIdToAdd)) {
+//            //remove(nodeStorage.getOrDefault(taskIdToAdd, null));
+//            nodeStorage.put(taskIdToAdd, newNode);
+//        } else {
+//            nodeStorage.put(taskIdToAdd, newNode);
+//        }
+        nodeStorage.put(taskIdToAdd, newNode);
         size++;
     }
 
+    public boolean wasTaskCalledBefore(Task taskToAdd){
+        int taskIdToAdd = getTaskId(taskToAdd);
+        return nodeStorage.containsKey(taskIdToAdd);
+    }
+
     public void remove(Node e) {
+
         if (e == null) {
             return;
         }
+
         Node prevNode = e.prev;
         Node nextNode = e.next;
 
@@ -65,6 +70,9 @@ public class CustomLinkedList {
             nextNode.prev = prevNode;
             e.next = null;
         }
+
+        int taskIdToRemove = getTaskId(e.item);
+        nodeStorage.remove(taskIdToRemove);
         size--;
     }
 
@@ -90,6 +98,10 @@ public class CustomLinkedList {
         return nodeStorage.get(task.getId());
     }
 
+    public Node getNode(int id) {
+        return nodeStorage.getOrDefault(id, null);
+    }
+
     private static class Node {
         Task item;
         Node next;
@@ -100,5 +112,17 @@ public class CustomLinkedList {
             this.prev = prev;
             this.next = next;
         }
+    }
+
+    public int getTaskId(Task task){
+        int idForTaskIfDoNotExist = -1;
+        int taskId;
+
+        if (task == null) {
+            taskId = idForTaskIfDoNotExist;
+        } else {
+            taskId = task.getId();
+        }
+        return taskId;
     }
 }

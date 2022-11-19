@@ -7,13 +7,13 @@ public class SubTask extends Task{
     public int getEpicId() {
         return epicId;
     }
-    public SubTask(String name
+    public SubTask(int id
+                    , String name
                     , String description
-                    , int epicId
-                    , int id
                     , StatusName status
-                    , TaskType type) {
-        super(name, description, id, status, type);
+                    , TaskType type
+                    , int epicId) {
+        super(id, name, description, status, type);
         this.epicId = epicId;
     }
     @Override
@@ -44,7 +44,7 @@ public class SubTask extends Task{
     }
     @Override
     public String toStringForCSV() {
-        String delimiter = " | ";
+        String delimiter = "|";
         return getId() + delimiter
                 + getType().name() + delimiter
                 + getName() + delimiter

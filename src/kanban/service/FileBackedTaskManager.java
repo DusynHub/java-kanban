@@ -1,9 +1,6 @@
 package kanban.service;
 
-import kanban.module.EpicTask;
-import kanban.module.RegularTask;
-import kanban.module.SubTask;
-import kanban.module.Task;
+import kanban.module.*;
 import kanban.module.storage.EpicTaskStorage;
 import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
@@ -18,20 +15,21 @@ import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    Path FileToSaveCondition;
-    private final String HEADERS = "ID | TYPE | TASK NAME | DESCRIPTION | STATUS | EPICID FOR SUBTASK";
-
+    protected final String STORAGE_HEADERS
+                                    = "ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK";
+    protected final String HISTORY_SEPARATOR = "BELOW_THIS_ROW_HISTORY_DATA";
+    protected final String HISTORY_HEADERS = "ID|TASK_TYPE";
+    protected final String COUNT_ID_SEPARATOR = "BELOW_THIS_ROW_CONT_ID_VALUE";
+    Path fileToSaveCondition;
     public FileBackedTaskManager(Path pathOfFile) {
-        this.FileToSaveCondition = pathOfFile;
+        this.fileToSaveCondition = pathOfFile;
     }
-
     private void save() {
         writeCondition(regularTaskStorage
                 , epicTaskStorage
                 , subTaskStorageForTaskManager
                 , inMemoryHistoryManager);
     }
-
     private void writeCondition(RegularTaskStorage regularTaskStorage
             , EpicTaskStorage epicTaskStorage
             , SubTaskStorage subTaskStorage
@@ -48,11 +46,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         try (BufferedWriter out =
                      new BufferedWriter(
-                             new FileWriter(FileToSaveCondition.toAbsolutePath().toString())
+                             new FileWriter(fileToSaveCondition.toAbsolutePath().toString())
                      )
         ) {
-            out.write(HEADERS);
-            out.newLine();
+            out.write(STORAGE_HEADERS + System.lineSeparator());
+
             for (TaskStorage storage : storages) {
                 for (Map.Entry<Integer, Task> entry : storage.getStorage().entrySet()) {
                     Task taskToCSV = entry.getValue();
@@ -60,26 +58,88 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     out.newLine();
                 }
             }
-            List<Task> history = inMemoryHistoryManager.getHistory();
 
-            out.newLine();
-            String separator = "";
+            List<Task> history = inMemoryHistoryManager.getHistory();
+            out.write(System.lineSeparator() + HISTORY_SEPARATOR);
+            out.write(System.lineSeparator() + HISTORY_HEADERS + System.lineSeparator());
+
             for(Task task : history){
-                out.write(separator + task.getId());
-                separator = ", ";
+
+                int taskId;
+                String taskType;
+
+                if(task == null){
+                    taskId = -1;
+                    taskType = "NOT_EXISTING_TASK";
+                } else {
+                    taskId = task.getId();
+                    taskType = task.getType().name();
+                }
+                out.write(taskId + "|" +  taskType);
+                out.newLine();
             }
+            out.write(System.lineSeparator() + COUNT_ID_SEPARATOR + System.lineSeparator());
+            out.write("COUNT_ID" +"|" + taskCreator.getCountId());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    @Override
-    public HashMap<Integer, Task> getRegularTaskStorage() {
-        HashMap<Integer, Task> result = super.getRegularTaskStorage();
-        save();
-        return result;
+
+    public void restoreCondition(Path fileToRestoreCondition){
+        ArrayList<String[]> regularTasks = new ArrayList<>();
+        ArrayList<String[]> EpicTasks = new ArrayList<>();
+        ArrayList<String[]> SubTasks = new ArrayList<>();
+
+
+        try(
+        BufferedReader br = new BufferedReader(
+                new FileReader(
+                        fileToRestoreCondition.toAbsolutePath().toString()));){
+
+            boolean areTasksRead = false;
+            boolean isHistoryRead = false;
+            while(br.ready()){
+                String curString = br.readLine();
+
+                if( curString.equals(STORAGE_HEADERS) ){
+                    continue;
+                }
+
+                if( curString.equals(HISTORY_HEADERS) ){
+                    continue;
+                }
+
+                if(curString.equals(HISTORY_SEPARATOR)){
+                    areTasksRead = true;
+                    continue;
+                }
+
+                if(curString.equals(COUNT_ID_SEPARATOR)){
+                    isHistoryRead = true;
+                    continue;
+                }
+
+                if(areTasksRead){
+                    //String[]
+                }
+
+                if(isHistoryRead){
+                    //String[] countIdInfo = curString
+                }
+
+                String[] taskContent = curString.split("|");
+                if(TaskType.valueOf(taskContent[1]) ==  TaskType.REGULAR_TASK ){
+                    RegularTask task = createRegularTaskFromCSV(taskContent);
+
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-//  Методы для работы с обычными задачами
+
+// Методы для работы с обычными задачами
     @Override
     public String createRegularTask(RegularTask task) {
         String result = super.createRegularTask(task);
@@ -110,6 +170,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return result;
     }
+
+
 // Методы для работы с подзадачами
     @Override
     public String createSubTask(SubTask task) {
@@ -117,6 +179,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return result;
     }
+    @Override
+    public String clearSubTaskStorage() {
+        String result = super.clearSubTaskStorage();
+        save();
+        return result;
+    }
+    @Override
+    public Task getSubTask(int id) {
+        Task result = super.getSubTask(id);
+        save();
+        return result;
+    }
+    @Override
+    public String updateSubTask(SubTask subTaskToUpdate) {
+        String result = super.updateSubTask(subTaskToUpdate);
+        save();
+        return result;
+    }
+    @Override
+    public String removeSubTask(int subId) {
+        String result = super.removeSubTask(subId);
+        save();
+        return result;
+    }
+
 // Методы для работы с эпик задачами
     @Override
     public String createEpicTask(EpicTask task) {
@@ -136,4 +223,70 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return result;
     }
+    @Override
+    public String updateEpicTask(EpicTask epicTaskToUpdate) {
+        String result = super.updateEpicTask(epicTaskToUpdate);
+        save();
+        return result;
+    }
+    @Override
+    public String removeEpicTask(int epicId) {
+        String result = super.removeEpicTask(epicId);
+        save();
+        return result;
+    }
+    @Override
+    public HashMap<Integer, Task> getSubTaskStorage() {
+        HashMap<Integer, Task> result = super.getSubTaskStorage();
+        save();
+        return result;
+    }
+
+
+// Методы создания задач из массива строк
+    private RegularTask createRegularTaskFromCSV(String[] regularTasksFromCSV) {
+
+        int id = Integer.parseInt(regularTasksFromCSV[0]);
+        String name = regularTasksFromCSV[2];
+        String description = regularTasksFromCSV[3];
+        String status = regularTasksFromCSV[4];
+        String type = regularTasksFromCSV[1];
+
+        return new RegularTask(id
+                , name
+                , description
+                , StatusName.valueOf(status)
+                , TaskType.valueOf(type));
+    }
+    private EpicTask createEpicTaskFromCSV(String[] epicTasksFromCSV) {
+
+        int id = Integer.parseInt(epicTasksFromCSV[0]);
+        String name = epicTasksFromCSV[2];
+        String description = epicTasksFromCSV[3];
+        String type = epicTasksFromCSV[1];
+
+        return new EpicTask(id
+                , name
+                , description
+                , TaskType.valueOf(type));
+    }
+    private SubTask createSubTaskFromCSV(String[] subTasksFromCSV)
+    {
+
+        int id = Integer.parseInt(subTasksFromCSV[0]);
+        String name = subTasksFromCSV[2];
+        String description = subTasksFromCSV[3];
+        String status = subTasksFromCSV[4];
+        String type = subTasksFromCSV[1];
+        int epicId = Integer.parseInt(subTasksFromCSV[5]);
+
+        return new SubTask(id
+                , name
+                , description
+                , StatusName.valueOf(status)
+                , TaskType.valueOf(type)
+                ,epicId);
+    }
+
+
 }
