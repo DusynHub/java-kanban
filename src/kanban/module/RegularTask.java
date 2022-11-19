@@ -1,8 +1,11 @@
 package kanban.module;
 
 public class RegularTask extends Task{
-    public RegularTask(String name, String description, int id, StatusName status) {
-        super(name, description, id, status);
+    public RegularTask(String name
+                        , String description
+                        , int id, StatusName status
+                        , TaskType type) {
+        super(name, description, id, status, type);
     }
     @Override
     public String toString() {
@@ -26,5 +29,14 @@ public class RegularTask extends Task{
                 && getName().equals(otherTask.getName())
                 && getDescription().equals(otherTask.getDescription())
                 && getStatus().equals(otherTask.getStatus());
+    }
+    @Override
+    public String toStringForCSV() {
+        String delimiter = " | ";
+        return getId() + delimiter
+                + getType().name() + delimiter
+                + getName() + delimiter
+                + getDescription() + delimiter
+                + getStatus().name() + delimiter;
     }
 }

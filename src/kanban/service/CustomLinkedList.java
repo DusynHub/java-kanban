@@ -72,7 +72,7 @@ public class CustomLinkedList {
 
         ArrayList<Task> historyInList = new ArrayList<>(size);
         if (size == 0) {
-            System.out.println("Не было ни одного вызова задачи");
+            //System.out.println("Не было ни одного вызова задачи");
             return historyInList;
         }
 

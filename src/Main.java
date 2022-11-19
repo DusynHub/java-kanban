@@ -1,17 +1,40 @@
-import kanban.module.EpicTask;
-import kanban.module.RegularTask;
-import kanban.module.StatusName;
-import kanban.module.SubTask;
+import kanban.module.*;
 import kanban.service.Managers;
 import kanban.service.TaskManager;
 import kanban.module.storage.TaskStorage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 
 import java.util.Scanner;
 
 public class Main{
     public static void main(String[] args) {
+
+        Path pathOfStorage = Paths.get("src/kanban/TaskManagerStorageInFile");
+        try{
+            if(!Files.exists(pathOfStorage)){
+                Files.createDirectory(pathOfStorage);
+            }
+        } catch(IOException e){
+            System.out.println("Ошибка при создании директории: ");
+            e.printStackTrace();
+        }
+
+        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath().toString()
+                                    + "/TaskStorage.csv");
+        try{
+
+            if(!Files.exists(pathOfFile)){
+                Files.createFile(pathOfFile);
+            }
+        }catch(IOException e){
+            System.out.println("Ошибка при создании файла хранения FileBackedTaskManager: ");
+            e.printStackTrace();
+        }
 
         RegularTask theBigLebowskiTask;
         RegularTask deathTask;
@@ -23,29 +46,34 @@ public class Main{
                     "Задача Лебовски",
                     "Где деньги, Лебовски?",
                     0,
-                    StatusName.NEW);
+                    StatusName.NEW,
+                    TaskType.REGULAR_TASK);
             deathTask = new RegularTask(
                     "Что такое Смерть?",
                     "Смерть — это то, что бывает с другими",
                     0,
-                    StatusName.IN_PROGRESS);
+                    StatusName.IN_PROGRESS,
+                    TaskType.REGULAR_TASK);
             resentmentTask = new RegularTask(
                     "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     0,
-                    StatusName.NEW);
+                    StatusName.NEW,
+                    TaskType.REGULAR_TASK);
             updatedResentmentTask = new RegularTask(
                     "Как обижать людей?",
                     "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     0,
-                    StatusName.DONE);
+                    StatusName.DONE,
+                    TaskType.REGULAR_TASK);
             importantTask = new RegularTask(
                     "Найти ответ на главный вопрос жизни, вселенной и всего такого",
                     "Может быть это 6 х 9 ?",
                     2,
-                    StatusName.IN_PROGRESS);
+                    StatusName.IN_PROGRESS,
+                    TaskType.REGULAR_TASK);
         }
         EpicTask cookRice;
         EpicTask doPracticumHomework;
@@ -55,19 +83,23 @@ public class Main{
             cookRice = new EpicTask(
                     "Приготовить рис",
                     "Нужен гарнир из коричневого риса",
-                    0);
+                    0,
+                    TaskType.EPIC_TASK);
             doPracticumHomework = new EpicTask(
                     "Выполнить домашнее задание практикума",
                     "Нужно успеть до 09.10.2022",
-                    0);
+                    0,
+                    TaskType.EPIC_TASK);
             updateDoPracticumHomework = new EpicTask(
                     "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
                     "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
-                    0);
+                    0,
+                    TaskType.EPIC_TASK);
             doTraining = new EpicTask(
                     "Выполнить треннировку",
                     "Выполнить 3 упражнения по 10 подходов",
-                    0);
+                    0,
+                    TaskType.EPIC_TASK);
         }
         SubTask subTaskCookRice1;
         SubTask subTaskCookRice2;
@@ -101,13 +133,15 @@ public class Main{
                             "Желательно 400 гр",
                             cookRice.getId(),
                             0,
-                            StatusName.DONE);
+                            StatusName.DONE,
+                            TaskType.SUBTASK);
                     subTaskCookRice2 = new SubTask(
                             "Варить 10 минут",
                             "Не уходить с кухни",
                             cookRice.getId(),
                             0,
-                            StatusName.NEW);
+                            StatusName.NEW,
+                            TaskType.SUBTASK);
                 System.out.println(taskManager.createSubTask(subTaskCookRice1));
                 System.out.println(taskManager.createSubTask(subTaskCookRice2));
             }
@@ -147,7 +181,8 @@ public class Main{
                             "Заклятые враги Дона Корлеоне",
                             cookRice.getId(),
                             cookRice.getSubTaskStorageForEpic().getStorage().keySet().iterator().next(),
-                            StatusName.DONE);
+                            StatusName.DONE,
+                            TaskType.SUBTASK);
                 System.out.println(taskManager.updateSubTask(updateSubTaskCookRice2));
             } else if(command == 16){
                 for (int i = 0; i < 5; i++) {

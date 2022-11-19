@@ -11,11 +11,13 @@ public abstract class Task {
     private String description;
     private int id;
     private StatusName status;
-    public Task(String name, String description, int id, StatusName status) {
+    private TaskType type;
+    public Task(String name, String description, int id, StatusName status, TaskType type) {
         this.name = name;
         this.description = description;
         this.id = id;
         this.status = status;
+        this.type = type;
     }
     public Task(String name, String description, int id) {
         this.name = name;
@@ -39,6 +41,9 @@ public abstract class Task {
     public StatusName getStatus() {
         return status;
     }
+    public TaskType getType() {
+        return type;
+    }
     public void setStatus(StatusName status) {
         this.status = status;
     }
@@ -55,5 +60,15 @@ public abstract class Task {
                 && name.equals(task.getName())
                 && description.equals(task.getDescription())
                 && status.equals(task.getStatus());
+    }
+
+    public String toStringForCSV() {
+        String delimiter = " | ";
+        return getId() + delimiter
+                + "Task" + delimiter
+                + getName() + delimiter
+                + getDescription() + delimiter
+                + getStatus().name() + delimiter
+                + getType().name();
     }
 }

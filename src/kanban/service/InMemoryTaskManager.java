@@ -1,9 +1,6 @@
 package kanban.service;
 
-import kanban.module.EpicTask;
-import kanban.module.RegularTask;
-import kanban.module.SubTask;
-import kanban.module.Task;
+import kanban.module.*;
 import kanban.module.storage.EpicTaskStorage;
 import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
@@ -20,11 +17,10 @@ public class InMemoryTaskManager implements TaskManager{
     private final TaskRemover taskRemover = new TaskRemover();
     private final TaskGetter taskGetter = new TaskGetter();
     private final TaskUpdater taskUpdater = new TaskUpdater();
-    private final RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
-    private final EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
-    private final SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
-
-    private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    protected final RegularTaskStorage regularTaskStorage = new RegularTaskStorage();
+    protected final EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
+    protected final SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
+    protected final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     /**
      * Возвращает список всех обычных задач
@@ -78,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return Task обычная задача с нужным id или null
      */
     @Override
-    public Task getRegularTask(int regularId){
+    public Task  getRegularTask(int regularId){
         Task regularTask = taskGetter.getRegularTask(regularId, regularTaskStorage);
         inMemoryHistoryManager.add(regularTask);
         return regularTask;
