@@ -4,7 +4,8 @@ public enum TaskType {
 
     REGULAR_TASK("Обычная задача"),
     SUBTASK("Подзадача"),
-    EPIC_TASK("Эпик задача");
+    EPIC_TASK("Эпик задача"),
+    NOT_EXISTING_TASK("Не существует");
 
     private String typeName;
 
