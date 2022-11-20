@@ -88,12 +88,34 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void restoreCondition(Path fileToRestoreCondition){
         ArrayList<String[]> regularTasks = new ArrayList<>();
-        ArrayList<String[]> EpicTasks = new ArrayList<>();
-        ArrayList<String[]> SubTasks = new ArrayList<>();
+        ArrayList<String[]> epicTasks = new ArrayList<>();
+        ArrayList<String[]> subTasks = new ArrayList<>();
+        ArrayList<String[]> history = new ArrayList<>();
+        int countIdToRestore = 0;
+        readFromCSV(fileToRestoreCondition, regularTasks, epicTasks, subTasks, history);
+
+        for (String[] taskInString : regularTasks) {
+            RegularTask recreatedTask = createRegularTaskFromCSV(taskInString);
+            restoreInMemoryRegularTask(recreatedTask);
+            System.out.println(regularTaskStorage.getStorage().containsKey(recreatedTask.getId()));
+        }
+
+        for (String[] taskInString : epicTasks) {
+            EpicTask recreatedTask = createEpicTaskFromCSV(taskInString);
+            restoreInMemoryEpicTask(recreatedTask);
+            System.out.println(epicTaskStorage.getStorage().containsKey(recreatedTask.getId()));
+        }
 
 
+    }
+    private void readFromCSV(Path fileToRestoreCondition
+            , ArrayList<String[]> regularTasks
+            , ArrayList<String[]> epicTasks
+            , ArrayList<String[]> subTasks
+            , ArrayList<String[]> history) {
+        int countIdToRestore;
         try(
-        BufferedReader br = new BufferedReader(
+                BufferedReader br = new BufferedReader(
                 new FileReader(
                         fileToRestoreCondition.toAbsolutePath().toString()));){
 
@@ -110,6 +132,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     continue;
                 }
 
+                if( curString.equals("") ){
+                    continue;
+                }
+
                 if(curString.equals(HISTORY_SEPARATOR)){
                     areTasksRead = true;
                     continue;
@@ -120,32 +146,51 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     continue;
                 }
 
-                if(areTasksRead){
-                    //String[]
+                if( areTasksRead && isHistoryRead ){
+                    String[] countIdInfo = curString.split("\\|");
+                    countIdToRestore = Integer.parseInt(countIdInfo[1]);
                 }
 
-                if(isHistoryRead){
-                    //String[] countIdInfo = curString
+                if( areTasksRead ){
+                    String[] historyInfo = curString.split("\\|");
+                    history.add(historyInfo);
                 }
 
-                String[] taskContent = curString.split("|");
+                String[] taskContent = curString.split("\\|");
                 if(TaskType.valueOf(taskContent[1]) ==  TaskType.REGULAR_TASK ){
-                    RegularTask task = createRegularTaskFromCSV(taskContent);
-
+                    regularTasks.add(taskContent);
                 }
+
+                if(TaskType.valueOf(taskContent[1]) ==  TaskType.EPIC_TASK ){
+                    epicTasks.add(taskContent);
+                }
+
+                if(TaskType.valueOf(taskContent[1]) ==  TaskType.SUBTASK ){
+                    subTasks.add(taskContent);
+                }
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-// Методы для работы с обычными задачами
+    // Методы для работы с обычными задачами
     @Override
     public String createRegularTask(RegularTask task) {
         String result = super.createRegularTask(task);
         save();
         return result;
     }
+
+    public void restoreInMemoryRegularTask(RegularTask taskToRestore){
+        regularTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
+    }
+    public void restoreInMemoryEpicTask(EpicTask taskToRestore){
+        epicTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
+    }
+
+
     @Override
     public String clearRegularTaskStorage() {
         String result = super.clearRegularTaskStorage();
@@ -285,7 +330,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 , description
                 , StatusName.valueOf(status)
                 , TaskType.valueOf(type)
-                ,epicId);
+                , epicId);
     }
 
 

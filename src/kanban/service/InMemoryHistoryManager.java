@@ -21,7 +21,8 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
     @Override
     public void remove(Task task){
-        linkedStorage.remove(linkedStorage.getNode(task));
+        int taskIdToAdd = getTaskId(task);
+        linkedStorage.remove(linkedStorage.getNode(taskIdToAdd));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class InMemoryHistoryManager implements HistoryManager{
                 System.out.println("Вызов " + (i + 1) + ": Вызванная задача отсутствовала");
             } else {
                 System.out.println("Вызов " + (i + 1)
-                                    + ": вызвана задача с id"
+                                    + ": вызвана задача с id "
                                     + taskHistory.get(i).getId());
             }
         }
