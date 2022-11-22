@@ -16,7 +16,7 @@ public class BackedTest {
 
     public static void main(String[] args) {
 
-        Path pathOfStorage = Paths.get("src/kanban/TaskManagerStorageInFile");
+        Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
         try{
             if(!Files.exists(pathOfStorage)){
                 Files.createDirectory(pathOfStorage);
