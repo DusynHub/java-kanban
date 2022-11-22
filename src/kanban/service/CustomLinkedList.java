@@ -1,6 +1,7 @@
 package kanban.service;
 
 import kanban.module.Task;
+import kanban.util.TaskIdGetter;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -11,9 +12,7 @@ public class CustomLinkedList {
     private Node first;
     private Node last;
     private int size = 0;
-
     private final Map<Integer, Node> nodeStorage = new HashMap<>();
-
     public void addLast(Task taskToAdd) {
 
         Node oldLast = last;
@@ -33,21 +32,13 @@ public class CustomLinkedList {
         } else {
             taskIdToAdd = taskToAdd.getId();
         }
-//        if (nodeStorage.containsKey(taskIdToAdd)) {
-//            //remove(nodeStorage.getOrDefault(taskIdToAdd, null));
-//            nodeStorage.put(taskIdToAdd, newNode);
-//        } else {
-//            nodeStorage.put(taskIdToAdd, newNode);
-//        }
         nodeStorage.put(taskIdToAdd, newNode);
         size++;
     }
-
     public boolean wasTaskCalledBefore(Task taskToAdd){
-        int taskIdToAdd = getTaskId(taskToAdd);
+        int taskIdToAdd = TaskIdGetter.getTaskId(taskToAdd);
         return nodeStorage.containsKey(taskIdToAdd);
     }
-
     public void remove(Node e) {
 
         if (e == null) {
@@ -70,12 +61,10 @@ public class CustomLinkedList {
             nextNode.prev = prevNode;
             e.next = null;
         }
-
-        int taskIdToRemove = getTaskId(e.item);
+        int taskIdToRemove = TaskIdGetter.getTaskId(e.item);
         nodeStorage.remove(taskIdToRemove);
         size--;
     }
-
     public ArrayList<Task> getHistoryInList() {
 
         ArrayList<Task> historyInList = new ArrayList<>(size);
@@ -93,15 +82,9 @@ public class CustomLinkedList {
 
         return historyInList;
     }
-
-    public Node getNode(Task task) {
-        return nodeStorage.get(task.getId());
-    }
-
     public Node getNode(int id) {
         return nodeStorage.getOrDefault(id, null);
     }
-
     private static class Node {
         Task item;
         Node next;
@@ -112,17 +95,5 @@ public class CustomLinkedList {
             this.prev = prev;
             this.next = next;
         }
-    }
-
-    public int getTaskId(Task task){
-        int idForTaskIfDoNotExist = -1;
-        int taskId;
-
-        if (task == null) {
-            taskId = idForTaskIfDoNotExist;
-        } else {
-            taskId = task.getId();
-        }
-        return taskId;
     }
 }

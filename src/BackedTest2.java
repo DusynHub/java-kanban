@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 public class BackedTest2 {
 
-
     public static void main(String[] args) {
 
         Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");

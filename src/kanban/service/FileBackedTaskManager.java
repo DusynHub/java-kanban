@@ -1,10 +1,12 @@
 package kanban.service;
 
+import kanban.exceptions.ManagerSaveException;
 import kanban.module.*;
 import kanban.module.storage.EpicTaskStorage;
 import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
 import kanban.module.storage.TaskStorage;
+import kanban.util.CSVTaskFormat;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -34,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void writeCondition(RegularTaskStorage regularTaskStorage
             , EpicTaskStorage epicTaskStorage
             , SubTaskStorage subTaskStorage
-            , HistoryManager inMemoryHistoryManager) {
+            , HistoryManager inMemoryHistoryManager) throws ManagerSaveException {
 
         List<TaskStorage> storages = new ArrayList<>();
         storages.add(regularTaskStorage);
@@ -56,38 +58,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
 
-            List<Task> history = inMemoryHistoryManager.getHistory();
-            out.write(System.lineSeparator() + HISTORY_SEPARATOR);
-            out.write(System.lineSeparator() + HISTORY_HEADERS + System.lineSeparator());
+            historyToString(inMemoryHistoryManager, out);
 
-            for(Task task : history){
-
-                int taskId;
-                String taskType;
-
-                if(task == null){
-                    taskId = -1;
-                    taskType = "NOT_EXISTING_TASK";
-                } else {
-                    taskId = task.getId();
-                    taskType = task.getType().name();
-                }
-                out.write(taskId + "|" +  taskType);
-                out.newLine();
-            }
             out.write(System.lineSeparator() + COUNT_ID_SEPARATOR + System.lineSeparator());
             out.write("COUNT_ID" +"|" + taskCreator.getCountId());
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException(e,"Ошибка при сохранении состояния менеджера");
         }
     }
 
-    public void restoreCondition(Path fileToRestoreCondition){
+    private void historyToString(HistoryManager inMemoryHistoryManager
+                                , BufferedWriter out
+                                 ) throws IOException {
+        List<Task> history = inMemoryHistoryManager.getHistory();
+        out.write(System.lineSeparator() + HISTORY_SEPARATOR);
+        out.write(System.lineSeparator() + HISTORY_HEADERS + System.lineSeparator());
+
+        for(Task task : history){
+
+            int taskId;
+            String taskType;
+
+            if(task == null){
+                taskId = -1;
+                taskType = "NOT_EXISTING_TASK";
+            } else {
+                taskId = task.getId();
+                taskType = task.getType().name();
+            }
+            out.write(taskId + "|" +  taskType);
+            out.newLine();
+        }
+    }
+
+    private void restoreCondition(Path fileToRestoreCondition){
         ArrayList<String[]> regularTasks = new ArrayList<>();
         ArrayList<String[]> epicTasks = new ArrayList<>();
         ArrayList<String[]> subTasks = new ArrayList<>();
         ArrayList<String[]> history = new ArrayList<>();
+
         int countIdToRestore = readFromCSV(fileToRestoreCondition
                                             ,regularTasks
                                             ,epicTasks
@@ -96,27 +106,43 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         readFromCSV(fileToRestoreCondition, regularTasks, epicTasks, subTasks, history);
 
         for (String[] taskInString : regularTasks) {
-            RegularTask recreatedTask = createRegularTaskFromCSV(taskInString);
+            RegularTask recreatedTask = CSVTaskFormat.createRegularTaskFromCSV(taskInString);
             restoreInMemoryRegularTask(recreatedTask);
         }
 
         for (String[] taskInString : epicTasks) {
-            EpicTask recreatedTask = createEpicTaskFromCSV(taskInString);
+            EpicTask recreatedTask = CSVTaskFormat.createEpicTaskFromCSV(taskInString);
             restoreInMemoryEpicTask(recreatedTask);
         }
 
         for (String[] taskInString : subTasks) {
-            SubTask recreatedTask = createSubTaskFromCSV(taskInString);
+            SubTask recreatedTask = CSVTaskFormat.createSubTaskFromCSV(taskInString);
             restoreInMemorySubTask(recreatedTask);
         }
 
+        restoreHistoryFromCSV(history);
+
+        taskCreator.setCountId(countIdToRestore);
+
+        if(countIdToRestore == 0){
+            System.out.println("Создан новый  Менеджер задач");
+        } else {
+            System.out.println("Менедежер задач загрузил информацию о задачах");
+            System.out.println("Общее количество созданных за время работы менеджера" +
+                    " задач равно: " + countIdToRestore);
+        }
+
+    }
+
+    private void restoreHistoryFromCSV(ArrayList<String[]> history) {
         for(String[] taskInfo : history){
 
             int taskId = Integer.parseInt(taskInfo[0]);
 
             if(TaskType.valueOf(taskInfo[1]) == TaskType.REGULAR_TASK){
 
-                RegularTask taskToHistory = (RegularTask) regularTaskStorage.getStorage().get(taskId);
+                RegularTask taskToHistory
+                        = (RegularTask) regularTaskStorage.getStorage().get(taskId);
                 inMemoryHistoryManager.add(taskToHistory);
             }
 
@@ -128,7 +154,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             if(TaskType.valueOf(taskInfo[1]) == TaskType.SUBTASK){
 
-                SubTask taskToHistory = (SubTask) subTaskStorageForTaskManager.getStorage().get(taskId);
+                SubTask taskToHistory
+                        = (SubTask) subTaskStorageForTaskManager.getStorage().get(taskId);
                 inMemoryHistoryManager.add(taskToHistory);
             }
 
@@ -136,19 +163,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 inMemoryHistoryManager.add(null);
             }
-
-            taskCreator.setCountId(countIdToRestore);
         }
-
-        if(countIdToRestore == 0){
-            System.out.println("Создан новый  Менеджер задач");
-        } else {
-            System.out.println("Менедежер задач загрузил информацию о задачах");
-            System.out.println("Общее количество созданных за время работы менеджера" +
-                    " задач равно: " + countIdToRestore);
-        }
-
     }
+
     private int readFromCSV(Path fileToRestoreCondition
             , ArrayList<String[]> regularTasks
             , ArrayList<String[]> epicTasks
@@ -221,33 +238,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    // Методы для работы с обычными задачами
+// Методы для работы с обычными задачами
     @Override
     public String createRegularTask(RegularTask task) {
         String result = super.createRegularTask(task);
         save();
         return result;
     }
-
-    public void restoreInMemoryRegularTask(RegularTask taskToRestore){
-        regularTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
-    }
-    public void restoreInMemoryEpicTask(EpicTask taskToRestore){
-        epicTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
-    }
-    public void restoreInMemorySubTask(SubTask taskToRestore){
-        if(taskToRestore == null){
-            return;
-        }
-        if(!epicTaskStorage.getStorage().containsKey(taskToRestore.getEpicId())){
-            return;
-        }
-        subTaskStorageForTaskManager.saveInStorage(taskToRestore.getId(), taskToRestore);
-        EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToRestore.getEpicId());
-        epic.getSubTaskStorageForEpic().saveInStorage(taskToRestore.getId(), taskToRestore);
-        taskUpdater.epicStatusUpdater(epic);
-    }
-
     @Override
     public String clearRegularTaskStorage() {
         String result = super.clearRegularTaskStorage();
@@ -272,7 +269,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return result;
     }
-
+    private void restoreInMemoryRegularTask(RegularTask taskToRestore){
+        regularTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
+    }
 
 // Методы для работы с подзадачами
     @Override
@@ -304,6 +303,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String result = super.removeSubTask(subId);
         save();
         return result;
+    }
+    private void restoreInMemorySubTask(SubTask taskToRestore){
+        if(taskToRestore == null){
+            return;
+        }
+        if(!epicTaskStorage.getStorage().containsKey(taskToRestore.getEpicId())){
+            return;
+        }
+        subTaskStorageForTaskManager.saveInStorage(taskToRestore.getId(), taskToRestore);
+        EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToRestore.getEpicId());
+        epic.getSubTaskStorageForEpic().saveInStorage(taskToRestore.getId(), taskToRestore);
+        taskUpdater.epicStatusUpdater(epic);
     }
 
 // Методы для работы с эпик задачами
@@ -343,49 +354,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return result;
     }
-
-
-// Методы создания задач из массива строк
-    private RegularTask createRegularTaskFromCSV(String[] regularTasksFromCSV) {
-
-        int id = Integer.parseInt(regularTasksFromCSV[0]);
-        String name = regularTasksFromCSV[2];
-        String description = regularTasksFromCSV[3];
-        String status = regularTasksFromCSV[4];
-        String type = regularTasksFromCSV[1];
-
-        return new RegularTask(id
-                , name
-                , description
-                , StatusName.valueOf(status)
-                , TaskType.valueOf(type));
-    }
-    private EpicTask createEpicTaskFromCSV(String[] epicTasksFromCSV) {
-
-        int id = Integer.parseInt(epicTasksFromCSV[0]);
-        String name = epicTasksFromCSV[2];
-        String description = epicTasksFromCSV[3];
-        String type = epicTasksFromCSV[1];
-
-        return new EpicTask(id
-                , name
-                , description
-                , TaskType.valueOf(type));
-    }
-    private SubTask createSubTaskFromCSV(String[] subTasksFromCSV)
-    {
-        int id = Integer.parseInt(subTasksFromCSV[0]);
-        String name = subTasksFromCSV[2];
-        String description = subTasksFromCSV[3];
-        String status = subTasksFromCSV[4];
-        String type = subTasksFromCSV[1];
-        int epicId = Integer.parseInt(subTasksFromCSV[5]);
-
-        return new SubTask(id
-                , name
-                , description
-                , StatusName.valueOf(status)
-                , TaskType.valueOf(type)
-                , epicId);
+    private void restoreInMemoryEpicTask(EpicTask taskToRestore){
+        epicTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
     }
 }

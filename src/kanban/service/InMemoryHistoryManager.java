@@ -1,6 +1,7 @@
 package kanban.service;
 
 import kanban.module.Task;
+import kanban.util.TaskIdGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,40 +10,25 @@ public class InMemoryHistoryManager implements HistoryManager{
 
     private List<Task> taskHistory = new ArrayList<>();
     private final CustomLinkedList linkedStorage = new CustomLinkedList();
-
-
     @Override
     public void add(Task task) {
           if(linkedStorage.wasTaskCalledBefore(task)){
-              int taskIdToAdd = getTaskId(task);
+              int taskIdToAdd = TaskIdGetter.getTaskId(task);
+
               linkedStorage.remove(linkedStorage.getNode(taskIdToAdd));
           }
           linkedStorage.addLast(task);
     }
     @Override
     public void remove(Task task){
-        int taskIdToAdd = getTaskId(task);
+        int taskIdToAdd = TaskIdGetter.getTaskId(task);
         linkedStorage.remove(linkedStorage.getNode(taskIdToAdd));
     }
-
     @Override
     public List<Task> getHistory() {
 
         return taskHistory = linkedStorage.getHistoryInList();
     }
-
-    public int getTaskId(Task task){
-        int idForTaskIfDoNotExist = -1;
-        int taskId;
-
-        if (task == null) {
-            taskId = idForTaskIfDoNotExist;
-        } else {
-            taskId = task.getId();
-        }
-        return taskId;
-    }
-
     @Override
     public void printHistory() {
         for (int i = 0; i < taskHistory.size(); i++) {
