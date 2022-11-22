@@ -41,10 +41,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         storages.add(epicTaskStorage);
         storages.add(subTaskStorage);
 
-//        BufferedReader br = new BufferedReader(
-//                new FileReader(
-//                        FileToSaveCondition.toAbsolutePath().toString()));
-
         try (BufferedWriter out =
                      new BufferedWriter(
                              new FileWriter(fileToSaveCondition.toAbsolutePath().toString())
@@ -92,25 +88,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         ArrayList<String[]> epicTasks = new ArrayList<>();
         ArrayList<String[]> subTasks = new ArrayList<>();
         ArrayList<String[]> history = new ArrayList<>();
-        int countIdToRestore = 0;
+        int countIdToRestore = readFromCSV(fileToRestoreCondition
+                                            ,regularTasks
+                                            ,epicTasks
+                                            , subTasks
+                                            , history);
         readFromCSV(fileToRestoreCondition, regularTasks, epicTasks, subTasks, history);
 
         for (String[] taskInString : regularTasks) {
             RegularTask recreatedTask = createRegularTaskFromCSV(taskInString);
             restoreInMemoryRegularTask(recreatedTask);
-            System.out.println(regularTaskStorage.getStorage().containsKey(recreatedTask.getId()));
         }
 
         for (String[] taskInString : epicTasks) {
             EpicTask recreatedTask = createEpicTaskFromCSV(taskInString);
             restoreInMemoryEpicTask(recreatedTask);
-            System.out.println(epicTaskStorage.getStorage().containsKey(recreatedTask.getId()));
         }
 
         for (String[] taskInString : subTasks) {
             SubTask recreatedTask = createSubTaskFromCSV(taskInString);
             restoreInMemorySubTask(recreatedTask);
-            System.out.println(subTaskStorageForTaskManager.getStorage().containsKey(recreatedTask.getId()));
         }
 
         for(String[] taskInfo : history){
@@ -123,18 +120,41 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 inMemoryHistoryManager.add(taskToHistory);
             }
 
+            if(TaskType.valueOf(taskInfo[1]) == TaskType.EPIC_TASK){
 
+                EpicTask taskToHistory = (EpicTask) epicTaskStorage.getStorage().get(taskId);
+                inMemoryHistoryManager.add(taskToHistory);
+            }
+
+            if(TaskType.valueOf(taskInfo[1]) == TaskType.SUBTASK){
+
+                SubTask taskToHistory = (SubTask) subTaskStorageForTaskManager.getStorage().get(taskId);
+                inMemoryHistoryManager.add(taskToHistory);
+            }
+
+            if(TaskType.valueOf(taskInfo[1]) == TaskType.NOT_EXISTING_TASK){
+
+                inMemoryHistoryManager.add(null);
+            }
+
+            taskCreator.setCountId(countIdToRestore);
         }
 
-
+        if(countIdToRestore == 0){
+            System.out.println("Создан новый  Менеджер задач");
+        } else {
+            System.out.println("Менедежер задач загрузил информацию о задачах");
+            System.out.println("Общее количество созданных за время работы менеджера" +
+                    " задач равно: " + countIdToRestore);
+        }
 
     }
-    private void readFromCSV(Path fileToRestoreCondition
+    private int readFromCSV(Path fileToRestoreCondition
             , ArrayList<String[]> regularTasks
             , ArrayList<String[]> epicTasks
             , ArrayList<String[]> subTasks
             , ArrayList<String[]> history) {
-        int countIdToRestore;
+        int savedCountId= 0;
         try(
                 BufferedReader br = new BufferedReader(
                 new FileReader(
@@ -169,7 +189,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 if( areTasksRead && isHistoryRead ){
                     String[] countIdInfo = curString.split("\\|");
-                    countIdToRestore = Integer.parseInt(countIdInfo[1]);
+                    savedCountId = Integer.parseInt(countIdInfo[1]);
                     continue;
                 }
 
@@ -183,17 +203,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 TaskType.valueOf(taskContent[1]).name();
                 if(TaskType.valueOf(taskContent[1]) ==  TaskType.REGULAR_TASK ){
                     regularTasks.add(taskContent);
+                    continue;
                 }
 
                 if(TaskType.valueOf(taskContent[1]) ==  TaskType.EPIC_TASK ){
                     epicTasks.add(taskContent);
+                    continue;
                 }
 
                 if(TaskType.valueOf(taskContent[1]) ==  TaskType.SUBTASK ){
                     subTasks.add(taskContent);
                 }
-
             }
+            return savedCountId;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

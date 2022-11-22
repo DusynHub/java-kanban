@@ -177,6 +177,7 @@ public class BackedTest2 {
                 for(Integer key : taskManager.getRegularTaskStorage().keySet()){
                     System.out.println(taskManager.getRegularTask(key));
                 }
+
                 System.out.println(taskManager.getRegularTask(deathTask.getId()));
                 System.out.println(taskManager.getRegularTask(resentmentTask.getId()));
             } else if(command == 11){

@@ -38,8 +38,6 @@ public class BackedTest {
             e.printStackTrace();
         }
 
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
-
         RegularTask theBigLebowskiTask;
         RegularTask deathTask;
         RegularTask resentmentTask;
