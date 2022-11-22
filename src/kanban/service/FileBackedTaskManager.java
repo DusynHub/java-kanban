@@ -124,6 +124,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 inMemoryHistoryManager.add(taskToHistory);
             }
 
+            if(TaskType.valueOf(taskInfo[1]) == TaskType.EPIC_TASK){
+
+                EpicTask taskToHistory = (EpicTask) epicTaskStorage.getStorage().get(taskId);
+                inMemoryHistoryManager.add(taskToHistory);
+            }
+
+            if(TaskType.valueOf(taskInfo[1]) == TaskType.SUBTASK){
+
+                RegularTask taskToHistory = (RegularTask) regularTaskStorage.getStorage().get(taskId);
+                inMemoryHistoryManager.add(taskToHistory);
+            }
+
+            if(TaskType.valueOf(taskInfo[1]) == TaskType.REGULAR_TASK){
+
+                RegularTask taskToHistory = (RegularTask) regularTaskStorage.getStorage().get(taskId);
+                inMemoryHistoryManager.add(taskToHistory);
+            }
+
 
         }
 
