@@ -27,6 +27,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.fileToSaveCondition = pathOfFile;
         restoreCondition(pathOfFile);
     }
+
+    public static FileBackedTaskManager loadFromFile(Path pathOfFile){
+        return new FileBackedTaskManager(pathOfFile);
+    }
+
     private void save() {
         writeCondition(regularTaskStorage
                 , epicTaskStorage

@@ -1,0 +1,18 @@
+ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK
+4|EPIC_TASK|Приготовить рис|Нужен гарнир из коричневого риса|IN_PROGRESS|
+5|EPIC_TASK|Выполнить домашнее задание практикума|Нужно успеть до 09.10.2022|NEW|
+6|EPIC_TASK|Выполнить треннировку|Выполнить 3 упражнения по 10 подходов|NEW|
+7|SUBTASK|Промыть рис|Желательно 400 гр|DONE|4
+8|SUBTASK|Варить 10 минут|Не уходить с кухни|NEW|4
+
+BELOW_THIS_ROW_HISTORY_DATA
+ID|TASK_TYPE
+4|EPIC_TASK
+5|EPIC_TASK
+6|EPIC_TASK
+7|SUBTASK
+8|SUBTASK
+-1|NOT_EXISTING_TASK
+
+BELOW_THIS_ROW_CONT_ID_VALUE
+COUNT_ID|9
