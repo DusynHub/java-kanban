@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class TaskRemover {
 
-    // Методы для RegularTask
+// Методы для RegularTask
     public String removeAllRegularTasks(RegularTaskStorage regularTaskStorage,
                                         HistoryManager historyManager){
         for(Integer regularId : regularTaskStorage.getStorage().keySet()){
@@ -34,7 +34,7 @@ public class TaskRemover {
         }
     }
 
-    //Методы для EpicTask
+//Методы для EpicTask
     public String removeAllEpicTasks(EpicTaskStorage epicTaskStorage,
                                      SubTaskStorage subTaskStorageForTaskManager,
                                      HistoryManager historyManager){
@@ -69,7 +69,7 @@ public class TaskRemover {
             return "Задача с id = '"+ epicId + "' отсутствует. Сначала создайте задачу с соответвующим epicId. Удаление невозможно";
         }
     }
-    // Методы для SubTask
+// Методы для SubTask
     public String removeAllSubTasks(SubTaskStorage subTaskStorageForTaskManager,
                                     EpicTaskStorage epicTaskStorage,
                                     HistoryManager historyManager
