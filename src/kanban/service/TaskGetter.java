@@ -56,7 +56,9 @@ public class TaskGetter {
         HashMap<Integer, Task> storage = epicTaskStorage.getStorage();
         EpicTask epicTask = (EpicTask) storage.get(epicId);
         if(epicTask == null){
-            System.out.println("Эпик задача с id = '" + epicId +"' Отсутствует. Возвращено null");
+            System.out.println("Вызов подздачи невозможен. Эпик задача с id = '" + epicId
+                                                                +"' Отсутствует. Возвращено null");
+
             return null;
         }
         SubTaskStorage subTaskStorageFromEpic = epicTask.getSubTaskStorageForEpic();

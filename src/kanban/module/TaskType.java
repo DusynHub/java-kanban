@@ -7,7 +7,7 @@ public enum TaskType {
     EPIC_TASK("Эпик задача"),
     NOT_EXISTING_TASK("Не существует");
 
-    private String typeName;
+    private final String typeName;
 
     TaskType(String typeName){
         this.typeName = typeName;

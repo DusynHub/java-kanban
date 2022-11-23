@@ -100,7 +100,7 @@ public class BackedTest {
         SubTask subTaskCookRice2;
         SubTask updateSubTaskCookRice2;
 
-        TaskManager taskManager = Managers.getFileBackedTaskManager();
+        TaskManager taskManager = FileBackedTaskManager.loadFromFile(pathOfFile);;
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
         int command;

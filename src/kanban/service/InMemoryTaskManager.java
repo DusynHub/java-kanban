@@ -225,7 +225,8 @@ public class InMemoryTaskManager implements TaskManager{
     public String createSubTask(SubTask task) {
         SubTask taskToSave = taskCreator.createSubTask(task, epicTaskStorage);
         if(taskToSave == null){
-            return "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
+            return "Подзадача не может быть создана. "
+                    + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
         }
         subTaskStorageForTaskManager.saveInStorage(taskToSave.getId(), taskToSave);
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToSave.getEpicId());

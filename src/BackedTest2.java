@@ -1,8 +1,10 @@
 import kanban.module.*;
 import kanban.module.storage.TaskStorage;
+import kanban.service.FileBackedTaskManager;
 import kanban.service.Managers;
 import kanban.service.TaskManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -98,7 +100,7 @@ public class BackedTest2 {
         SubTask subTaskCookRice2;
         SubTask updateSubTaskCookRice2;
 
-        TaskManager taskManager = Managers.getFileBackedTaskManager();
+        TaskManager taskManager = FileBackedTaskManager.loadFromFile(pathOfFile);
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
         int command;
@@ -193,6 +195,7 @@ public class BackedTest2 {
                 for(Integer key : taskManager.getSubTaskStorage().keySet()){
                     System.out.println(taskManager.getSubTask(key));
                 }
+
                 for (int i = 0; i < 3; i++) {
                     System.out.println(taskManager.getSubTask(random.nextInt(15)));
                 }
@@ -265,6 +268,4 @@ public class BackedTest2 {
         System.out.println("20 - Получить историю вызова задач");
         System.out.println("0 - Выход из программы");
     }
-
-
 }

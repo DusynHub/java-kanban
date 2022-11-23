@@ -12,14 +12,17 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    static void main(String[] args){
+    protected final String STORAGE_HEADERS
+                                    = "ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK";
+    protected final String HISTORY_SEPARATOR = "BELOW_THIS_ROW_HISTORY_DATA";
+    protected final String HISTORY_HEADERS = "ID|TASK_TYPE";
+    protected final String COUNT_ID_SEPARATOR = "BELOW_THIS_ROW_CONT_ID_VALUE";
+    Path fileToSaveCondition;
+    public static void main(String[] args){
 
         Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
         try{
@@ -31,7 +34,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             e.printStackTrace();
         }
 
-        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath().toString()
+        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath()
                 + "/TaskStorage.csv");
         try{
 
@@ -43,14 +46,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             e.printStackTrace();
         }
 
-        FileBackedTaskManager fileBackedTaskManager
-                                                = FileBackedTaskManager.loadFromFile(pathOfStorage);
-
-
         RegularTask theBigLebowskiTask;
         RegularTask deathTask;
         RegularTask resentmentTask;
-        RegularTask updatedResentmentTask;
         RegularTask importantTask;
         {
             theBigLebowskiTask = new RegularTask(
@@ -71,12 +69,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                             "Удобная фраза: произнес ее — и обижай кого хочешь.",
                     StatusName.NEW,
                     TaskType.REGULAR_TASK);
-            updatedResentmentTask = new RegularTask(
-                    0, "Как обижать людей?",
-                    "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
-                            "Удобная фраза: произнес ее — и обижай кого хочешь.",
-                    StatusName.DONE,
-                    TaskType.REGULAR_TASK);
             importantTask = new RegularTask(
                     2, "Найти ответ на главный вопрос жизни, вселенной и всего такого",
                     "Может быть это 6 х 9 ?",
@@ -85,7 +77,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         EpicTask cookRice;
         EpicTask doPracticumHomework;
-        EpicTask updateDoPracticumHomework;
         EpicTask doTraining;
         {
             cookRice = new EpicTask(
@@ -96,57 +87,117 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     0, "Выполнить домашнее задание практикума",
                     "Нужно успеть до 09.10.2022",
                     TaskType.EPIC_TASK);
-            updateDoPracticumHomework = new EpicTask(
-                    0, "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
-                    "ОБНОВЛЕНИЕ ЭПИК ЗАДАЧИ",
-                    TaskType.EPIC_TASK);
             doTraining = new EpicTask(
                     0, "Выполнить треннировку",
                     "Выполнить 3 упражнения по 10 подходов",
                     TaskType.EPIC_TASK);
         }
+
+        FileBackedTaskManager fileBackedTaskManager
+                = FileBackedTaskManager.loadFromFile(pathOfStorage);
+
         SubTask subTaskCookRice1;
         SubTask subTaskCookRice2;
-        SubTask updateSubTaskCookRice2;
 
         System.out.println(fileBackedTaskManager.createRegularTask(theBigLebowskiTask));
         System.out.println(fileBackedTaskManager.createRegularTask(deathTask));
         System.out.println(fileBackedTaskManager.createRegularTask(resentmentTask));
         System.out.println(fileBackedTaskManager.createRegularTask(importantTask));
 
-
         System.out.println(fileBackedTaskManager.createEpicTask(cookRice));
         System.out.println(fileBackedTaskManager.createEpicTask(doPracticumHomework));
         System.out.println(fileBackedTaskManager.createEpicTask(doTraining));
 
+        Iterator<Integer> it = fileBackedTaskManager.getEpicTaskStorage().keySet().iterator();
+
+        int existingEpicId = -1;
+        if(it.hasNext()){
+            existingEpicId = it.next();
+        }
+
         subTaskCookRice1 = new SubTask(
                 0, "Промыть рис",
                 "Желательно 400 гр",
-                StatusName.DONE, TaskType.SUBTASK, cookRice.getId()
-        );
+                StatusName.DONE, TaskType.SUBTASK, existingEpicId);
         subTaskCookRice2 = new SubTask(
                 0, "Варить 10 минут",
                 "Не уходить с кухни",
-                StatusName.NEW, TaskType.SUBTASK, cookRice.getId()
-        );
+                StatusName.NEW, TaskType.SUBTASK, existingEpicId);
+
         System.out.println(fileBackedTaskManager.createSubTask(subTaskCookRice1));
         System.out.println(fileBackedTaskManager.createSubTask(subTaskCookRice2));
 
+        for(Integer key : fileBackedTaskManager.getRegularTaskStorage().keySet()){
+            System.out.println(fileBackedTaskManager.getRegularTask(key));
+        }
+
+
+        for(Integer key : fileBackedTaskManager.getSubTaskStorage().keySet()){
+            System.out.println(fileBackedTaskManager.getSubTask(key));
+        }
+// Вызов несуществующей задачи
+        System.out.println(fileBackedTaskManager.getSubTask(-354));
+
+        for(Integer key : fileBackedTaskManager.getEpicTaskStorage().keySet()){
+            System.out.println(fileBackedTaskManager.getEpicTask(key));
+        }
+
+        System.out.println("\nИстория вызовов первого менеджера");
+        fileBackedTaskManager.getHistoryOfTasks();
+
+        System.out.println();
+
+        FileBackedTaskManager fileBackedTaskManager2
+                = FileBackedTaskManager.loadFromFile(pathOfStorage);
+        System.out.println("\nИстория вызовов второго менеджера");
+        fileBackedTaskManager2.getHistoryOfTasks();
+
+
+        System.out.println("\nПеречень обычных задач первого менеджера");
+        fileBackedTaskManager.printRegularTaskStorage();
+        System.out.println("\nПеречень обычных задач второго менеджера");
+        fileBackedTaskManager2.printRegularTaskStorage();
+
+        System.out.println("\nПеречень эпик задач первого менеджера");
+        fileBackedTaskManager.printEpicTaskStorage();
+        System.out.println("\nПеречень эпик задач второго менеджера");
+        fileBackedTaskManager2.printEpicTaskStorage();
+
+        System.out.println("\nПеречень подзадач первого менеджера");
+        fileBackedTaskManager.printSubTaskStorage();
+        System.out.println("\nПеречень подзадач второго менеджера");
+        fileBackedTaskManager2.printSubTaskStorage();
     }
 
+    public FileBackedTaskManager() {
 
-    protected final String STORAGE_HEADERS
-                                    = "ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK";
-    protected final String HISTORY_SEPARATOR = "BELOW_THIS_ROW_HISTORY_DATA";
-    protected final String HISTORY_HEADERS = "ID|TASK_TYPE";
-    protected final String COUNT_ID_SEPARATOR = "BELOW_THIS_ROW_CONT_ID_VALUE";
-    Path fileToSaveCondition;
-    public FileBackedTaskManager(Path pathOfFile) {
+        Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
+        try{
+            if(!Files.exists(pathOfStorage)){
+                Files.createDirectory(pathOfStorage);
+            }
+        } catch(IOException e){
+            System.out.println("Ошибка при создании директории: ");
+            e.printStackTrace();
+        }
+
+        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath()
+                + "/TaskStorage.csv");
+        try{
+
+            if(!Files.exists(pathOfFile)){
+                Files.createFile(pathOfFile);
+            }
+        }catch(IOException e){
+            System.out.println("Ошибка при создании файла хранения FileBackedTaskManager: ");
+            e.printStackTrace();
+        }
+
         this.fileToSaveCondition = pathOfFile;
         restoreCondition(pathOfFile);
     }
     public static FileBackedTaskManager loadFromFile(Path pathOfFile){
-        return new FileBackedTaskManager(pathOfFile);
+        return new FileBackedTaskManager();
     }
     private void save() {
         writeCondition(regularTaskStorage
@@ -191,7 +242,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
         }
     }
-
     private void historyToCSV(HistoryManager inMemoryHistoryManager
                                 , BufferedWriter out
                                  ) throws IOException {
@@ -226,6 +276,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                                             ,epicTasks
                                             , subTasks
                                             , history);
+
 
         for (String[] taskInString : regularTasks) {
             RegularTask recreatedTask = CSVTaskFormat.createRegularTaskFromCSV(taskInString);
@@ -295,7 +346,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try(
                 BufferedReader br = new BufferedReader(
                 new FileReader(
-                        fileToRestoreCondition.toAbsolutePath().toString()));){
+                        fileToRestoreCondition.toAbsolutePath().toString()))){
 
             boolean areTasksRead = false;
             boolean isHistoryRead = false;
@@ -337,7 +388,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
 
                 String[] taskContent = curString.split("\\|");
-                TaskType.valueOf(taskContent[1]).name();
+
                 if(TaskType.valueOf(taskContent[1]) ==  TaskType.REGULAR_TASK ){
                     regularTasks.add(taskContent);
                     continue;

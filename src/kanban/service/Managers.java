@@ -1,15 +1,10 @@
 package kanban.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class Managers {
 
     public static TaskManager getDefault(){
 
-        return new InMemoryTaskManager();
+        return new FileBackedTaskManager();
     }
 
     public static HistoryManager getDefaultHistory(){
