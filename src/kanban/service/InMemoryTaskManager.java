@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Класс TaskManager для управления трекером задач
  */
-public class InMemoryTaskManager implements TaskManager{
+public class InMemoryTaskManager implements TaskManager {
     protected final TaskCreator taskCreator = new TaskCreator();
     protected final TaskRemover taskRemover = new TaskRemover();
     protected final TaskGetter taskGetter = new TaskGetter();
@@ -74,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return Task обычная задача с нужным id или null
      */
     @Override
-    public Task  getRegularTask(int regularId){
+    public Task getRegularTask(int regularId) {
         Task regularTask = taskGetter.getRegularTask(regularId, regularTaskStorage);
         inMemoryHistoryManager.add(regularTask);
         return regularTask;
@@ -87,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return String Информация о статусе обновления обычной задачи
      */
     @Override
-    public String updateRegularTask(RegularTask regularTaskToUpdate){
+    public String updateRegularTask(RegularTask regularTaskToUpdate) {
         return taskUpdater.updateRegularTask(regularTaskToUpdate, regularTaskStorage);
     }
 
@@ -98,7 +98,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return String Информация о статусе удаления обычной задачи
      */
     @Override
-    public String removeRegularTask(int regularId){
+    public String removeRegularTask(int regularId) {
         return taskRemover.removeRegularTask(regularId, regularTaskStorage, inMemoryHistoryManager);
     }
 
@@ -151,7 +151,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return Task Эпик задача с требуемым id
      */
     @Override
-    public Task getEpicTask(int epicId){
+    public Task getEpicTask(int epicId) {
         Task epicTask = taskGetter.getEpicTask(epicId, epicTaskStorage);
         inMemoryHistoryManager.add(epicTask);
         return epicTask;
@@ -164,7 +164,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return String Информация о статусе обновления эпик задачи
      */
     @Override
-    public String updateEpicTask (EpicTask epicTaskToUpdate){
+    public String updateEpicTask(EpicTask epicTaskToUpdate) {
         return taskUpdater.updateEpicTask(epicTaskToUpdate, epicTaskStorage);
     }
 
@@ -175,7 +175,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return String Информация о статусе удаления эпик задачи
      */
     @Override
-    public String removeEpicTask(int epicId){
+    public String removeEpicTask(int epicId) {
         return taskRemover.removeEpicTask(epicId, epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 
@@ -186,7 +186,7 @@ public class InMemoryTaskManager implements TaskManager{
      * @return SubTaskStorage писок всех подзада, конкретной эпик задачи
      */
     @Override
-    public SubTaskStorage getSubTaskStorageFromEpic(int epicId){
+    public SubTaskStorage getSubTaskStorageFromEpic(int epicId) {
         return taskGetter.getSubTaskFromEpicTask(epicId, epicTaskStorage);
     }
 
@@ -196,8 +196,8 @@ public class InMemoryTaskManager implements TaskManager{
      * @param taskStorage список задач, который надо распечатать
      */
     @Override
-    public void printStorage(TaskStorage taskStorage){
-        if(taskStorage == null){
+    public void printStorage(TaskStorage taskStorage) {
+        if (taskStorage == null) {
             System.out.println("null");
             return;
         }
@@ -224,7 +224,7 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public String createSubTask(SubTask task) {
         SubTask taskToSave = taskCreator.createSubTask(task, epicTaskStorage);
-        if(taskToSave == null){
+        if (taskToSave == null) {
             return "Подзадача не может быть создана. "
                     + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
         }
@@ -251,22 +251,22 @@ public class InMemoryTaskManager implements TaskManager{
     @Override
     public String clearSubTaskStorage() {
         HashMap<Integer, Task> storage = epicTaskStorage.getStorage();
-        for(Integer epicId : storage.keySet()){
+        for (Integer epicId : storage.keySet()) {
             EpicTask epicTask = (EpicTask) storage.get(epicId);
             epicTask.getSubTaskStorageForEpic().clearStorage();
             taskUpdater.epicStatusUpdater(epicTask);
         }
-        return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager, epicTaskStorage,inMemoryHistoryManager );
+        return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager, epicTaskStorage, inMemoryHistoryManager);
     }
 
     /**
      * Возвращает подзадачу по id
      *
-     * @param id  id требуемой подзадачи
+     * @param id id требуемой подзадачи
      * @return Task  Возвращает требуемую подзадачу
      */
     @Override
-    public Task getSubTask(int id){
+    public Task getSubTask(int id) {
 
         Task subTask = taskGetter.getSubTask(id, subTaskStorageForTaskManager);
         inMemoryHistoryManager.add(subTask);
@@ -276,14 +276,14 @@ public class InMemoryTaskManager implements TaskManager{
     /**
      * Обновляет подзадачу
      *
-     * @param subTaskToUpdate  подзадача, которая должна обновить подзадачу
+     * @param subTaskToUpdate подзадача, которая должна обновить подзадачу
      * @return String Информация о статусе обновления подзадачи
      */
     @Override
-    public String updateSubTask (SubTask subTaskToUpdate){
+    public String updateSubTask(SubTask subTaskToUpdate) {
         String result = taskUpdater.updateSubTask(subTaskToUpdate, subTaskStorageForTaskManager, epicTaskStorage);
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(subTaskToUpdate.getEpicId());
-        if(epic == null){
+        if (epic == null) {
             return result;
         }
         epic.getSubTaskStorageForEpic().saveInStorage(subTaskToUpdate.getId(), subTaskToUpdate);
@@ -298,13 +298,13 @@ public class InMemoryTaskManager implements TaskManager{
      * @return String Информация о статусе удаления подзадачи
      */
     @Override
-    public String removeSubTask(int subId){
+    public String removeSubTask(int subId) {
         return taskRemover.removeSubTask(subId, epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 
-// Методы HistoryManager
+    // Методы HistoryManager
     @Override
-    public List<Task> getHistoryOfTasks(){
+    public List<Task> getHistoryOfTasks() {
         List<Task> listToReturn = inMemoryHistoryManager.getHistory();
         inMemoryHistoryManager.printHistory();
         return listToReturn;
