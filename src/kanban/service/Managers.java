@@ -16,31 +16,4 @@ public class Managers {
 
         return new InMemoryHistoryManager();
     }
-
-    public static FileBackedTaskManager getFileBackedTaskManager(){
-
-        Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
-        try{
-            if(!Files.exists(pathOfStorage)){
-                Files.createDirectory(pathOfStorage);
-            }
-        } catch(IOException e){
-            System.out.println("Ошибка при создании директории: ");
-            e.printStackTrace();
-        }
-
-        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath().toString()
-                + "/TaskStorage.csv");
-        try{
-
-            if(!Files.exists(pathOfFile)){
-                Files.createFile(pathOfFile);
-            }
-        }catch(IOException e){
-            System.out.println("Ошибка при создании файла хранения FileBackedTaskManager: ");
-            e.printStackTrace();
-        }
-
-        return new FileBackedTaskManager(pathOfFile);
-    }
 }
