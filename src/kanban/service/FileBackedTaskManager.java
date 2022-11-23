@@ -519,12 +519,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return result;
     }
-    @Override
-    public HashMap<Integer, Task> getSubTaskStorage() {
-        HashMap<Integer, Task> result = super.getSubTaskStorage();
-        save();
-        return result;
-    }
     private void restoreInMemoryEpicTask(EpicTask taskToRestore){
         epicTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
     }
