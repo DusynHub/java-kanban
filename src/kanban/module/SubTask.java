@@ -16,6 +16,18 @@ public class SubTask extends Task{
         super(id, name, description, status, type);
         this.epicId = epicId;
     }
+
+    public SubTask(SubTask otherSubTask) {
+
+        super(otherSubTask.getId()
+                , otherSubTask.getName()
+                ,otherSubTask.getDescription()
+                , otherSubTask.getStatus()
+                , otherSubTask.getType());
+        this.epicId = otherSubTask.getEpicId();
+    }
+
+
     @Override
     public  String toString() {
         return "SubTask { \n"
@@ -36,7 +48,7 @@ public class SubTask extends Task{
         if (this == o) return true;
         if (!(o instanceof SubTask)) return false;
         SubTask otherTask = (SubTask) o;
-        return getId() == otherTask.getId()
+        return  getId() == otherTask.getId()
                 && getName().equals(otherTask.getName())
                 && getDescription().equals(otherTask.getDescription())
                 && epicId == otherTask.getEpicId()

@@ -1,5 +1,6 @@
 package kanban.module.storage;
 
+import kanban.module.RegularTask;
 import kanban.module.Task;
 
 import java.util.HashMap;
@@ -39,5 +40,32 @@ public class RegularTaskStorage extends TaskStorage {
             System.out.print("=");
         }
         System.out.println();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof RegularTaskStorage)) return false;
+        RegularTaskStorage otherStorage = (RegularTaskStorage) o;
+
+        boolean result =  true;
+
+        for(Integer key : storage.keySet()){
+            if(otherStorage.getStorage().containsKey(key) == false){
+                result = false;
+            } else{
+                RegularTask thisRegularTask = (RegularTask) this.getStorage().get(key);
+                RegularTask toCheck = (RegularTask) otherStorage.getStorage().get(key);
+                if(thisRegularTask.equals(toCheck) == false){
+                    result =false;
+                }
+            }
+        }
+        return result;
     }
 }

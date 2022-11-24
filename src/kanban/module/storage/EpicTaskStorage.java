@@ -1,4 +1,6 @@
 package kanban.module.storage;
+import kanban.module.EpicTask;
+import kanban.module.RegularTask;
 import kanban.module.Task;
 import java.util.HashMap;
 
@@ -37,5 +39,33 @@ public class EpicTaskStorage extends TaskStorage {
             System.out.print("=");
         }
         System.out.println();
+    }
+
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof EpicTaskStorage)) return false;
+        EpicTaskStorage otherStorage = (EpicTaskStorage) o;
+
+        boolean result =  true;
+
+        for(Integer key : storage.keySet()){
+            if(otherStorage.getStorage().containsKey(key) == false){
+                result = false;
+            } else{
+                EpicTask thisEpicTask = (EpicTask) this.getStorage().get(key);
+                EpicTask toCheck = (EpicTask) otherStorage.getStorage().get(key);
+                if(thisEpicTask.equals(toCheck) == false){
+                    result =false;
+                }
+            }
+        }
+        return result;
     }
 }

@@ -100,14 +100,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         SubTask subTaskCookRice1;
         SubTask subTaskCookRice2;
 
-        System.out.println(fileBackedTaskManager.createRegularTask(theBigLebowskiTask));
-        System.out.println(fileBackedTaskManager.createRegularTask(deathTask));
-        System.out.println(fileBackedTaskManager.createRegularTask(resentmentTask));
-        System.out.println(fileBackedTaskManager.createRegularTask(importantTask));
+        fileBackedTaskManager.createRegularTask(theBigLebowskiTask);
+        fileBackedTaskManager.createRegularTask(deathTask);
+        fileBackedTaskManager.createRegularTask(resentmentTask);
+        fileBackedTaskManager.createRegularTask(importantTask);
 
-        System.out.println(fileBackedTaskManager.createEpicTask(cookRice));
-        System.out.println(fileBackedTaskManager.createEpicTask(doPracticumHomework));
-        System.out.println(fileBackedTaskManager.createEpicTask(doTraining));
+        fileBackedTaskManager.createEpicTask(cookRice);
+        fileBackedTaskManager.createEpicTask(doPracticumHomework);
+        fileBackedTaskManager.createEpicTask(doTraining);
 
         Iterator<Integer> it = fileBackedTaskManager.getEpicTaskStorage().keySet().iterator();
 
@@ -125,49 +125,43 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 "Не уходить с кухни",
                 StatusName.NEW, TaskType.SUBTASK, existingEpicId);
 
-        System.out.println(fileBackedTaskManager.createSubTask(subTaskCookRice1));
-        System.out.println(fileBackedTaskManager.createSubTask(subTaskCookRice2));
+        fileBackedTaskManager.createSubTask(subTaskCookRice1);
+        fileBackedTaskManager.createSubTask(subTaskCookRice2);
 
         for (Integer key : fileBackedTaskManager.getRegularTaskStorage().keySet()) {
-            System.out.println(fileBackedTaskManager.getRegularTask(key));
+            fileBackedTaskManager.getRegularTask(key);
         }
-
 
         for (Integer key : fileBackedTaskManager.getSubTaskStorage().keySet()) {
-            System.out.println(fileBackedTaskManager.getSubTask(key));
+            fileBackedTaskManager.getSubTask(key);
         }
 // Вызов несуществующей задачи
-        System.out.println(fileBackedTaskManager.getSubTask(-354));
+        //fileBackedTaskManager.getSubTask(-354);
 
         for (Integer key : fileBackedTaskManager.getEpicTaskStorage().keySet()) {
-            System.out.println(fileBackedTaskManager.getEpicTask(key));
+            fileBackedTaskManager.getEpicTask(key);
         }
-
-        System.out.println("\nИстория вызовов первого менеджера");
-        fileBackedTaskManager.getHistoryOfTasks();
 
         System.out.println();
 
         FileBackedTaskManager fileBackedTaskManager2
                 = FileBackedTaskManager.loadFromFile(pathOfStorage);
-        System.out.println("\nИстория вызовов второго менеджера");
-        fileBackedTaskManager2.getHistoryOfTasks();
 
+        boolean isRTStoragesEqual
+                = fileBackedTaskManager.getRegularTaskStorage().equals(fileBackedTaskManager2.getRegularTaskStorage());
+        boolean isETCStoragesEqual
+                = fileBackedTaskManager.getEpicTaskStorage().equals(fileBackedTaskManager2.getEpicTaskStorage());
+        boolean isSBTtoragesEqual
+                = fileBackedTaskManager.getSubTaskStorage().equals(fileBackedTaskManager2.getSubTaskStorage());
+        boolean isHistoriesEqual
+                = fileBackedTaskManager.getHistoryOfTasks().equals(fileBackedTaskManager2.getHistoryOfTasks());
 
-        System.out.println("\nПеречень обычных задач первого менеджера");
-        fileBackedTaskManager.printRegularTaskStorage();
-        System.out.println("\nПеречень обычных задач второго менеджера");
-        fileBackedTaskManager2.printRegularTaskStorage();
-
-        System.out.println("\nПеречень эпик задач первого менеджера");
-        fileBackedTaskManager.printEpicTaskStorage();
-        System.out.println("\nПеречень эпик задач второго менеджера");
-        fileBackedTaskManager2.printEpicTaskStorage();
-
-        System.out.println("\nПеречень подзадач первого менеджера");
-        fileBackedTaskManager.printSubTaskStorage();
-        System.out.println("\nПеречень подзадач второго менеджера");
-        fileBackedTaskManager2.printSubTaskStorage();
+        System.out.println();
+        System.out.println("Равны ли хранилища Обычных задач ? --> " + isRTStoragesEqual);
+        System.out.println("Равны ли хранилища Эпик задач ? --> " + isETCStoragesEqual);
+        System.out.println("Равны ли хранилища Подзадач ? --> " + isSBTtoragesEqual);
+        System.out.println("Равны ли хранилища Подзадач ? --> " + isSBTtoragesEqual);
+        System.out.println("Равны ли истории вызовов ? --> " + isHistoriesEqual);
     }
 
     public FileBackedTaskManager() {
@@ -300,17 +294,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         restoreHistoryFromCSV(history);
-
         taskCreator.setCountId(countIdToRestore);
 
         if (countIdToRestore == 0) {
             System.out.println("Создан новый  Менеджер задач");
         } else {
             System.out.println("Менедежер задач загрузил информацию о задачах");
-            System.out.println("Общее количество созданных за время работы менеджера" +
-                    " задач равно: " + countIdToRestore);
         }
-
     }
 
     private void restoreHistoryFromCSV(ArrayList<String[]> history) {
@@ -544,5 +534,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void restoreInMemoryEpicTask(EpicTask taskToRestore) {
         epicTaskStorage.saveInStorage(taskToRestore.getId(), taskToRestore);
+    }
+// Получение списка просмотренных по id задач
+    public List<Task> getHistoryOfTasks() {
+        List<Task> listToReturn = inMemoryHistoryManager.getHistory();
+        return listToReturn;
     }
 }

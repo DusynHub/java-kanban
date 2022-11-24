@@ -1,7 +1,11 @@
 package kanban.module.storage;
 
+import kanban.module.RegularTask;
+import kanban.module.SubTask;
 import kanban.module.Task;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class SubTaskStorage extends TaskStorage {
     @Override
@@ -38,5 +42,19 @@ public class SubTaskStorage extends TaskStorage {
             System.out.print("=");
         }
         System.out.println();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof SubTaskStorage)) return false;
+        SubTaskStorage otherStorage = (SubTaskStorage) o;
+        HashMap<Integer, Task> otherHashMap = otherStorage.getStorage();
+        return storage.equals(otherHashMap);
     }
 }

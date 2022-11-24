@@ -14,7 +14,6 @@ public class InMemoryHistoryManager implements HistoryManager{
     public void add(Task task) {
           if(linkedStorage.wasTaskCalledBefore(task)){
               int taskIdToAdd = TaskIdGetter.getTaskId(task);
-
               linkedStorage.remove(linkedStorage.getNode(taskIdToAdd));
           }
           linkedStorage.addLast(task);
