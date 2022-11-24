@@ -1,6 +1,5 @@
 package kanban.module.storage;
 import kanban.module.EpicTask;
-import kanban.module.RegularTask;
 import kanban.module.Task;
 import java.util.HashMap;
 
@@ -56,12 +55,12 @@ public class EpicTaskStorage extends TaskStorage {
         boolean result =  true;
 
         for(Integer key : storage.keySet()){
-            if(otherStorage.getStorage().containsKey(key) == false){
+            if(!otherStorage.getStorage().containsKey(key)){
                 result = false;
             } else{
                 EpicTask thisEpicTask = (EpicTask) this.getStorage().get(key);
                 EpicTask toCheck = (EpicTask) otherStorage.getStorage().get(key);
-                if(thisEpicTask.equals(toCheck) == false){
+                if(!thisEpicTask.equals(toCheck)){
                     result =false;
                 }
             }

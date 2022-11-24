@@ -537,7 +537,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 // Получение списка просмотренных по id задач
     public List<Task> getHistoryOfTasks() {
-        List<Task> listToReturn = inMemoryHistoryManager.getHistory();
-        return listToReturn;
+        return inMemoryHistoryManager.getHistory();
     }
 }

@@ -56,12 +56,12 @@ public class RegularTaskStorage extends TaskStorage {
         boolean result =  true;
 
         for(Integer key : storage.keySet()){
-            if(otherStorage.getStorage().containsKey(key) == false){
+            if(!otherStorage.getStorage().containsKey(key)){
                 result = false;
             } else{
                 RegularTask thisRegularTask = (RegularTask) this.getStorage().get(key);
                 RegularTask toCheck = (RegularTask) otherStorage.getStorage().get(key);
-                if(thisRegularTask.equals(toCheck) == false){
+                if(!thisRegularTask.equals(toCheck)){
                     result =false;
                 }
             }
