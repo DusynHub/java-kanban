@@ -95,7 +95,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         FileBackedTaskManager fileBackedTaskManager
-                = FileBackedTaskManager.loadFromFile(pathOfStorage);
+                = FileBackedTaskManager.loadFromFile(pathOfFile);
 
         SubTask subTaskCookRice1;
         SubTask subTaskCookRice2;
@@ -135,8 +135,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         for (Integer key : fileBackedTaskManager.getSubTaskStorage().keySet()) {
             fileBackedTaskManager.getSubTask(key);
         }
-// Вызов несуществующей задачи
-        //fileBackedTaskManager.getSubTask(-354);
 
         for (Integer key : fileBackedTaskManager.getEpicTaskStorage().keySet()) {
             fileBackedTaskManager.getEpicTask(key);
@@ -145,7 +143,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         System.out.println();
 
         FileBackedTaskManager fileBackedTaskManager2
-                = FileBackedTaskManager.loadFromFile(pathOfStorage);
+                = FileBackedTaskManager.loadFromFile(pathOfFile);
 
         boolean isRTStoragesEqual
                 = fileBackedTaskManager.getRegularTaskStorage().equals(fileBackedTaskManager2.getRegularTaskStorage());
@@ -166,33 +164,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager() {
 
-        Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
-        try {
-            if (!Files.exists(pathOfStorage)) {
-                Files.createDirectory(pathOfStorage);
-            }
-        } catch (IOException e) {
-            throw new ManagerSaveException(e, "Ошибка при создании директории для хранения файла "
-                    + "с состоянием менеджера");
-        }
+    }
 
-        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath() + "/TaskStorage.csv");
-        try {
-
-            if (!Files.exists(pathOfFile)) {
-                Files.createFile(pathOfFile);
-            }
-        } catch (IOException e) {
-            throw new ManagerSaveException(e, "Ошибка при создании файла "
-                    + "хранения состояния FileBackedTaskManager");
-        }
+    public FileBackedTaskManager(Path pathOfFile) {
 
         this.fileToSaveCondition = pathOfFile;
         restoreCondition(pathOfFile);
     }
 
     public static FileBackedTaskManager loadFromFile(Path pathOfFile) {
-        return new FileBackedTaskManager();
+        return new FileBackedTaskManager(pathOfFile);
     }
 
     private void save() {
