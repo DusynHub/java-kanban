@@ -12,9 +12,9 @@ public class TaskGetter {
 
     // Методы для RegularTask
     public HashMap<Integer, Task> getRegularTaskStorage(RegularTaskStorage regularTaskStorage) {
-        if(regularTaskStorage.getStorage().isEmpty()){
-            System.out.println("Ни одной подзадачи не было создано. Возвращено null");
-        }
+//        if(regularTaskStorage.getStorage().isEmpty()){
+//            System.out.println("Ни одной подзадачи не было создано. Возвращено null");
+//        }
         return regularTaskStorage.getStorage();
     }
     public Task getRegularTask(int regularId, RegularTaskStorage regularTaskStorage){
@@ -34,9 +34,9 @@ public class TaskGetter {
 
     //Методы для EpicTask
     public HashMap<Integer, Task> getEpicTaskStorage(EpicTaskStorage epicTaskStorage) {
-        if(epicTaskStorage.getStorage().isEmpty()){
-            System.out.println("Ни одной эпик задачи не было создано. Возвращено null");
-        }
+//        if(epicTaskStorage.getStorage().isEmpty()){
+//            System.out.println("Ни одной эпик задачи не было создано. Возвращено null");
+//        }
         return epicTaskStorage.getStorage();
     }
     public Task getEpicTask(int epicId, EpicTaskStorage epicTaskStorage){
@@ -71,9 +71,9 @@ public class TaskGetter {
 
     // Методы для SubTask
     public HashMap<Integer, Task> getSubTaskStorage(SubTaskStorage subTaskStorage) {
-        if(subTaskStorage.getStorage().isEmpty()){
-            System.out.println("Ни одной эпик задачи не было создано. Возвращено null");
-        }
+//        if(subTaskStorage.getStorage().isEmpty()){
+//            System.out.println("Ни одной эпик задачи не было создано. Возвращено null");
+//        }
         return subTaskStorage.getStorage();
     }
     public Task getSubTask(int subId, SubTaskStorage subTaskStorage){

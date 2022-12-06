@@ -23,6 +23,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     protected final String COUNT_ID_SEPARATOR = "BELOW_THIS_ROW_CONT_ID_VALUE";
     Path fileToSaveCondition;
 
+    /*
     public static void main(String[] args) {
 
         Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
@@ -161,6 +162,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         System.out.println("Равны ли хранилища Подзадач ? --> " + isSBTtoragesEqual);
         System.out.println("Равны ли истории вызовов ? --> " + isHistoriesEqual);
     }
+    */
+
 
     public FileBackedTaskManager() {
 
@@ -277,11 +280,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         restoreHistoryFromCSV(history);
         taskCreator.setCountId(countIdToRestore);
 
-        if (countIdToRestore == 0) {
-            System.out.println("Создан новый  Менеджер задач");
-        } else {
-            System.out.println("Менедежер задач загрузил информацию о задачах");
-        }
+//        if (countIdToRestore == 0) {
+//            System.out.println("Создан новый  Менеджер задач");
+//        } else {
+//            System.out.println("Менедежер задач загрузил информацию о задачах");
+//        }
     }
 
     private void restoreHistoryFromCSV(ArrayList<String[]> history) {
@@ -519,5 +522,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 // Получение списка просмотренных по id задач
     public List<Task> getHistoryOfTasks() {
         return inMemoryHistoryManager.getHistory();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FileBackedTaskManager)) return false;
+        if (!super.equals(o)) return false;
+        FileBackedTaskManager that = (FileBackedTaskManager) o;
+        return Objects.equals(this.getRegularTaskStorage(), that.getRegularTaskStorage())
+                && Objects.equals(this.getEpicTaskStorage(), that.getEpicTaskStorage())
+                && Objects.equals(this.subTaskStorageForTaskManager, that.subTaskStorageForTaskManager)
+                && Objects.equals(this.getHistoryOfTasks(), that.getHistoryOfTasks());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(),Objects.hash(super.hashCode(), fileToSaveCondition));
     }
 }

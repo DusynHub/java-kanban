@@ -8,6 +8,7 @@ import kanban.module.storage.TaskStorage;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Класс TaskManager для управления трекером задач
@@ -308,6 +309,22 @@ public class InMemoryTaskManager implements TaskManager {
         List<Task> listToReturn = inMemoryHistoryManager.getHistory();
         inMemoryHistoryManager.printHistory();
         return listToReturn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InMemoryTaskManager)) return false;
+        InMemoryTaskManager that = (InMemoryTaskManager) o;
+        return Objects.equals(this.getRegularTaskStorage(), that.getRegularTaskStorage())
+                && Objects.equals(this.getEpicTaskStorage(), that.getEpicTaskStorage())
+                && Objects.equals(this.subTaskStorageForTaskManager, that.subTaskStorageForTaskManager)
+                && Objects.equals(this.getHistoryOfTasks(), that.getHistoryOfTasks());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRegularTaskStorage(), getEpicTaskStorage(), subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 }
 

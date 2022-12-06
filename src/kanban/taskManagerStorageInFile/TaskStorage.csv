@@ -1,61 +1,9 @@
 ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK
-0|REGULAR_TASK|Задача Лебовски|Где деньги, Лебовски?|NEW|
-1|REGULAR_TASK|Что такое Смерть?|Смерть — это то, что бывает с другими|IN_PROGRESS|
-2|REGULAR_TASK|Как обижать людей?|Он всегда недолюбливал людей, которые «никого не хотели обидеть». Удобная фраза: произнес ее — и обижай кого хочешь.|NEW|
-18|REGULAR_TASK|Задача Лебовски|Где деньги, Лебовски?|NEW|
-3|REGULAR_TASK|Найти ответ на главный вопрос жизни, вселенной и всего такого|Может быть это 6 х 9 ?|IN_PROGRESS|
-19|REGULAR_TASK|Что такое Смерть?|Смерть — это то, что бывает с другими|IN_PROGRESS|
-20|REGULAR_TASK|Как обижать людей?|Он всегда недолюбливал людей, которые «никого не хотели обидеть». Удобная фраза: произнес ее — и обижай кого хочешь.|NEW|
-21|REGULAR_TASK|Найти ответ на главный вопрос жизни, вселенной и всего такого|Может быть это 6 х 9 ?|IN_PROGRESS|
-9|REGULAR_TASK|Задача Лебовски|Где деньги, Лебовски?|NEW|
-10|REGULAR_TASK|Что такое Смерть?|Смерть — это то, что бывает с другими|IN_PROGRESS|
-11|REGULAR_TASK|Как обижать людей?|Он всегда недолюбливал людей, которые «никого не хотели обидеть». Удобная фраза: произнес ее — и обижай кого хочешь.|NEW|
-12|REGULAR_TASK|Найти ответ на главный вопрос жизни, вселенной и всего такого|Может быть это 6 х 9 ?|IN_PROGRESS|
-4|EPIC_TASK|Приготовить рис|Нужен гарнир из коричневого риса|IN_PROGRESS|
-5|EPIC_TASK|Выполнить домашнее задание практикума|Нужно успеть до 09.10.2022|NEW|
-6|EPIC_TASK|Выполнить треннировку|Выполнить 3 упражнения по 10 подходов|NEW|
-22|EPIC_TASK|Приготовить рис|Нужен гарнир из коричневого риса|NEW|
-23|EPIC_TASK|Выполнить домашнее задание практикума|Нужно успеть до 09.10.2022|NEW|
-24|EPIC_TASK|Выполнить треннировку|Выполнить 3 упражнения по 10 подходов|NEW|
-13|EPIC_TASK|Приготовить рис|Нужен гарнир из коричневого риса|NEW|
-14|EPIC_TASK|Выполнить домашнее задание практикума|Нужно успеть до 09.10.2022|NEW|
-15|EPIC_TASK|Выполнить треннировку|Выполнить 3 упражнения по 10 подходов|NEW|
-16|SUBTASK|Промыть рис|Желательно 400 гр|DONE|4
-17|SUBTASK|Варить 10 минут|Не уходить с кухни|NEW|4
-7|SUBTASK|Промыть рис|Желательно 400 гр|DONE|4
-8|SUBTASK|Варить 10 минут|Не уходить с кухни|NEW|4
-25|SUBTASK|Промыть рис|Желательно 400 гр|DONE|4
-26|SUBTASK|Варить 10 минут|Не уходить с кухни|NEW|4
+0|EPIC_TASK|0 epic|epic with id 0|NEW|
+1|EPIC_TASK|1 epic|epic with id 1|NEW|
 
 BELOW_THIS_ROW_HISTORY_DATA
 ID|TASK_TYPE
-0|REGULAR_TASK
-1|REGULAR_TASK
-2|REGULAR_TASK
-18|REGULAR_TASK
-3|REGULAR_TASK
-19|REGULAR_TASK
-20|REGULAR_TASK
-21|REGULAR_TASK
-9|REGULAR_TASK
-10|REGULAR_TASK
-11|REGULAR_TASK
-12|REGULAR_TASK
-16|SUBTASK
-17|SUBTASK
-7|SUBTASK
-8|SUBTASK
-25|SUBTASK
-26|SUBTASK
-4|EPIC_TASK
-5|EPIC_TASK
-6|EPIC_TASK
-22|EPIC_TASK
-23|EPIC_TASK
-24|EPIC_TASK
-13|EPIC_TASK
-14|EPIC_TASK
-15|EPIC_TASK
 
 BELOW_THIS_ROW_CONT_ID_VALUE
-COUNT_ID|27
+COUNT_ID|2
