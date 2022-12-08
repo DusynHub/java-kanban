@@ -9,14 +9,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class TaskUpdater {
-    public String updateRegularTask(RegularTask regularTaskToUpdate, RegularTaskStorage regularTaskStorage) {
-
+    public String updateRegularTask(RegularTask regularTaskToUpdate
+                                    , RegularTaskStorage regularTaskStorage
+                                    )
+    {
         HashMap<Integer, Task> storage = regularTaskStorage.getStorage();
         if(storage.containsKey(regularTaskToUpdate.getId())){
             storage.put(regularTaskToUpdate.getId(), regularTaskToUpdate);
             return "Задача c id = "+ regularTaskToUpdate.getId() + " обновлена.";
         } else {
-            return "Задача отсутствует c id = " + regularTaskToUpdate.getId() + ". Сначала создайте задачу с соответвующим id. Обновление невозможно.";
+            return "Задача отсутствует c id = " + regularTaskToUpdate.getId()
+                    + ". Сначала создайте задачу с соответвующим id. Обновление невозможно.";
         }
     }
     public String updateEpicTask(EpicTask epicTaskToUpdate, EpicTaskStorage epicTaskStorage) {
@@ -37,7 +40,11 @@ public class TaskUpdater {
         }
     }
 
-    public String updateSubTask(SubTask subTaskToUpdate, SubTaskStorage subTaskStorage, EpicTaskStorage epicTaskStorage) {
+    public String updateSubTask(SubTask subTaskToUpdate
+                                , SubTaskStorage subTaskStorage
+                                , EpicTaskStorage epicTaskStorage
+                                )
+    {
 
         HashMap<Integer, Task> storage = subTaskStorage.getStorage();
         if(storage.containsKey(subTaskToUpdate.getId())){
@@ -47,7 +54,8 @@ public class TaskUpdater {
 
             return "Подзадача c id = " + subTaskToUpdate.getId() + " обновлена";
         } else {
-            return "Подзадача отсутствует c id = " + subTaskToUpdate.getId() + ". Сначала создайте подзадачу с соответвующим id. Обновление невозможно.";
+            return "Подзадача отсутствует c id = " + subTaskToUpdate.getId()
+                    + ". Сначала создайте подзадачу с соответвующим id. Обновление невозможно.";
         }
     }
 

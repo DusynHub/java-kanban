@@ -10,9 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+
 
     Path pathOfFile;
     @BeforeEach
@@ -48,6 +49,8 @@ class FileBackedTaskManagerTest {
             System.out.println("Ошибка при создании файла хранения FileBackedTaskManager: ");
             e.printStackTrace();
         }
+
+        taskManager = new FileBackedTaskManager(pathOfFile);
     }
     @Test
     public void shouldReturnTrueForComparisonOfTwoEmptyFileBackedTaskManagers(){
@@ -107,20 +110,20 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
 
         RegularTask regularWithId0 = new RegularTask(
-                                                    0
-                                                    ,"0 regular"
-                                                    ,"regular with id 0"
-                                                    , StatusName.NEW
-                                                    , TaskType.REGULAR_TASK
-                                                     );
+                0
+                ,"0 regular"
+                ,"regular with id 0"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+        );
         fileBackedTaskManager.createRegularTask(regularWithId0);
 
         EpicTask epicWithId1 = new EpicTask(
-                                            1
-                                            , "1 epic"
-                                            , "epic with id 1"
-                                            , TaskType.EPIC_TASK
-                                            );
+                1
+                , "1 epic"
+                , "epic with id 1"
+                , TaskType.EPIC_TASK
+        );
 
         fileBackedTaskManager.createEpicTask(epicWithId1);
 
@@ -132,13 +135,13 @@ class FileBackedTaskManagerTest {
         }
 
         SubTask subTaskWithId2 = new SubTask(
-                                                2
-                                                , "2 subtask"
-                                                , "subtask with id 2"
-                                                , StatusName.NEW
-                                                , TaskType.SUBTASK
-                                                , existingEpicId
-                                                );
+                2
+                , "2 subtask"
+                , "subtask with id 2"
+                , StatusName.NEW
+                , TaskType.SUBTASK
+                , existingEpicId
+        );
 
         fileBackedTaskManager.createSubTask(subTaskWithId2);
 
@@ -179,4 +182,5 @@ class FileBackedTaskManagerTest {
 
         assertEquals(fileBackedTaskManager, fileBackedTaskManager2);
     }
+
 }

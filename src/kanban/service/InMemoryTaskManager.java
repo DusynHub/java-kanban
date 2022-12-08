@@ -66,7 +66,6 @@ public class InMemoryTaskManager implements TaskManager {
     public String clearRegularTaskStorage() {
         return taskRemover.removeAllRegularTasks(regularTaskStorage, inMemoryHistoryManager);
     }
-
     /**
      * Возвращает обычную задачу по id задачи, если она создана.
      * Если задачи нет, то возвращает null

@@ -1,9 +1,10 @@
 ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK
-0|EPIC_TASK|0 epic|epic with id 0|NEW|
-1|EPIC_TASK|1 epic|epic with id 1|NEW|
+0|EPIC_TASK|Приготовить рис|Нужен гарнир из коричневого риса|IN_PROGRESS|
+1|SUBTASK|Промыть рис|Желательно 400 гр|IN_PROGRESS|0
+2|SUBTASK|Варить 10 минут|Не уходить с кухни|IN_PROGRESS|0
 
 BELOW_THIS_ROW_HISTORY_DATA
 ID|TASK_TYPE
 
 BELOW_THIS_ROW_CONT_ID_VALUE
-COUNT_ID|2
+COUNT_ID|3

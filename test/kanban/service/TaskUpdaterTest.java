@@ -55,7 +55,7 @@ class TaskUpdaterTest {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(pathOfFile);
     }
     @Test
-    public void ShouldReturnNewStatusForEpicWithoutSubtasks() {
+    public void ShouldSetNewStatusForEpicWithoutSubtasks() {
         EpicTask cookRice = new EpicTask(
                 0,
                 "Приготовить рис",
@@ -76,7 +76,7 @@ class TaskUpdaterTest {
         assertSame(StatusName.NEW, resTask.getStatus());
     }
     @Test
-    public void ShouldReturnNewStatusForEpicWithTwoSubtasksHavingNewStatus() {
+    public void ShouldSetNewStatusForEpicWithTwoNewSubtasks() {
         EpicTask cookRice = new EpicTask(
                 0,
                 "Приготовить рис",
@@ -109,7 +109,7 @@ class TaskUpdaterTest {
         assertSame(StatusName.NEW, resTask.getStatus());
     }
     @Test
-    public void ShouldReturnInProgressStatusForEpicWithDoneAndNewSubstasks() {
+    public void ShouldSetInProgressStatusForEpicWithDoneAndNewSubstasks() {
         EpicTask cookRice = new EpicTask(
                 0,
                 "Приготовить рис",
@@ -142,7 +142,7 @@ class TaskUpdaterTest {
         assertSame(StatusName.IN_PROGRESS, resTask.getStatus());
     }
     @Test
-    public void ShouldReturnInProgressStatusForEpicWithTwoInProgressSubtasks() {
+    public void ShouldSetInProgressStatusForEpicWithTwoInProgressSubtasks() {
         EpicTask cookRice = new EpicTask(
                 0,
                 "Приготовить рис",
@@ -175,7 +175,7 @@ class TaskUpdaterTest {
         assertSame(StatusName.IN_PROGRESS, resTask.getStatus());
     }
     @Test
-    public void ShouldReturnDoneStatusForEpicWithTwoSubtasksHavingDoneStatus() {
+    public void ShouldSetDoneStatusForEpicWithTwoSubtasksHavingDoneStatus() {
         EpicTask cookRice = new EpicTask(
                 0,
                 "Приготовить рис",
@@ -207,7 +207,5 @@ class TaskUpdaterTest {
 
         assertSame(StatusName.DONE, resTask.getStatus());
     }
-
-
 
 }
