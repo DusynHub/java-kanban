@@ -1,12 +1,28 @@
 package kanban.module;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SubTask extends Task{
     private final int epicId;
     public int getEpicId() {
         return epicId;
     }
+
+    public SubTask(int id
+            , String name
+            , String description
+            , StatusName status
+            , TaskType type
+            , Optional<Duration> duration
+            , Optional<ZonedDateTime> startTime
+            , int epicId) {
+        super(id, name, description, status, type, duration, startTime);
+        this.epicId = epicId;
+    }
+
     public SubTask(int id
                     , String name
                     , String description
@@ -30,12 +46,29 @@ public class SubTask extends Task{
 
     @Override
     public  String toString() {
+
+        String curDuration;
+        if(getDuration().isPresent()){
+            curDuration = String.valueOf( getDuration().get().toMinutes());
+        } else {
+            curDuration = "не задана";
+        }
+
+        String curStartTime;
+        if(getStartTime().isPresent()){
+            curStartTime = getStartTime().get().format(getFormatter());
+        } else {
+            curStartTime = "не задано";
+        }
+
         return "SubTask { \n"
          + "Epic id подзадачи = '" + epicId + "'\n"
          + "id подзадачи =  '" + getId() + "'\n"
          + "Подзадача = '" + getName() + "'\n"
          + "Длина описания = '" + getDescription().length() + "'\n"
          + "Cтатус подзадачи = '" + getStatus().getStatusName() + "'\n"
+         + "Продолжительность задачи = '" + curDuration + "'\n"
+         + "Время начала задачи = '" + curStartTime + "'\n"
          + "}";
     }
 
@@ -52,7 +85,9 @@ public class SubTask extends Task{
                 && getName().equals(otherTask.getName())
                 && getDescription().equals(otherTask.getDescription())
                 && epicId == otherTask.getEpicId()
-                && getStatus().equals(otherTask.getStatus());
+                && getStatus().equals(otherTask.getStatus())
+                && getDuration().equals(otherTask.getDuration())
+                && getStartTime().equals(otherTask.getStartTime());
     }
     @Override
     public String toStringForCSV() {

@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
-
-    Path pathOfFile;
+    private Path pathOfFile;
     @BeforeEach
     public void beforeEach(){
 
@@ -52,6 +54,8 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
         taskManager = new FileBackedTaskManager(pathOfFile);
     }
+
+    /*
     @Test
     public void shouldReturnTrueForComparisonOfTwoEmptyFileBackedTaskManagers(){
 
@@ -65,14 +69,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
         FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
 
-        RegularTask regularWithId0 = new RegularTask(
-                0
-                ,"0 regular"
-                ,"epic with id 0"
-                , StatusName.NEW
-                , TaskType.REGULAR_TASK
-        );
-        fileBackedTaskManager.createRegularTask(regularWithId0);
+        fileBackedTaskManager.createRegularTask(rt0);
 
         EpicTask epicWithId1 = new EpicTask(
                 1
@@ -90,16 +87,20 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
             existingEpicId = it.next();
         }
 
-        SubTask subTaskWithId2 = new SubTask(
+        SubTask sb2 = new SubTask(
                 2
                 , "Промыть рис"
                 , "Желательно 400 гр"
                 , StatusName.DONE
                 , TaskType.SUBTASK
+                , Duration.ofMinutes(60)
+                , ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 15, 12, 0)
+                , zone)
                 , existingEpicId
         );
 
-        fileBackedTaskManager.createSubTask(subTaskWithId2);
+        fileBackedTaskManager.createSubTask(sb2);
         FileBackedTaskManager  fileBackedTaskManager2 = new FileBackedTaskManager(pathOfFile);
 
         assertEquals(fileBackedTaskManager, fileBackedTaskManager2);
@@ -109,14 +110,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
         FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
 
-        RegularTask regularWithId0 = new RegularTask(
-                0
-                ,"0 regular"
-                ,"regular with id 0"
-                , StatusName.NEW
-                , TaskType.REGULAR_TASK
-        );
-        fileBackedTaskManager.createRegularTask(regularWithId0);
+        fileBackedTaskManager.createRegularTask(rt0);
 
         EpicTask epicWithId1 = new EpicTask(
                 1
@@ -134,16 +128,20 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
             existingEpicId = it.next();
         }
 
-        SubTask subTaskWithId2 = new SubTask(
+        SubTask sb2 = new SubTask(
                 2
-                , "2 subtask"
+                , "2 subtaskAAAAAAAA"
                 , "subtask with id 2"
                 , StatusName.NEW
                 , TaskType.SUBTASK
+                , Duration.ofMinutes(60)
+                , ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 15, 12, 0)
+                , zone)
                 , existingEpicId
         );
 
-        fileBackedTaskManager.createSubTask(subTaskWithId2);
+        fileBackedTaskManager.createSubTask(sb2);
 
 
         fileBackedTaskManager.getRegularTask(0);
@@ -182,5 +180,5 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
         assertEquals(fileBackedTaskManager, fileBackedTaskManager2);
     }
-
+    */
 }

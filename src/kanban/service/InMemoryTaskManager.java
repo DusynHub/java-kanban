@@ -6,9 +6,8 @@ import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
 import kanban.module.storage.TaskStorage;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 /**
  * Класс TaskManager для управления трекером задач
@@ -22,6 +21,25 @@ public class InMemoryTaskManager implements TaskManager {
     protected final EpicTaskStorage epicTaskStorage = new EpicTaskStorage();
     protected final SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
     protected final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+
+    protected final TreeSet<Task> prioritized = new TreeSet<>(new Comparator<Task>() {
+        @Override
+        public int compare(Task obj1, Task obj2) {
+            Optional<ZonedDateTime> t1 = obj1.getStartTime();
+            Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+            if (t1.isPresent() && t2.isPresent()) {
+                return t1.get().compareTo(t2.get());
+            } else if (t1.isPresent()) {
+                return -1;
+            } else if (t2.isPresent()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    });
+
 
     /**
      * Возвращает список всех обычных задач
@@ -45,6 +63,7 @@ public class InMemoryTaskManager implements TaskManager {
     public String createRegularTask(RegularTask task) {
         Task taskToSave = taskCreator.createRegularTask(task);
         regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
+        prioritized.add(taskToSave);
         return "Обычная задача c id = " + taskToSave.getId() + " создана";
     }
 
@@ -64,6 +83,13 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String clearRegularTaskStorage() {
+        List<Task> toDelete = new ArrayList<>();
+        for(Task task : prioritized){
+           if(task.getType() == TaskType.REGULAR_TASK){
+               toDelete.add(task);
+           }
+        }
+        prioritized.removeAll(toDelete);
         return taskRemover.removeAllRegularTasks(regularTaskStorage, inMemoryHistoryManager);
     }
     /**
@@ -232,6 +258,9 @@ public class InMemoryTaskManager implements TaskManager {
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToSave.getEpicId());
         epic.getSubTaskStorageForEpic().saveInStorage(taskToSave.getId(), taskToSave);
         taskUpdater.epicStatusUpdater(epic);
+        taskUpdater.epicDurationUpdater(epic);
+        taskUpdater.epicStartTimeUpdater(epic);
+
         return "Подзача задача c id = " + taskToSave.getId() + " создана";
     }
 
@@ -255,6 +284,8 @@ public class InMemoryTaskManager implements TaskManager {
             EpicTask epicTask = (EpicTask) storage.get(epicId);
             epicTask.getSubTaskStorageForEpic().clearStorage();
             taskUpdater.epicStatusUpdater(epicTask);
+            taskUpdater.epicDurationUpdater(epicTask);
+            taskUpdater.epicStartTimeUpdater(epicTask);
         }
         return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager, epicTaskStorage, inMemoryHistoryManager);
     }
@@ -288,6 +319,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
         epic.getSubTaskStorageForEpic().saveInStorage(subTaskToUpdate.getId(), subTaskToUpdate);
         taskUpdater.epicStatusUpdater(epic);
+        taskUpdater.epicDurationUpdater(epic);
+        taskUpdater.epicStartTimeUpdater(epic);
         return result;
     }
 
@@ -324,6 +357,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public int hashCode() {
         return Objects.hash(getRegularTaskStorage(), getEpicTaskStorage(), subTaskStorageForTaskManager, inMemoryHistoryManager);
+    }
+
+    public List<Task> getPrioritizedTasks(){
+
+        List<Task> result = new ArrayList<>(prioritized);
+        return result;
     }
 }
 

@@ -1,11 +1,15 @@
 package kanban.module;
 
 import kanban.module.storage.SubTaskStorage;
+
+import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class EpicTask extends Task{
 
     private final SubTaskStorage subTaskStorageForEpic = new SubTaskStorage();
+    private Optional<ZonedDateTime> endTime;
     public EpicTask(int id, String name, String description, TaskType type) {
         super(id, name, description, StatusName.NEW, type);
     }
@@ -25,10 +29,30 @@ public class EpicTask extends Task{
                 && getName().equals(otherTask.getName())
                 && getDescription().equals(otherTask.getDescription())
                 && getStatus().equals(otherTask.getStatus())
-                && subTaskStorageForEpic.equals(otherTask.getSubTaskStorageForEpic());
+                && getDuration().equals(otherTask.getDuration())
+                && getStartTime().equals(otherTask.getStartTime())
+                && endTime.equals(otherTask.getEndTime())
+                && subTaskStorageForEpic.equals(otherTask.getSubTaskStorageForEpic()
+                );
     }
     @Override
     public String toString() {
+
+        String curDuration;
+        if(getDuration().isPresent()){
+            curDuration = String.valueOf( getDuration().get().toMinutes());
+        } else {
+            curDuration = "не задана";
+        }
+
+        String curStartTime;
+        if(getStartTime().isPresent()){
+            curStartTime = getStartTime().get().format(getFormatter());
+        } else {
+            curStartTime = "не задано";
+        }
+
+
         return "EpicTask { \n"
                 + "id эпик задачи = '" + getId() + "'\n"
                 + "Эпик задача = '" + getName() + "'\n"
@@ -36,6 +60,8 @@ public class EpicTask extends Task{
                 + "Cтатус эпик задачи = '" + getStatus().getStatusName() + "'\n"
                 + "Количество подзадач в эпик задаче '"
                     + subTaskStorageForEpic.getStorage().size() + "'\n"
+                + "Продолжительность задачи = '" + curDuration + "'\n"
+                + "Время начала задачи = '" + curStartTime + "'\n"
                 + "}";
     }
 
@@ -47,5 +73,14 @@ public class EpicTask extends Task{
                 + getName() + delimiter
                 + getDescription() + delimiter
                 + getStatus().name() + delimiter;
+    }
+
+    @Override
+    public Optional<ZonedDateTime> getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Optional<ZonedDateTime> endTime) {
+        this.endTime = endTime;
     }
 }

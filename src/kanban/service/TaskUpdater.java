@@ -5,8 +5,11 @@ import kanban.module.storage.EpicTaskStorage;
 import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Optional;
 
 public class TaskUpdater {
     public String updateRegularTask(RegularTask regularTaskToUpdate
@@ -59,8 +62,6 @@ public class TaskUpdater {
         }
     }
 
-
-
     public void epicStatusUpdater(EpicTask epicTask){
         HashMap<Integer, Task> storage = epicTask.getSubTaskStorageForEpic().getStorage();
 
@@ -85,5 +86,75 @@ public class TaskUpdater {
             }
         }
         epicTask.setStatus(value);
+    }
+
+    public void epicStartTimeUpdater(EpicTask epicTask){
+        HashMap<Integer, Task> storage = epicTask.getSubTaskStorageForEpic().getStorage();
+
+        if(storage.isEmpty()){
+            epicTask.setStartTime(Optional.empty());
+            return;
+        }
+        epicTask.setStartTime(findMinStartTime(epicTask.getSubTaskStorageForEpic()));
+    }
+
+    public void epicDurationUpdater(EpicTask epicTask){
+        HashMap<Integer, Task> storage = epicTask.getSubTaskStorageForEpic().getStorage();
+
+        if(storage.isEmpty()){
+            epicTask.setDuration(Optional.empty());
+            return;
+        }
+        epicTask.setDuration(sumDuration(epicTask.getSubTaskStorageForEpic()));
+    }
+
+    public Optional<ZonedDateTime> findMinStartTime(SubTaskStorage subTaskStorage){
+
+        HashMap<Integer, Task> subTaskStorageFromEpic = subTaskStorage.getStorage();
+
+        if(subTaskStorageFromEpic.isEmpty()){
+            return Optional.empty();
+        }
+
+        Iterator<Task> it = subTaskStorageFromEpic.values().iterator();
+        Optional<ZonedDateTime> minStartTime = Optional.empty();
+
+        for(Task curTask : subTaskStorageFromEpic.values()){
+            if(minStartTime.isEmpty()){
+                minStartTime = curTask.getStartTime();
+                continue;
+            }
+            if(minStartTime.get().isAfter(curTask.getStartTime().get())){
+                minStartTime = curTask.getStartTime();
+            }
+
+        }
+        return minStartTime;
+
+    }
+
+    public Optional<Duration> sumDuration(SubTaskStorage subTaskStorage){
+
+        HashMap<Integer, Task> subTaskStorageFromEpic = subTaskStorage.getStorage();
+
+        if(subTaskStorageFromEpic.isEmpty()){
+            return Optional.empty();
+        }
+
+        Optional<Duration> sumDuration = Optional.empty();
+        for(Task curTask : subTaskStorageFromEpic.values()){
+            if(curTask.getDuration().isPresent()){
+                if(sumDuration.isEmpty()){
+                    sumDuration = curTask.getDuration();
+                } else {
+                    sumDuration = Optional.of(sumDuration.get()
+                                                        .plusMinutes(curTask
+                                                        .getDuration()
+                                                        .get().toMinutes())
+                                                );
+                }
+            }
+        }
+        return sumDuration;
     }
 }

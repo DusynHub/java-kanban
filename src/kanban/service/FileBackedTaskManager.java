@@ -478,6 +478,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToRestore.getEpicId());
         epic.getSubTaskStorageForEpic().saveInStorage(taskToRestore.getId(), taskToRestore);
         taskUpdater.epicStatusUpdater(epic);
+        taskUpdater.epicDurationUpdater(epic);
+        taskUpdater.epicStartTimeUpdater(epic);
     }
 
     // Методы для работы с эпик задачами
