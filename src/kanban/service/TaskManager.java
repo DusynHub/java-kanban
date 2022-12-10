@@ -9,6 +9,7 @@ import kanban.module.storage.TaskStorage;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -39,5 +40,8 @@ public interface TaskManager {
     String updateSubTask (SubTask subTaskToUpdate);
     String removeSubTask(int subId);
     List<Task> getHistoryOfTasks();
+    List<Task> getPrioritizedTasks();
+    TreeSet<Task> getPrioritized();
+
 }
 

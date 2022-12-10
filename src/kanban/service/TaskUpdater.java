@@ -4,20 +4,30 @@ import kanban.module.*;
 import kanban.module.storage.EpicTaskStorage;
 import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
+import kanban.util.StartDateValidator;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.TreeSet;
 
 public class TaskUpdater {
     public String updateRegularTask(RegularTask regularTaskToUpdate
                                     , RegularTaskStorage regularTaskStorage
-                                    )
+                                    , TreeSet<Task> prioritized)
     {
+        if(!StartDateValidator.validateStartDate(regularTaskToUpdate, prioritized)){
+            return "Время выполнения обновлённого RegularTask пересекается с имеющимися заданиями"
+                    + "Здача не была обновлена";
+
+        }
+
         HashMap<Integer, Task> storage = regularTaskStorage.getStorage();
         if(storage.containsKey(regularTaskToUpdate.getId())){
+            prioritized.remove(regularTaskStorage.getStorage().get(regularTaskToUpdate.getId()));
+            prioritized.add(regularTaskToUpdate);
             storage.put(regularTaskToUpdate.getId(), regularTaskToUpdate);
             return "Задача c id = "+ regularTaskToUpdate.getId() + " обновлена.";
         } else {
@@ -46,11 +56,17 @@ public class TaskUpdater {
     public String updateSubTask(SubTask subTaskToUpdate
                                 , SubTaskStorage subTaskStorage
                                 , EpicTaskStorage epicTaskStorage
-                                )
+                                , TreeSet<Task> prioritized)
     {
-
         HashMap<Integer, Task> storage = subTaskStorage.getStorage();
         if(storage.containsKey(subTaskToUpdate.getId())){
+            if(!StartDateValidator.validateStartDate(subTaskToUpdate, prioritized)){
+                return "Время выполнения обновлённого SubTask пересекается с имеющимися заданиями"
+                        + "Здача не была обновлена";
+
+            }
+            prioritized.remove(subTaskToUpdate);
+            prioritized.add(subTaskToUpdate);
             storage.put(subTaskToUpdate.getId(), subTaskToUpdate);
             EpicTask epicTask = (EpicTask) epicTaskStorage.getStorage().get(subTaskToUpdate.getEpicId());
             epicTask.getSubTaskStorageForEpic().saveInStorage(subTaskToUpdate.getId(), subTaskToUpdate);
