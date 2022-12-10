@@ -150,7 +150,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
 
         rt01 = new RegularTask(
-                0
+                11
                 , "0 RegularTask"
                 , "RegularTask with id 0"
                 , StatusName.IN_PROGRESS
@@ -775,166 +775,77 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.createEpicTask(et0);
         taskManager.createSubTask(st1);
-        HashMap<Integer, Task> expected = new HashMap<>(2);
+        HashMap<Integer, Task> expected = new HashMap<>(1);
         expected.put(1, st1);
-        assertEquals(expected, taskManager.getSubTaskStorage());
+        assertEquals(expected
+                , taskManager.getSubTaskStorage()
+                , "SubTaskStorage в менеджере содержит не одну задачу");
     }
 
     @Test
     public void shouldReturnSubTaskStorageFromEpicWithOneSubTask() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
 
+        taskManager.createEpicTask(et0);
         taskManager.createSubTask(st1);
-
-        HashMap<Integer, Task> expected = new HashMap<>(2);
+        HashMap<Integer, Task> expected = new HashMap<>(1);
         expected.put(1, st1);
-
-        assertEquals(expected, taskManager.getSubTaskStorageFromEpic(0).getStorage());
+        assertEquals(expected
+                , taskManager.getSubTaskStorageFromEpic(0).getStorage()
+                ,"SubTaskStorage в эпике содержит не одну задачу");
     }
 
     // тесты создания SubTask
     @Test
     public void shouldReturnMessageOnCreatingSubTaskIfEpicTaskDoNotExist() {
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-
-
         String expected =
-                "Подзадача c id" + subTaskWithId1.getId() + " не может быть создана. "
+                "Подзадача c id" + st1.getId() + " не может быть создана. "
                         + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
 
-        String result = taskManager.createSubTask(subTaskWithId1);
-
-        assertEquals(expected, result);
+        String result = taskManager.createSubTask(st1);
+        assertEquals(expected
+                , result
+                , "Некорректное сообщение при попытку создать SubTask у несуществующего Epic");
     }
 
     @Test
     public void shouldCreateSubTaskInSubTaskStorage() {
-
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
-
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
         SubTask result = (SubTask) taskManager.getSubTaskStorage().get(1);
-        assertEquals(subTaskWithId1, result);
+        assertEquals(st1
+                , result
+                , "В SubTaskStorage менеджера нет подзадачи");
     }
 
     @Test
     public void shouldCreateSubTaskInEpic() {
-
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
-
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
         SubTask result
                 = (SubTask) taskManager.getSubTaskStorageFromEpic(0).getStorage().get(1);
-        assertEquals(subTaskWithId1, result);
+        assertEquals(st1
+                , result
+                , "В SubTaskStorage эпика нет подзадачи");
     }
 
     @Test
     public void shouldCreate3SubTasksInSubTaskStorage() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "0 subtask"
-                , "subtask with id 0"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
-
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId2);
-
-        SubTask subTaskWithId3 = new SubTask(
-                3
-                , "3 subtask"
-                , "subtask with id 3"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 2
-        );
-        taskManager.createSubTask(subTaskWithId3);
-
-        EpicTask epicWithId4 = new EpicTask(
-                4
-                , "4 epic"
-                , "epic with id 4"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId4);
-
-        SubTask subTaskWithId5 = new SubTask(
-                5
-                , "5 subtask"
-                , "subtask with id 5"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 4
-        );
-        taskManager.createSubTask(subTaskWithId5);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+        taskManager.createEpicTask(et4);
+        taskManager.createSubTask(st5);
 
         HashMap<Integer, Task> expected = new HashMap<>(3);
-        expected.put(1, subTaskWithId1);
-        expected.put(3, subTaskWithId3);
-        expected.put(5, subTaskWithId5);
+        expected.put(1, st1);
+        expected.put(3, st3);
+        expected.put(5, st5);
 
-        assertEquals(expected, taskManager.getSubTaskStorage());
+        assertEquals(expected
+                , taskManager.getSubTaskStorage()
+                , "SubTaskStorage после создания трёх подзадач не соотвуетвует ожидаемому");
     }
 
     @Test
@@ -961,169 +872,71 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnEmptySubTaskStorageAfterClearingAlreadyEmptyStorage() {
         taskManager.clearSubTaskStorage();
-        assertTrue(taskManager.getSubTaskStorage().isEmpty());
+        assertTrue(taskManager.getSubTaskStorage().isEmpty()
+                , "SubTaskStorage в менеджере не "
+                        +"пустое после очистке уже пустого SubTaskStorage");
     }
 
     @Test
     public void shouldReturnEmptySubTaskStorageAfterClearing() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
 
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "0 subtask"
-                , "subtask with id 0"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId2);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
 
-        SubTask subTaskWithId3 = new SubTask(
-                3
-                , "3 subtask"
-                , "subtask with id 3"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 2
-        );
-        taskManager.createSubTask(subTaskWithId3);
+        taskManager.createEpicTask(et4);
+        taskManager.createSubTask(st5);
 
-        EpicTask epicWithId4 = new EpicTask(
-                4
-                , "4 epic"
-                , "epic with id 4"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId4);
-
-        SubTask subTaskWithId5 = new SubTask(
-                5
-                , "5 subtask"
-                , "subtask with id 5"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 4
-        );
-        taskManager.createSubTask(subTaskWithId5);
         taskManager.clearSubTaskStorage();
-        assertTrue(taskManager.getSubTaskStorage().isEmpty());
+        assertTrue(taskManager.getSubTaskStorage().isEmpty()
+                                 , "Не пустое SubTaskStorage в менеджере после очистки " );
     }
 
     @Test
     public void shouldReturnEmptySubTaskStorageInEpicAfterClearing() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
 
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId2);
-
-        SubTask subTaskWithId3 = new SubTask(
-                3
-                , "3 subtask"
-                , "subtask with id 3"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 2
-        );
-        taskManager.createSubTask(subTaskWithId3);
-
-        EpicTask epicWithId4 = new EpicTask(
-                4
-                , "4 epic"
-                , "epic with id 4"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId4);
-
-        SubTask subTaskWithId5 = new SubTask(
-                5
-                , "5 subtask"
-                , "subtask with id 5"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 4
-        );
-        taskManager.createSubTask(subTaskWithId5);
+        taskManager.createEpicTask(et4);
+        taskManager.createSubTask(st5);
         taskManager.clearSubTaskStorage();
 
-        assertTrue(taskManager.getSubTaskStorageFromEpic(4).getStorage().isEmpty());
+        assertTrue(taskManager.getSubTaskStorageFromEpic(4).getStorage().isEmpty()
+                , "Не пустое SubTaskStorage эпик после очитски");
     }
 
     // тесты получения SubTask по id
     @Test
     public void shouldReturnNullAfterCallingNonExistingSubTask() {
-        assertNull(taskManager.getSubTask(0));
+        assertNull(taskManager.getSubTask(0)
+                , "Не null при попытку получить SubTask до создания хотя бы одной SubTask");
     }
 
     @Test
     public void shouldReturnSubTaskWithId1FromManagersSubTaskStorage() {
-
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
-        assertEquals(subTaskWithId1, taskManager.getSubTask(1));
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        assertEquals(st1
+                        , taskManager.getSubTask(1)
+                        , "Возвращённая SubTask в SubTaskStorage в мендежере"
+                        +" не равна ожидаемой после создания одной SubTask");
     }
 
     @Test
     public void shouldReturnSubTaskWithId1FromEpic() {
-
-
         taskManager.createEpicTask(et0);
         taskManager.createSubTask(st1);
-
         assertEquals(
                 st1
                 , taskManager.getSubTaskStorageFromEpic(0).getStorage().get(1)
-        );
+                , "Возвращённая SubTask в SubTaskStorage в эпике"
+                        +" не равна ожидаемой после создания одной SubTask");
     }
 
     // тесты обновления SubTask
@@ -1136,6 +949,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , "subtask with id 1"
                 , StatusName.IN_PROGRESS
                 , TaskType.SUBTASK
+                , Optional.of(Duration.ofMinutes(60))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 11, 9, 0)
+                , zone))
                 , 0
         );
 
@@ -1162,6 +979,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , "subtask with id 124"
                 , StatusName.IN_PROGRESS
                 , TaskType.SUBTASK
+                , Optional.of(Duration.ofMinutes(60))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 11, 9, 0)
+                , zone))
                 , 124
         );
 
@@ -1189,6 +1010,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , "subtask with id 1"
                 , StatusName.DONE
                 , TaskType.SUBTASK
+                , Optional.of(Duration.ofMinutes(60))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 11, 9, 0)
+                , zone))
                 , 0
         );
         taskManager.updateSubTask(updateSubTaskWithId1);

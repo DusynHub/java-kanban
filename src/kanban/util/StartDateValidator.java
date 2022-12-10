@@ -18,6 +18,9 @@ public final class StartDateValidator {
         }
 
         for(Task priorTask : prioritized){
+            if(task.getId() == priorTask.getId()){
+                continue;
+            }
             if(priorTask.getStartTime().isPresent() && priorTask.getEndTime().isPresent()){
                 Boolean isTaskBeforePriorTask
                         = task.getEndTime().get().isBefore(priorTask.getStartTime().get());
