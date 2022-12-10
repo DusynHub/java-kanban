@@ -386,6 +386,34 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
+    public void shouldReturnMessageIfRegularTaskToUpdateHaveNotFreeStartTime() {
+
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        RegularTask updateRegularWithId0 = new RegularTask(
+                0
+                , "0 REGULAR"
+                , "REGULAR with id 0"
+                , StatusName.DONE
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(120))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 9, 9, 0)
+                , zone))
+        );
+        String expectedMessage
+                = "Время выполнения обновлённого RegularTask пересекается с имеющимися заданиями"
+                + "Здача не была обновлена";
+
+        String messageIfTaskToUpgradeDoesNotExist
+                = taskManager.updateRegularTask(updateRegularWithId0);
+
+        assertEquals(expectedMessage
+                , messageIfTaskToUpgradeDoesNotExist
+                , "Сообщения не совпадают");
+    }
+
+    @Test
     public void shouldReturnMessageIfRegularTaskToUpgradeDoNotExist() {
 
         taskManager.createRegularTask(rt0);
