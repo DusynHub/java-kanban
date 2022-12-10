@@ -8,8 +8,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +23,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
     static RegularTask rt0;
     static RegularTask rt1;
     static RegularTask rt2;
-    static SubTask sb1;
-    static SubTask sb2;
-    static SubTask sb3;
-    static SubTask sb5;
+    static RegularTask rt3;
+    static RegularTask rt4;
+    static RegularTask rt5;
+    static RegularTask rt6;
+    static RegularTask rt7;
+    static RegularTask rt8;
+    static RegularTask rt01;
+    static SubTask st1;
+    static SubTask st2;
+    static SubTask st3;
+    static SubTask st5;
+    static SubTask st02SameStartTimeAsRt0;
+    static EpicTask et0;
+    static EpicTask et1;
+    static EpicTask et2;
+    static EpicTask et3;
+    static EpicTask et4;
 
     @BeforeAll
     public static void beforeAll(){
@@ -61,7 +76,127 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(2022, 12, 10, 7, 0)
                 , zone))
         );
-        sb1 = new SubTask(
+
+        rt3 = new RegularTask(
+                3
+                , "3 RegularTask"
+                , "RegularTask with id 3"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(90))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 18, 11, 0)
+                , zone))
+        );
+
+        rt4 = new RegularTask(
+                4
+                , "4 RegularTask"
+                , "RegularTask with id 4"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(120))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 19, 13, 0)
+                , zone))
+        );
+
+        rt5 = new RegularTask(
+                5
+                , "5 RegularTask"
+                , "RegularTask with id 5"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(30))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 20, 8, 0)
+                , zone))
+        );
+
+        rt6 = new RegularTask(
+                6
+                , "6 RegularTask"
+                , "RegularTask with id 6"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(45))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 21, 15, 0)
+                , zone))
+        );
+
+        rt7 = new RegularTask(
+                7
+                , "7 RegularTask"
+                , "RegularTask with id 7"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(240))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 22, 16, 0)
+                , zone))
+        );
+
+        rt8 = new RegularTask(
+                8
+                , "8 RegularTask"
+                , "RegularTask with id 8"
+                , StatusName.NEW
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(45))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 11, 23, 8, 0)
+                , zone))
+        );
+
+        rt01 = new RegularTask(
+                0
+                , "0 RegularTask"
+                , "RegularTask with id 0"
+                , StatusName.IN_PROGRESS
+                , TaskType.REGULAR_TASK
+                , Optional.of(Duration.ofMinutes(60))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 8, 22, 1)
+                , zone))
+        );
+
+
+        et0 = new EpicTask(
+                0
+                , "0 epic"
+                , "epic with id 0"
+                , TaskType.EPIC_TASK
+        );
+
+        et1 = new EpicTask(
+                1
+                , "1 epic"
+                , "epic with id 1"
+                , TaskType.EPIC_TASK
+        );
+
+        et2 = new EpicTask(
+                2
+                , "2 epic"
+                , "epic with id 2"
+                , TaskType.EPIC_TASK
+        );
+
+        et3 = new EpicTask(
+                3
+                , "3 epic"
+                , "epic with id 3"
+                , TaskType.EPIC_TASK
+        );
+
+        et4 = new EpicTask(
+                4
+                , "4 epic"
+                , "epic with id 4"
+                , TaskType.EPIC_TASK
+        );
+        st1 = new SubTask(
                 1
                 , "1 subtask"
                 , "subtask with id 1"
@@ -73,8 +208,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , zone))
                 , 0
         );
-
-        sb2 = new SubTask(
+        st2 = new SubTask(
                 2
                 , "2 subtask"
                 , "subtask with id 2"
@@ -86,8 +220,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , zone))
                 , 0
         );
-
-        sb3 = new SubTask(
+        st3 = new SubTask(
                 3
                 , "3 subtask"
                 , "subtask with id 3"
@@ -99,8 +232,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , zone))
                 , 2
         );
-
-        sb5 = new SubTask(
+        st5 = new SubTask(
                 5
                 , "5 subtask"
                 , "subtask with id 5"
@@ -111,6 +243,19 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(2022, 12, 13, 13, 0)
                 , zone))
                 , 4
+        );
+
+        st02SameStartTimeAsRt0 = new SubTask(
+                2
+                , "2 subtask"
+                , "subtask with id 2"
+                , StatusName.IN_PROGRESS
+                , TaskType.SUBTASK
+                , Optional.of(Duration.ofMinutes(60))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 8, 21, 59)
+                , zone))
+                , 1
         );
     }
 // тесты методов для RegularTask
@@ -144,6 +289,22 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
+    public void shouldNotCreateRegularTaskWithSameDate() {
+
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt01);
+
+        HashMap<Integer, Task> expected = new HashMap<>(1);
+        expected.put(0, rt0);
+
+        HashMap<Integer, Task> result = taskManager.getRegularTaskStorage();
+
+        assertEquals(expected
+                , result
+                , "RegularTaskStorages не совпадают");
+    }
+
+    @Test
     public void shouldCreate3RegularTasksInRegularTaskStorage() {
 
         taskManager.createRegularTask(rt0);
@@ -155,8 +316,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         expected.put(1, rt1);
         expected.put(2, rt2);
 
+        HashMap<Integer, Task> result = taskManager.getRegularTaskStorage();
+
         assertEquals(expected
-                , taskManager.getRegularTaskStorage()
+                , result
                 , "RegularTaskStorages не совпадают");
     }
 
@@ -165,7 +328,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldReturnEmptyRegularTaskStorageAfterClearingAlreadyEmptyStorage() {
         taskManager.clearRegularTaskStorage();
         assertTrue(taskManager.getRegularTaskStorage().isEmpty()
-                , "RegularTaskStorage не пустое");
+                , "RegularTaskStorage не пустое при очистке уже пустого сообщения");
     }
 
     @Test
@@ -174,13 +337,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createRegularTask(rt0);
         taskManager.createRegularTask(rt1);
         taskManager.clearRegularTaskStorage();
-        assertTrue(taskManager.getRegularTaskStorage().isEmpty());
+        assertTrue(taskManager.getRegularTaskStorage().isEmpty()
+                , "RegularTaskStorage не пустое после очистке") ;
     }
 
     // тесты получения RegularTask по id
     @Test
     public void shouldReturnNullAfterCallingNonExistingRegularTask() {
-        assertNull(taskManager.getRegularTask(0));
+        assertNull(taskManager.getRegularTask(0)
+                , "При вызове RegularTask из пустого хранилища возращено не null");
     }
 
     @Test
@@ -193,7 +358,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , TaskType.REGULAR_TASK
         );
         taskManager.createRegularTask(regularWithId0);
-        assertEquals(regularWithId0, taskManager.getRegularTask(0));
+        assertEquals(regularWithId0, taskManager.getRegularTask(0)
+                , "Возвращённое RegularTask не соответствует ожидаемой RegularTask");
     }
 
     // тесты обновления RegularTask
@@ -247,6 +413,13 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldUpgradeRegularTaskWithUpdatedStatus() {
 
         taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+        taskManager.createRegularTask(rt4);
+        taskManager.createRegularTask(rt5);
+        taskManager.createRegularTask(rt6);
+        taskManager.createRegularTask(rt7);
 
         RegularTask updateRegularWithId0 = new RegularTask(
                 0
@@ -257,9 +430,37 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         taskManager.updateRegularTask(updateRegularWithId0);
 
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+            });
+
+        expected.add(updateRegularWithId0);
+        expected.add(rt1);
+        expected.add(st3);
+        expected.add(rt4);
+        expected.add(rt5);
+        expected.add(rt6);
+        expected.add(rt7);
+
         assertEquals(updateRegularWithId0
                     , taskManager.getRegularTask(0)
                     , "Задача не обновлена");
+
+        assertEquals(expected, taskManager.getPrioritized());
     }
 
     // тесты удаления RegularTask по id
@@ -274,6 +475,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(expected
             , messageIfRegularTaskToDeleteDoNotExist
             ,"Неправильное сообщение при попытке удаления задачи при отсутствии задач");
+
     }
 
     @Test
@@ -311,155 +513,102 @@ abstract class TaskManagerTest<T extends TaskManager> {
     // тесты получения хранилища EpicTask
     @Test
     public void shouldReturnEmptyEpicTaskStorage() {
-        assertTrue(taskManager.getEpicTaskStorage().isEmpty());
+        assertTrue(taskManager.getEpicTaskStorage().isEmpty()
+                , "Возвращено не пустое EpicTaskStorage при вызове пустого EpicTaskStorage");
     }
 
     @Test
     public void shouldReturnEpicTaskStorageWithOneEpicTask() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
 
         HashMap<Integer, Task> expected = new HashMap<>(2);
-        expected.put(0, epicWithId0);
+        expected.put(0, et0);
 
-        taskManager.createEpicTask(epicWithId0);
-        assertEquals(expected, taskManager.getEpicTaskStorage());
+        taskManager.createEpicTask(et0);
+        assertEquals(expected, taskManager.getEpicTaskStorage()
+                ,"Полученное EpicTaskStorage не соответствует ожидаемому");
     }
 
     // тесты создания EpicTask
     @Test
     public void shouldCreateEpicTaskInEpicTaskStorage() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-
-        taskManager.createEpicTask(epicWithId0);
+        taskManager.createEpicTask(et0);
         EpicTask result = (EpicTask) taskManager.getEpicTaskStorage().get(0);
-        assertEquals(epicWithId0, result);
+        assertEquals(et0, result
+                ,"Созданное EpicTaskStorage не соответствует ожидаемому с 1 задачей");
     }
 
     @Test
     public void shouldCreate3EpicTasksInEpicTaskStorage() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        EpicTask epicWithId1 = new EpicTask(
-                1
-                , "1 epic"
-                , "epic with id 1"
-                , TaskType.EPIC_TASK
-        );
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-        taskManager.createEpicTask(epicWithId1);
-        taskManager.createEpicTask(epicWithId2);
+        taskManager.createEpicTask(et0);
+        taskManager.createEpicTask(et1);
+        taskManager.createEpicTask(et2);
 
 
         HashMap<Integer, Task> expected = new HashMap<>(3);
-        expected.put(0, epicWithId0);
-        expected.put(1, epicWithId1);
-        expected.put(2, epicWithId2);
+        expected.put(0, et0);
+        expected.put(1, et1);
+        expected.put(2, et2);
 
-        assertEquals(expected, taskManager.getEpicTaskStorage());
+        assertEquals(expected, taskManager.getEpicTaskStorage()
+                , "Созданное EpicTaskStorage не соответствует ожидаемому с 3 задачами");
     }
 
     // тесты удалеия всех EpicTask
     @Test
     public void shouldReturnEmptyEpicTaskStorageAfterClearingAlreadyEmptyStorage() {
         taskManager.clearEpicTaskStorage();
-        assertTrue(taskManager.getEpicTaskStorage().isEmpty());
+        assertTrue(taskManager.getEpicTaskStorage().isEmpty()
+                , "Возвращено непустое EpicTaskStorage после очистки уже пустого EpicTaskStorage");
     }
 
     @Test
     public void shouldReturnEmptyEpicTaskStorageAfterClearing() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        EpicTask epicWithId1 = new EpicTask(
-                1
-                , "1 epic"
-                , "epic with id 1"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-        taskManager.createEpicTask(epicWithId1);
+
+        taskManager.createEpicTask(et0);
+        taskManager.createEpicTask(et1);
         taskManager.clearEpicTaskStorage();
 
-        assertTrue(taskManager.getEpicTaskStorage().isEmpty());
+        assertTrue(taskManager.getEpicTaskStorage().isEmpty()
+                , "Возвращено непустое EpicTaskStorage после очистки");
     }
 
     // тесты получения EpicTask по id
     @Test
     public void shouldReturnNullAfterCallingNonExistingEpicTask() {
-        assertNull(taskManager.getEpicTask(0));
+        assertNull(taskManager.getEpicTask(0)
+                , "Возвращено не Null после вызова несуществующей EpicTask");
     }
 
     @Test
     public void shouldReturnEpicTaskWithId0() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-        assertEquals(epicWithId0, taskManager.getEpicTask(0));
+        taskManager.createEpicTask(et0);
+        assertEquals(et0, taskManager.getEpicTask(0)
+                , "Возвращенная EpicTask без SubTask не соответствует ожидаемой");
     }
 
     @Test
     public void shouldReturnDurationAsSumOfSubTasksDuration() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-
-
-        taskManager.createEpicTask(epicWithId0);
-        taskManager.createSubTask(sb1);
-        taskManager.createSubTask(sb2);
-        assertEquals(Optional.of(Duration.ofMinutes(120)), taskManager.getEpicTask(0).getDuration());
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        taskManager.createSubTask(st2);
+        assertEquals(Optional.of(Duration.ofMinutes(120))
+                , taskManager.getEpicTask(0).getDuration()
+                , "Возвращенная EpicTask c двуя SubTask не соответствует ожидаемой");
     }
 
     @Test
     public void shouldReturnStartTimeAsSubTaskStart() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-
-        taskManager.createEpicTask(epicWithId0);
-        taskManager.createSubTask(sb1);
-        taskManager.createSubTask(sb2);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        taskManager.createSubTask(st2);
         Optional<ZonedDateTime> expected = Optional.of(ZonedDateTime.of(
                 LocalDateTime.of(2022, 12, 11, 9, 0)
                 , zone));
         assertEquals(expected
-                , epicWithId0.getStartTime()
-                ,"Неправльное время начала Epic");
+                , et0.getStartTime()
+                ,"Неправльное время начала EpicTask");
     }
 
     // тесты обновления EpicTask
@@ -488,13 +637,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnMessageIEpicTaskToUpgradeDoNotExist() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
+
+        taskManager.createEpicTask(et0);
 
         EpicTask updateEpicWithId0 = new EpicTask(
                 99999
@@ -510,19 +654,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
         String messageIfTaskToUpgradeDoesNotExist
                 = taskManager.updateEpicTask(updateEpicWithId0);
 
-        assertEquals(expectedMessage, messageIfTaskToUpgradeDoesNotExist);
+        assertEquals(expectedMessage
+                , messageIfTaskToUpgradeDoesNotExist
+                , "Возращеное сообщение при попытке обновить EpicTask не соответствует"
+                        + "ожидаемому");
     }
 
     @Test
     public void shouldUpgradeEpicTaskWithUpdatedStatus() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
+        taskManager.createEpicTask(et0);
         EpicTask updateEpicWithId0 = new EpicTask(
                 0
                 , "0 epic"
@@ -530,31 +670,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , TaskType.EPIC_TASK
         );
         taskManager.updateEpicTask(updateEpicWithId0);
-
-        assertEquals(updateEpicWithId0, taskManager.getEpicTask(0));
+        assertEquals(updateEpicWithId0
+                , taskManager.getEpicTask(0)
+                , "Обновленая EpicTask не соответствует ожидаемой");
     }
 
     @Test
     public void shouldReturnInProgressStatusForEpicTask() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "0 epic"
-                , "epic with id 0"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createEpicTask(epicWithId0);
-        taskManager.createSubTask(subTaskWithId1);
-
-        assertSame(StatusName.IN_PROGRESS, taskManager.getEpicTask(0).getStatus());
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        assertSame(StatusName.IN_PROGRESS
+                , taskManager.getEpicTask(0).getStatus()
+                , "Статуст EpicTask не соответствует ожидаемому");
     }
 
     // тесты удаления EpicTask по id
@@ -566,59 +693,43 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 + "Удаление невозможно";
 
         String messageIfEpicTaskToDeleteDoNotExist = taskManager.removeEpicTask(1);
-        assertEquals(expected, messageIfEpicTaskToDeleteDoNotExist);
+        assertEquals(expected
+                , messageIfEpicTaskToDeleteDoNotExist
+                , "Некорректное сообщение при попытке удалить задачиу при пустом"
+                        + "EpicTaskStorage");
     }
 
     @Test
     public void shouldReturnMessageIfEpicTaskToDeleteDoNotExist() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-
-        taskManager.createEpicTask(epicWithId0);
+        taskManager.createEpicTask(et0);
 
         String expected = "Задача с id = '" + 1
                 + "' отсутствует. Сначала создайте задачу с соответвующим epicId. "
                 + "Удаление невозможно";
 
         String messageIfEpicTaskToDeleteDoNotExist = taskManager.removeEpicTask(1);
-        assertEquals(expected, messageIfEpicTaskToDeleteDoNotExist);
+        assertEquals(expected
+                , messageIfEpicTaskToDeleteDoNotExist
+                , "Некорректное сообщение при попытке удалить несуществующую EpicTask при пустом");
     }
 
     @Test
     public void shouldRemoveEpicTaskFromStorage() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        EpicTask epicWithId1 = new EpicTask(
-                1
-                , "1 epic"
-                , "epic with id 1"
-                , TaskType.EPIC_TASK
-        );
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-        taskManager.createEpicTask(epicWithId1);
-        taskManager.createEpicTask(epicWithId2);
+
+        taskManager.createEpicTask(et0);
+        taskManager.createEpicTask(et1);
+        taskManager.createEpicTask(et2);
 
         taskManager.removeEpicTask(1);
 
         HashMap<Integer, Task> expected = new HashMap<>(2);
-        expected.put(0, epicWithId0);
-        expected.put(2, epicWithId2);
+        expected.put(0, et0);
+        expected.put(2, et2);
 
-        assertEquals(expected, taskManager.getEpicTaskStorage());
+        assertEquals(expected
+                , taskManager.getEpicTaskStorage()
+                , "Хранилище EpicTaskStorage после удаления EpicTask не соответствует"
+                        + "ожидаемому");
     }
 
 
@@ -627,24 +738,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
     // тесты получения хранилища SubTask
     @Test
     public void shouldReturnEmptySubTaskStorage() {
-        assertTrue(taskManager.getSubTaskStorage().isEmpty());
+        assertTrue(taskManager.getSubTaskStorage().isEmpty()
+                , "Возвращено не пустое SubTaskStorage");
     }
 
     @Test
     public void shouldReturnSubTaskStorageWithOneSubTask() {
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
 
-        taskManager.createSubTask(sb1);
-
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
         HashMap<Integer, Task> expected = new HashMap<>(2);
-        expected.put(1, sb1);
-
+        expected.put(1, st1);
         assertEquals(expected, taskManager.getSubTaskStorage());
     }
 
@@ -658,10 +762,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         taskManager.createEpicTask(epicWithId0);
 
-        taskManager.createSubTask(sb1);
+        taskManager.createSubTask(st1);
 
         HashMap<Integer, Task> expected = new HashMap<>(2);
-        expected.put(1, sb1);
+        expected.put(1, st1);
 
         assertEquals(expected, taskManager.getSubTaskStorageFromEpic(0).getStorage());
     }
@@ -681,7 +785,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
 
         String expected =
-                "Подзадача не может быть создана. "
+                "Подзадача c id" + subTaskWithId1.getId() + " не может быть создана. "
                         + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
 
         String result = taskManager.createSubTask(subTaskWithId1);
@@ -804,6 +908,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertEquals(expected, taskManager.getSubTaskStorage());
     }
+
+    @Test
+    public void shouldNotCreateInSubTaskWithNearDateWithRt0() {
+
+        taskManager.createEpicTask(et0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createSubTask(st02SameStartTimeAsRt0);
+        taskManager.createSubTask(st2);
+
+        HashMap<Integer, Task> expected = new HashMap<>(1);
+        expected.put(2, st2);
+
+        HashMap<Integer, Task> result = taskManager.getSubTaskStorage();
+
+        assertEquals(expected
+                , result
+                , "SubTaskStorages не совпадают после попытки создания подзадачи"
+                        + ", со временем выполнения пересекающейся с обычной задачей");
+    }
+
 
     // тесты удаления всех SubTask
     @Test
@@ -964,26 +1088,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnSubTaskWithId1FromEpic() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
 
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
         assertEquals(
-                subTaskWithId1
+                st1
                 , taskManager.getSubTaskStorageFromEpic(0).getStorage().get(1)
         );
     }
@@ -1015,23 +1125,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnMessageIfSubTaskToUpgradeDoNotExist() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "0 subtask"
-                , "subtask with id 0"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
         SubTask updateSubTaskWithId1 = new SubTask(
                 124
@@ -1039,7 +1134,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , "subtask with id 124"
                 , StatusName.IN_PROGRESS
                 , TaskType.SUBTASK
-                , 0
+                , 124
         );
 
         String expectedMessage
@@ -1056,23 +1151,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldUpgradeSubTaskWithUpdatedStatus() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
 
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
         SubTask updateSubTaskWithId1 = new SubTask(
                 1
@@ -1082,10 +1163,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , TaskType.SUBTASK
                 , 0
         );
-
         taskManager.updateSubTask(updateSubTaskWithId1);
 
-        assertEquals(updateSubTaskWithId1, taskManager.getSubTask(1));
+        assertEquals(updateSubTaskWithId1, taskManager.getSubTask(1)
+                , "Обновлянная подзадача не равна");
     }
 
     // тесты удаления SubTask по id
@@ -1096,161 +1177,302 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 + "' отсутствует. Сначала создайте задачу с соответвующим Id. Удаление невозможно";
 
         String messageIfEpicTaskToDeleteDoNotExist = taskManager.removeSubTask(1);
-        assertEquals(expected, messageIfEpicTaskToDeleteDoNotExist);
+        assertEquals(expected, messageIfEpicTaskToDeleteDoNotExist
+                , "При удалении подзадачи из пустого хранилища получено некорреткное сообщение");
     }
 
     @Test
     public void shouldReturnMessageIfSubTaskToDeleteDoNotExist() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
-
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "1 subtask"
-                , "subtask with id 1"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
         String expected = "Подзадача с id = '" + 2
                 + "' отсутствует. Сначала создайте задачу с соответвующим Id. Удаление невозможно";
 
         String messageIfEpicTaskToDeleteDoNotExist = taskManager.removeSubTask(2);
-        assertEquals(expected, messageIfEpicTaskToDeleteDoNotExist);
+        assertEquals(expected, messageIfEpicTaskToDeleteDoNotExist
+                ,"При удалении несуществующей подзадачи удалена получено некорректное сообщение");
     }
 
     @Test
     public void shouldRemoveSubTaskFromStorageInManager() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "0 subtask"
-                , "subtask with id 0"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
 
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId2);
+        taskManager.createEpicTask(et4);
+        taskManager.createSubTask(st5);
 
-        SubTask subTaskWithId3 = new SubTask(
-                3
-                , "3 subtask"
-                , "subtask with id 3"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 2
-        );
-        taskManager.createSubTask(subTaskWithId3);
-
-        EpicTask epicWithId4 = new EpicTask(
-                4
-                , "4 epic"
-                , "epic with id 4"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId4);
-
-        SubTask subTaskWithId5 = new SubTask(
-                5
-                , "5 subtask"
-                , "subtask with id 5"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 4
-        );
-        taskManager.createSubTask(subTaskWithId5);
         taskManager.removeSubTask(3);
 
         HashMap<Integer, Task> expected = new HashMap<>(3);
-        expected.put(1, subTaskWithId1);
-        expected.put(5, subTaskWithId5);
+        expected.put(1, st1);
+        expected.put(5, st5);
 
-        assertEquals(expected, taskManager.getSubTaskStorage());
+        assertEquals(expected, taskManager.getSubTaskStorage()
+                ,"Хранилище подзадач в менеджене после удаления не пустое");
     }
 
     @Test
     public void shouldRemoveSubTaskFromStorageInEpic() {
 
-        EpicTask epicWithId0 = new EpicTask(
-                0
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId0);
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
 
-        SubTask subTaskWithId1 = new SubTask(
-                1
-                , "0 subtask"
-                , "subtask with id 0"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 0
-        );
-        taskManager.createSubTask(subTaskWithId1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
 
-        EpicTask epicWithId2 = new EpicTask(
-                2
-                , "2 epic"
-                , "epic with id 2"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId2);
 
-        SubTask subTaskWithId3 = new SubTask(
-                3
-                , "3 subtask"
-                , "subtask with id 3"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 2
-        );
-        taskManager.createSubTask(subTaskWithId3);
+        taskManager.createEpicTask(et4);
+        taskManager.createSubTask(st5);
 
-        EpicTask epicWithId4 = new EpicTask(
-                4
-                , "4 epic"
-                , "epic with id 4"
-                , TaskType.EPIC_TASK
-        );
-        taskManager.createEpicTask(epicWithId4);
-
-        SubTask subTaskWithId5 = new SubTask(
-                5
-                , "5 subtask"
-                , "subtask with id 5"
-                , StatusName.IN_PROGRESS
-                , TaskType.SUBTASK
-                , 4
-        );
-        taskManager.createSubTask(subTaskWithId5);
         taskManager.removeSubTask(3);
 
-        assertTrue(taskManager.getSubTaskStorageFromEpic(2).getStorage().isEmpty());
+        assertTrue(taskManager.getSubTaskStorageFromEpic(2).getStorage().isEmpty()
+                ,"Хранилище подзадач в эпике после удаленич не пустое");
+    }
+
+// тесты приоритета
+    @Test
+    public void shouldCreate4RegularTasksInPrioritized() {
+
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+
+        taskManager.createEpicTask(et4);
+        taskManager.createSubTask(st5);
+
+        taskManager.createRegularTask(rt6);
+        taskManager.createRegularTask(rt7);
+        taskManager.createRegularTask(rt8);
+
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        expected.add(st1);
+        expected.add(st3);
+        expected.add(st5);
+        expected.add(rt6);
+        expected.add(rt7);
+        expected.add(rt8);
+
+        assertEquals(expected, taskManager.getPrioritized());
+    }
+    @Test
+    public void shouldDeleteAllRegularTasksFromPrioritized() {
+
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+        taskManager.createRegularTask(rt4);
+        taskManager.createRegularTask(rt5);
+        taskManager.createRegularTask(rt6);
+        taskManager.createRegularTask(rt7);
+        taskManager.clearRegularTaskStorage();
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+
+        expected.add(st3);
+
+        assertEquals(expected, taskManager.getPrioritized());
+    }
+    @Test
+    public void shouldDeleteSubTasksOnEpicByIdDeletionFromPrioritized() {
+
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+        taskManager.createRegularTask(rt4);
+        taskManager.createRegularTask(rt5);
+        taskManager.createRegularTask(rt6);
+        taskManager.createRegularTask(rt7);
+        taskManager.removeEpicTask(2);
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+
+        expected.add(rt0);
+        expected.add(rt1);
+        expected.add(rt4);
+        expected.add(rt5);
+        expected.add(rt6);
+        expected.add(rt7);
+        assertEquals(expected, taskManager.getPrioritized());
+    }
+    @Test
+    public void shouldDeleteSubTasksOnAllEpicDeletionFromPrioritized() {
+
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+        taskManager.createRegularTask(rt4);
+        taskManager.createRegularTask(rt5);
+        taskManager.createRegularTask(rt6);
+        taskManager.createRegularTask(rt7);
+        taskManager.clearEpicTaskStorage();
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+
+        expected.add(rt0);
+        expected.add(rt1);
+        expected.add(rt4);
+        expected.add(rt5);
+        expected.add(rt6);
+        expected.add(rt7);
+        assertEquals(expected, taskManager.getPrioritized());
+    }
+    @Test
+    public void shouldDeleteSubTaskOnDeleteSubTaskByIdFromPrioritized() {
+
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createEpicTask(et2);
+        taskManager.createSubTask(st3);
+        taskManager.createRegularTask(rt4);
+        taskManager.createRegularTask(rt5);
+        taskManager.createRegularTask(rt6);
+        taskManager.createRegularTask(rt7);
+        taskManager.removeSubTask(3);
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+
+        expected.add(rt0);
+        expected.add(rt1);
+        expected.add(rt4);
+        expected.add(rt5);
+        expected.add(rt6);
+        expected.add(rt7);
+        assertEquals(expected, taskManager.getPrioritized());
+    }
+    @Test
+    public void shouldUpgradeSubTaskWithUpdatedStatusInPrioritized() {
+
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+
+        SubTask updateSubTaskWithId1 = new SubTask(
+                1
+                , "1 UPDATED subtask"
+                , "subtask with id 1"
+                , StatusName.DONE
+                , TaskType.SUBTASK
+                , Optional.of(Duration.ofMinutes(60))
+                , Optional.of(ZonedDateTime.of(
+                LocalDateTime.of(2022, 12, 11, 9, 0)
+                , zone))
+                , 0
+        );
+        taskManager.updateSubTask(updateSubTaskWithId1);
+
+        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
+            @Override
+            public int compare(Task obj1, Task obj2) {
+                Optional<ZonedDateTime> t1 = obj1.getStartTime();
+                Optional<ZonedDateTime> t2 = obj2.getStartTime();
+
+                if (t1.isPresent() && t2.isPresent()) {
+                    return t1.get().compareTo(t2.get());
+                } else if (t1.isPresent()) {
+                    return -1;
+                } else if (t2.isPresent()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        expected.add(updateSubTaskWithId1);
+
+        assertEquals(expected, taskManager.getPrioritized()
+                , "Обновлянная подзадача не равна в prioritized не равна");
     }
 
 }

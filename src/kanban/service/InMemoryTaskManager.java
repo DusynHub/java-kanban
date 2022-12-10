@@ -61,7 +61,11 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String createRegularTask(RegularTask task) {
-        Task taskToSave = taskCreator.createRegularTask(task);
+        Task taskToSave = taskCreator.createRegularTask(task, prioritized);
+        if(taskToSave == null){
+            return "Обычная задача c id = " + task.getId() + " не создана"
+                    + "\n Измените вермя начала или длительность.";
+        }
         regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
         prioritized.add(taskToSave);
         return "Обычная задача c id = " + taskToSave.getId() + " создана";
@@ -83,14 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String clearRegularTaskStorage() {
-        List<Task> toDelete = new ArrayList<>();
-        for(Task task : prioritized){
-           if(task.getType() == TaskType.REGULAR_TASK){
-               toDelete.add(task);
-           }
-        }
-        prioritized.removeAll(toDelete);
-        return taskRemover.removeAllRegularTasks(regularTaskStorage, inMemoryHistoryManager);
+        return taskRemover.removeAllRegularTasks(regularTaskStorage, inMemoryHistoryManager, prioritized);
     }
     /**
      * Возвращает обычную задачу по id задачи, если она создана.
@@ -114,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String updateRegularTask(RegularTask regularTaskToUpdate) {
-        return taskUpdater.updateRegularTask(regularTaskToUpdate, regularTaskStorage);
+        return taskUpdater.updateRegularTask(regularTaskToUpdate, regularTaskStorage, prioritized);
     }
 
     /**
@@ -125,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String removeRegularTask(int regularId) {
-        return taskRemover.removeRegularTask(regularId, regularTaskStorage, inMemoryHistoryManager);
+        return taskRemover.removeRegularTask(regularId, regularTaskStorage, inMemoryHistoryManager, prioritized);
     }
 
     /**
@@ -167,7 +164,10 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String clearEpicTaskStorage() {
-        return taskRemover.removeAllEpicTasks(epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
+        return taskRemover.removeAllEpicTasks(epicTaskStorage
+                , subTaskStorageForTaskManager
+                , inMemoryHistoryManager
+                , prioritized);
     }
 
     /**
@@ -202,7 +202,11 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String removeEpicTask(int epicId) {
-        return taskRemover.removeEpicTask(epicId, epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
+        return taskRemover.removeEpicTask(epicId
+                    , epicTaskStorage
+                    , subTaskStorageForTaskManager
+                    , inMemoryHistoryManager
+                    , prioritized);
     }
 
     /**
@@ -249,9 +253,9 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String createSubTask(SubTask task) {
-        SubTask taskToSave = taskCreator.createSubTask(task, epicTaskStorage);
+        SubTask taskToSave = taskCreator.createSubTask(task, epicTaskStorage, prioritized);
         if (taskToSave == null) {
-            return "Подзадача не может быть создана. "
+            return "Подзадача c id" + task.getId() + " не может быть создана. "
                     + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
         }
         subTaskStorageForTaskManager.saveInStorage(taskToSave.getId(), taskToSave);
@@ -260,7 +264,7 @@ public class InMemoryTaskManager implements TaskManager {
         taskUpdater.epicStatusUpdater(epic);
         taskUpdater.epicDurationUpdater(epic);
         taskUpdater.epicStartTimeUpdater(epic);
-
+        prioritized.add(taskToSave);
         return "Подзача задача c id = " + taskToSave.getId() + " создана";
     }
 
@@ -287,6 +291,10 @@ public class InMemoryTaskManager implements TaskManager {
             taskUpdater.epicDurationUpdater(epicTask);
             taskUpdater.epicStartTimeUpdater(epicTask);
         }
+
+        HashMap<Integer, Task> subTaskStorage = subTaskStorageForTaskManager.getStorage();
+        prioritized.removeAll(subTaskStorage.values());
+
         return taskRemover.removeAllSubTasks(subTaskStorageForTaskManager, epicTaskStorage, inMemoryHistoryManager);
     }
 
@@ -312,7 +320,10 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String updateSubTask(SubTask subTaskToUpdate) {
-        String result = taskUpdater.updateSubTask(subTaskToUpdate, subTaskStorageForTaskManager, epicTaskStorage);
+        String result = taskUpdater.updateSubTask(subTaskToUpdate
+                        , subTaskStorageForTaskManager
+                        , epicTaskStorage
+                        , prioritized);
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(subTaskToUpdate.getEpicId());
         if (epic == null) {
             return result;
@@ -332,7 +343,11 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String removeSubTask(int subId) {
-        return taskRemover.removeSubTask(subId, epicTaskStorage, subTaskStorageForTaskManager, inMemoryHistoryManager);
+        return taskRemover.removeSubTask(subId
+                , epicTaskStorage
+                , subTaskStorageForTaskManager
+                , inMemoryHistoryManager
+                , prioritized);
     }
 
     // Методы HistoryManager
@@ -359,10 +374,15 @@ public class InMemoryTaskManager implements TaskManager {
         return Objects.hash(getRegularTaskStorage(), getEpicTaskStorage(), subTaskStorageForTaskManager, inMemoryHistoryManager);
     }
 
+    @Override
     public List<Task> getPrioritizedTasks(){
-
         List<Task> result = new ArrayList<>(prioritized);
         return result;
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritized(){
+        return prioritized;
     }
 }
 

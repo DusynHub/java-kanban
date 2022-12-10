@@ -51,7 +51,9 @@ public class EpicTaskStorage extends TaskStorage {
         if (this == o) return true;
         if (!(o instanceof EpicTaskStorage)) return false;
         EpicTaskStorage otherStorage = (EpicTaskStorage) o;
-
+        if(this.storage.size() != otherStorage.storage.size()){
+            return false;
+        }
         boolean result =  true;
 
         for(Integer key : storage.keySet()){

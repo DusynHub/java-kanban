@@ -3,28 +3,38 @@ package kanban.service;
 import kanban.module.EpicTask;
 import kanban.module.SubTask;
 import kanban.module.Task;
+import kanban.module.TaskType;
 import kanban.module.storage.EpicTaskStorage;
 import kanban.module.storage.RegularTaskStorage;
 import kanban.module.storage.SubTaskStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.TreeSet;
 
 public class TaskRemover {
 
 // Методы для RegularTask
-    public String removeAllRegularTasks(RegularTaskStorage regularTaskStorage,
-                                        HistoryManager historyManager){
+    public String removeAllRegularTasks(RegularTaskStorage regularTaskStorage
+                                        , HistoryManager historyManager
+                                        , TreeSet<Task> prioritized){
         for(Integer regularId : regularTaskStorage.getStorage().keySet()){
             historyManager.remove(regularTaskStorage.getStorage().get(regularId));
         }
+
+        prioritized.removeAll(regularTaskStorage.getStorage().values());
+
         return regularTaskStorage.clearStorage();
     }
-    public String removeRegularTask(int regularId,
-                                    RegularTaskStorage regularTaskStorage,
-                                    HistoryManager historyManager){
+    public String removeRegularTask(int regularId
+                                    , RegularTaskStorage regularTaskStorage
+                                    , HistoryManager historyManager
+                                    , TreeSet<Task> prioritized){
 
         HashMap<Integer, Task> storage = regularTaskStorage.getStorage();
         if(storage.containsKey(regularId)){
+            prioritized.remove(regularTaskStorage.getStorage().get(regularId));
             historyManager.remove(storage.get(regularId));
             storage.remove(regularId);
             return "Задача  с id = '"+ regularId + "' удалена";
@@ -35,12 +45,14 @@ public class TaskRemover {
     }
 
 //Методы для EpicTask
-    public String removeAllEpicTasks(EpicTaskStorage epicTaskStorage,
-                                     SubTaskStorage subTaskStorageForTaskManager,
-                                     HistoryManager historyManager){
+    public String removeAllEpicTasks(EpicTaskStorage epicTaskStorage
+                                     , SubTaskStorage subTaskStorageForTaskManager
+                                     , HistoryManager historyManager
+                                     ,  TreeSet<Task> prioritized){
         for(Integer id : subTaskStorageForTaskManager.getStorage().keySet()){
             historyManager.remove( subTaskStorageForTaskManager.getStorage().get(id) );
         }
+        prioritized.removeAll(subTaskStorageForTaskManager.getStorage().values());
         subTaskStorageForTaskManager.clearStorage();
 
         for(Integer id : epicTaskStorage.getStorage().keySet()){
@@ -49,10 +61,11 @@ public class TaskRemover {
 
         return epicTaskStorage.clearStorage();
     }
-    public String removeEpicTask(int epicId,
-                                 EpicTaskStorage EpicTaskStorage,
-                                 SubTaskStorage subTaskStorage,
-                                 HistoryManager historyManager){
+    public String removeEpicTask(int epicId
+                                , EpicTaskStorage EpicTaskStorage
+                                , SubTaskStorage subTaskStorage
+                                , HistoryManager historyManager
+                                , TreeSet<Task> prioritized){
 
         HashMap<Integer, Task> subStorage = subTaskStorage.getStorage();
         HashMap<Integer, Task> epicStorage = EpicTaskStorage.getStorage();
@@ -63,6 +76,9 @@ public class TaskRemover {
                 subStorage.remove(subTaskId);
             }
             historyManager.remove(epicStorage.get(epicId));
+            prioritized.removeAll(((EpicTask) epicStorage.get(epicId))
+                                                          .getSubTaskStorageForEpic()
+                                                          .getStorage().values());
             epicStorage.remove(epicId);
             return "Эпик задача с id = '"+ epicId + "' удалена";
         } else {
@@ -89,15 +105,16 @@ public class TaskRemover {
         return subTaskStorageForTaskManager.clearStorage();
     }
     public String removeSubTask(int subId,
-                                EpicTaskStorage epicTaskStorage,
-                                SubTaskStorage subTaskStorage,
-                                HistoryManager historyManager
-                                ){
+                                EpicTaskStorage epicTaskStorage
+                                , SubTaskStorage subTaskStorage
+                                , HistoryManager historyManager
+                                , TreeSet<Task> prioritized){
 
         HashMap<Integer, Task> subStorage = subTaskStorage.getStorage();
         HashMap<Integer, Task> epicStorage = epicTaskStorage.getStorage();
         if(subStorage.containsKey(subId)){
             SubTask subTask = (SubTask) subStorage.get(subId);
+            prioritized.remove(subTask);
             historyManager.remove(subStorage.get(subId));
             subStorage.remove(subId);
             EpicTask task = (EpicTask) epicStorage.get(subTask.getEpicId());
