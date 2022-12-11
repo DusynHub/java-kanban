@@ -19,8 +19,6 @@ public class TaskGetter {
         HashMap<Integer, Task> storage = regularTaskStorage.getStorage();
 
         if(storage.get(regularId) == null) {
-            System.out.println("Задача с указанным id = " + regularId +
-            " отсутствует. Возвращено пустое значение.");
         }
         return storage.get(regularId);
     }
@@ -32,9 +30,6 @@ public class TaskGetter {
     public Task getEpicTask(int epicId, EpicTaskStorage epicTaskStorage){
 
         HashMap<Integer, Task> storage = epicTaskStorage.getStorage();
-        if(storage.get(epicId) == null) {
-            System.out.println("Эпик задача с указанным id = " + epicId + " отсутствует. Возвращено пустое значение.");
-        }
         return storage.get(epicId);
     }
     public SubTaskStorage getSubTaskFromEpicTask(int epicId, EpicTaskStorage epicTaskStorage){
