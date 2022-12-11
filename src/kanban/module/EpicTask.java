@@ -31,7 +31,6 @@ public class EpicTask extends Task{
                 && getStatus().equals(otherTask.getStatus())
                 && getDuration().equals(otherTask.getDuration())
                 && getStartTime().equals(otherTask.getStartTime())
-                && endTime.equals(otherTask.getEndTime())
                 && subTaskStorageForEpic.equals(otherTask.getSubTaskStorageForEpic()
                 );
     }
@@ -67,12 +66,28 @@ public class EpicTask extends Task{
 
     @Override
     public String toStringForCSV() {
+        String curDuration;
+        if(getDuration().isPresent()){
+            curDuration = String.valueOf( getDuration().get().toMinutes());
+        } else {
+            curDuration = "не задана";
+        }
+
+        String curStartTime;
+        if(getStartTime().isPresent()){
+            curStartTime = getStartTime().get().format(getFormatter());
+        } else {
+            curStartTime = "не задано";
+        }
+
         String delimiter = "|";
         return getId() + delimiter
                 + getType().name() + delimiter
                 + getName() + delimiter
                 + getDescription() + delimiter
-                + getStatus().name() + delimiter;
+                + getStatus().name() + delimiter
+                + curDuration + delimiter
+                + curStartTime;
     }
 
     @Override

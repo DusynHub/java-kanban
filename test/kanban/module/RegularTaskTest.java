@@ -53,7 +53,6 @@ class RegularTaskTest {
                 , zone))
         );
 
-        System.out.println(rt0);
         assertEquals(rtSame,rt0, "Regular Task не равны");
     }
 }

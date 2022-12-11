@@ -13,7 +13,7 @@ import java.util.TreeSet;
 public class TaskCreator {
     private int countId = 0;
     public Task createRegularTask(RegularTask task, TreeSet<Task> prioritized){
-        if(!StartDateValidator.validateStartDate(task, prioritized)){
+        if(!StartDateValidator.validateStartDate(task, prioritized, false)){
             return null;
         }
         task.setId(countId);
@@ -29,7 +29,7 @@ public class TaskCreator {
         if(!epicTaskStorage.getStorage().containsKey(task.getEpicId())){
             return null;
         }
-        if(!StartDateValidator.validateStartDate(task, prioritized)){
+        if(!StartDateValidator.validateStartDate(task, prioritized, false)){
             return null;
         }
         task.setId(countId);

@@ -18,7 +18,7 @@ public class TaskUpdater {
                                     , RegularTaskStorage regularTaskStorage
                                     , TreeSet<Task> prioritized)
     {
-        if(!StartDateValidator.validateStartDate(regularTaskToUpdate, prioritized)){
+        if(!StartDateValidator.validateStartDate(regularTaskToUpdate, prioritized, true)){
             return "Время выполнения обновлённого RegularTask пересекается с имеющимися заданиями"
                     + "Здача не была обновлена";
 
@@ -60,7 +60,7 @@ public class TaskUpdater {
     {
         HashMap<Integer, Task> storage = subTaskStorage.getStorage();
         if(storage.containsKey(subTaskToUpdate.getId())){
-            if(!StartDateValidator.validateStartDate(subTaskToUpdate, prioritized)){
+            if(!StartDateValidator.validateStartDate(subTaskToUpdate, prioritized, true)){
                 return "Время выполнения обновлённого SubTask пересекается с имеющимися заданиями"
                         + "Здача не была обновлена";
 
@@ -132,7 +132,6 @@ public class TaskUpdater {
             return Optional.empty();
         }
 
-        Iterator<Task> it = subTaskStorageFromEpic.values().iterator();
         Optional<ZonedDateTime> minStartTime = Optional.empty();
 
         for(Task curTask : subTaskStorageFromEpic.values()){
@@ -167,7 +166,7 @@ public class TaskUpdater {
                                                         .plusMinutes(curTask
                                                         .getDuration()
                                                         .get().toMinutes())
-                                                );
+                                             );
                 }
             }
         }

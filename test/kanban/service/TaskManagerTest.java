@@ -30,6 +30,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     static RegularTask rt7;
     static RegularTask rt8;
     static RegularTask rt01;
+    static RegularTask rtAnyId;
     static SubTask st1;
     static SubTask st2;
     static SubTask st3;
@@ -159,6 +160,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 , Optional.of(ZonedDateTime.of(
                 LocalDateTime.of(2022, 12, 8, 22, 1)
                 , zone))
+        );
+
+        rtAnyId = new RegularTask(
+                0
+                , "0 RegularTask"
+                , "RegularTask with id 0"
+                , StatusName.IN_PROGRESS
+                , TaskType.REGULAR_TASK
         );
 
 

@@ -376,8 +376,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getPrioritizedTasks(){
-        List<Task> result = new ArrayList<>(prioritized);
-        return result;
+        return new ArrayList<>(prioritized);
     }
 
     @Override

@@ -40,9 +40,4 @@ public class InMemoryHistoryManager implements HistoryManager{
             }
         }
     }
-
-    public CustomLinkedList getlinkedStorage(){
-
-        return linkedStorage;
-    }
 }

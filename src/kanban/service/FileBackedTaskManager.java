@@ -9,161 +9,17 @@ import kanban.module.storage.TaskStorage;
 import kanban.util.CSVTaskFormat;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     protected final String STORAGE_HEADERS
-            = "ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|EPIC_ID FOR SUBTASK";
+            = "ID|TYPE|TASK_NAME|DESCRIPTION|STATUS|DURATION|ZONED_DATE_TIME|EPIC_ID FOR SUBTASK";
     protected final String HISTORY_SEPARATOR = "BELOW_THIS_ROW_HISTORY_DATA";
     protected final String HISTORY_HEADERS = "ID|TASK_TYPE";
     protected final String COUNT_ID_SEPARATOR = "BELOW_THIS_ROW_CONT_ID_VALUE";
     Path fileToSaveCondition;
-
-    /*
-    public static void main(String[] args) {
-
-        Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
-        try {
-            if (!Files.exists(pathOfStorage)) {
-                Files.createDirectory(pathOfStorage);
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка при создании директории: ");
-            e.printStackTrace();
-        }
-
-        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath()
-                + "/TaskStorage.csv");
-        try {
-
-            if (!Files.exists(pathOfFile)) {
-                Files.createFile(pathOfFile);
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка при создании файла хранения FileBackedTaskManager: ");
-            e.printStackTrace();
-        }
-
-        RegularTask theBigLebowskiTask;
-        RegularTask deathTask;
-        RegularTask resentmentTask;
-        RegularTask importantTask;
-        {
-            theBigLebowskiTask = new RegularTask(
-                    0,
-                    "Задача Лебовски",
-                    "Где деньги, Лебовски?",
-                    StatusName.NEW,
-                    TaskType.REGULAR_TASK);
-            deathTask = new RegularTask(
-                    0,
-                    "Что такое Смерть?",
-                    "Смерть — это то, что бывает с другими",
-                    StatusName.IN_PROGRESS,
-                    TaskType.REGULAR_TASK);
-            resentmentTask = new RegularTask(
-                    0, "Как обижать людей?",
-                    "Он всегда недолюбливал людей, которые «никого не хотели обидеть». " +
-                            "Удобная фраза: произнес ее — и обижай кого хочешь.",
-                    StatusName.NEW,
-                    TaskType.REGULAR_TASK);
-            importantTask = new RegularTask(
-                    2, "Найти ответ на главный вопрос жизни, вселенной и всего такого",
-                    "Может быть это 6 х 9 ?",
-                    StatusName.IN_PROGRESS,
-                    TaskType.REGULAR_TASK);
-        }
-        EpicTask cookRice;
-        EpicTask doPracticumHomework;
-        EpicTask doTraining;
-        {
-            cookRice = new EpicTask(
-                    0, "Приготовить рис",
-                    "Нужен гарнир из коричневого риса",
-                    TaskType.EPIC_TASK);
-            doPracticumHomework = new EpicTask(
-                    0, "Выполнить домашнее задание практикума",
-                    "Нужно успеть до 09.10.2022",
-                    TaskType.EPIC_TASK);
-            doTraining = new EpicTask(
-                    0, "Выполнить треннировку",
-                    "Выполнить 3 упражнения по 10 подходов",
-                    TaskType.EPIC_TASK);
-        }
-
-        FileBackedTaskManager fileBackedTaskManager
-                = FileBackedTaskManager.loadFromFile(pathOfFile);
-
-        SubTask subTaskCookRice1;
-        SubTask subTaskCookRice2;
-
-        fileBackedTaskManager.createRegularTask(theBigLebowskiTask);
-        fileBackedTaskManager.createRegularTask(deathTask);
-        fileBackedTaskManager.createRegularTask(resentmentTask);
-        fileBackedTaskManager.createRegularTask(importantTask);
-
-        fileBackedTaskManager.createEpicTask(cookRice);
-        fileBackedTaskManager.createEpicTask(doPracticumHomework);
-        fileBackedTaskManager.createEpicTask(doTraining);
-
-        Iterator<Integer> it = fileBackedTaskManager.getEpicTaskStorage().keySet().iterator();
-
-        int existingEpicId = -1;
-        if (it.hasNext()) {
-            existingEpicId = it.next();
-        }
-
-        subTaskCookRice1 = new SubTask(
-                0, "Промыть рис",
-                "Желательно 400 гр",
-                StatusName.DONE, TaskType.SUBTASK, existingEpicId);
-        subTaskCookRice2 = new SubTask(
-                0, "Варить 10 минут",
-                "Не уходить с кухни",
-                StatusName.NEW, TaskType.SUBTASK, existingEpicId);
-
-        fileBackedTaskManager.createSubTask(subTaskCookRice1);
-        fileBackedTaskManager.createSubTask(subTaskCookRice2);
-
-        for (Integer key : fileBackedTaskManager.getRegularTaskStorage().keySet()) {
-            fileBackedTaskManager.getRegularTask(key);
-        }
-
-        for (Integer key : fileBackedTaskManager.getSubTaskStorage().keySet()) {
-            fileBackedTaskManager.getSubTask(key);
-        }
-
-        for (Integer key : fileBackedTaskManager.getEpicTaskStorage().keySet()) {
-            fileBackedTaskManager.getEpicTask(key);
-        }
-
-        System.out.println();
-
-        FileBackedTaskManager fileBackedTaskManager2
-                = FileBackedTaskManager.loadFromFile(pathOfFile);
-
-        boolean isRTStoragesEqual
-                = fileBackedTaskManager.getRegularTaskStorage().equals(fileBackedTaskManager2.getRegularTaskStorage());
-        boolean isETCStoragesEqual
-                = fileBackedTaskManager.getEpicTaskStorage().equals(fileBackedTaskManager2.getEpicTaskStorage());
-        boolean isSBTtoragesEqual
-                = fileBackedTaskManager.getSubTaskStorage().equals(fileBackedTaskManager2.getSubTaskStorage());
-        boolean isHistoriesEqual
-                = fileBackedTaskManager.getHistoryOfTasks().equals(fileBackedTaskManager2.getHistoryOfTasks());
-
-        System.out.println();
-        System.out.println("Равны ли хранилища Обычных задач ? --> " + isRTStoragesEqual);
-        System.out.println("Равны ли хранилища Эпик задач ? --> " + isETCStoragesEqual);
-        System.out.println("Равны ли хранилища Подзадач ? --> " + isSBTtoragesEqual);
-        System.out.println("Равны ли хранилища Подзадач ? --> " + isSBTtoragesEqual);
-        System.out.println("Равны ли истории вызовов ? --> " + isHistoriesEqual);
-    }
-    */
-
 
     public FileBackedTaskManager() {
 
@@ -278,13 +134,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         restoreHistoryFromCSV(history);
+
         taskCreator.setCountId(countIdToRestore);
 
-//        if (countIdToRestore == 0) {
-//            System.out.println("Создан новый  Менеджер задач");
-//        } else {
-//            System.out.println("Менедежер задач загрузил информацию о задачах");
-//        }
+        prioritized.addAll(regularTaskStorage.getStorage().values());
+        prioritized.addAll(subTaskStorageForTaskManager.getStorage().values());
+
     }
 
     private void restoreHistoryFromCSV(ArrayList<String[]> history) {
@@ -317,6 +172,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 inMemoryHistoryManager.add(null);
             }
         }
+
     }
 
     private int readConditionFromCSV(Path fileToRestoreCondition
@@ -536,7 +392,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return Objects.equals(this.getRegularTaskStorage(), that.getRegularTaskStorage())
                 && Objects.equals(this.getEpicTaskStorage(), that.getEpicTaskStorage())
                 && Objects.equals(this.subTaskStorageForTaskManager, that.subTaskStorageForTaskManager)
-                && Objects.equals(this.getHistoryOfTasks(), that.getHistoryOfTasks());
+                && Objects.equals(this.getHistoryOfTasks(), that.getHistoryOfTasks())
+                && Objects.equals(this.getPrioritized(), that.getPrioritized());
     }
 
     @Override

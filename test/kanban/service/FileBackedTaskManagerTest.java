@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Iterator;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,7 +52,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         taskManager = new FileBackedTaskManager(pathOfFile);
     }
 
-    /*
+
     @Test
     public void shouldReturnTrueForComparisonOfTwoEmptyFileBackedTaskManagers(){
 
@@ -69,116 +66,66 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
         FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
 
-        fileBackedTaskManager.createRegularTask(rt0);
+        fileBackedTaskManager.createEpicTask(et0);
+        fileBackedTaskManager.createSubTask(st1);
+        fileBackedTaskManager.createSubTask(st2);
+        fileBackedTaskManager.createRegularTask(rt3);
+        fileBackedTaskManager.createRegularTask(rtAnyId);
 
-        EpicTask epicWithId1 = new EpicTask(
-                1
-                , "0 epic"
-                , "epic with id 0"
-                , TaskType.EPIC_TASK
-        );
-
-        fileBackedTaskManager.createEpicTask(epicWithId1);
-
-        Iterator<Integer> it = fileBackedTaskManager.getEpicTaskStorage().keySet().iterator();
-
-        int existingEpicId = -1;
-        if (it.hasNext()) {
-            existingEpicId = it.next();
-        }
-
-        SubTask sb2 = new SubTask(
-                2
-                , "Промыть рис"
-                , "Желательно 400 гр"
-                , StatusName.DONE
-                , TaskType.SUBTASK
-                , Duration.ofMinutes(60)
-                , ZonedDateTime.of(
-                LocalDateTime.of(2022, 12, 15, 12, 0)
-                , zone)
-                , existingEpicId
-        );
-
-        fileBackedTaskManager.createSubTask(sb2);
         FileBackedTaskManager  fileBackedTaskManager2 = new FileBackedTaskManager(pathOfFile);
 
-        assertEquals(fileBackedTaskManager, fileBackedTaskManager2);
+        assertEquals(fileBackedTaskManager
+                , fileBackedTaskManager2
+                , "Менеджеры не равны");
     }
+
+
     @Test
     public void shouldReturnTrueForComparisonOfTwoFileBackedTaskManagersWith3TasksAndHistory(){
 
         FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
 
-        fileBackedTaskManager.createRegularTask(rt0);
+        fileBackedTaskManager.createEpicTask(et0);
+        fileBackedTaskManager.createSubTask(st1);
+        fileBackedTaskManager.createSubTask(st2);
+        fileBackedTaskManager.createRegularTask(rt3);
+        fileBackedTaskManager.createRegularTask(rt3);
 
-        EpicTask epicWithId1 = new EpicTask(
-                1
-                , "1 epic"
-                , "epic with id 1"
-                , TaskType.EPIC_TASK
-        );
-
-        fileBackedTaskManager.createEpicTask(epicWithId1);
-
-        Iterator<Integer> it = fileBackedTaskManager.getEpicTaskStorage().keySet().iterator();
-
-        int existingEpicId = -1;
-        if (it.hasNext()) {
-            existingEpicId = it.next();
-        }
-
-        SubTask sb2 = new SubTask(
-                2
-                , "2 subtaskAAAAAAAA"
-                , "subtask with id 2"
-                , StatusName.NEW
-                , TaskType.SUBTASK
-                , Duration.ofMinutes(60)
-                , ZonedDateTime.of(
-                LocalDateTime.of(2022, 12, 15, 12, 0)
-                , zone)
-                , existingEpicId
-        );
-
-        fileBackedTaskManager.createSubTask(sb2);
-
-
-        fileBackedTaskManager.getRegularTask(0);
-        fileBackedTaskManager.getEpicTask(1);
-        fileBackedTaskManager.getSubTask(2);
+        fileBackedTaskManager.getRegularTask(3);
+        fileBackedTaskManager.getEpicTask(0);
+        fileBackedTaskManager.getSubTask(1);
 
         FileBackedTaskManager  fileBackedTaskManager2 = new FileBackedTaskManager(pathOfFile);
 
-        assertEquals(fileBackedTaskManager, fileBackedTaskManager2);
+        assertEquals(fileBackedTaskManager
+                , fileBackedTaskManager2
+                , "Менеджеры не равны");
     }
+
     @Test
     public void shouldReturnTrueForComparisonOfTwoFileBackedTaskManagersWithOnlyEpics(){
-
-        FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
-
-        EpicTask epicWithId0 = new EpicTask(
+        et0 = new EpicTask(
                 0
                 , "0 epic"
                 , "epic with id 0"
                 , TaskType.EPIC_TASK
         );
 
-        fileBackedTaskManager.createEpicTask(epicWithId0);
-
-        EpicTask epicWithId1 = new EpicTask(
+        et1 = new EpicTask(
                 1
                 , "1 epic"
                 , "epic with id 1"
                 , TaskType.EPIC_TASK
         );
 
-        fileBackedTaskManager.createEpicTask(epicWithId1);
-
-
+        FileBackedTaskManager  fileBackedTaskManager = new FileBackedTaskManager(pathOfFile);
+        fileBackedTaskManager.createEpicTask(et0);
+        fileBackedTaskManager.createEpicTask(et1);
         FileBackedTaskManager  fileBackedTaskManager2 = new FileBackedTaskManager(pathOfFile);
 
-        assertEquals(fileBackedTaskManager, fileBackedTaskManager2);
+        assertEquals(fileBackedTaskManager
+                , fileBackedTaskManager2
+                , "Менеджеры не равны");
     }
-    */
+
 }

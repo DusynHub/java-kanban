@@ -18,7 +18,7 @@ public abstract class Task {
     private TaskType type;
     private Optional<Duration> duration;
     private Optional<ZonedDateTime> startTime;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy; HH:mm:ss. ZZZZZ");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     public Task(int id
             , String name

@@ -67,11 +67,28 @@ public class RegularTask extends Task{
     }
     @Override
     public String toStringForCSV() {
+
+        String curDuration;
+        if(getDuration().isPresent()){
+            curDuration = String.valueOf( getDuration().get().toMinutes());
+        } else {
+            curDuration = "не задана";
+        }
+
+        String curStartTime;
+        if(getStartTime().isPresent()){
+            curStartTime = getStartTime().get().format(getFormatter());
+        } else {
+            curStartTime = "не задано";
+        }
+
         String delimiter = "|";
         return getId() + delimiter
                 + getType().name() + delimiter
                 + getName() + delimiter
                 + getDescription() + delimiter
-                + getStatus().name() + delimiter;
+                + getStatus().name() + delimiter
+                + curDuration + delimiter
+                + curStartTime;
     }
 }
