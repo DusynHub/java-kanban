@@ -22,9 +22,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final SubTaskStorage subTaskStorageForTaskManager = new SubTaskStorage();
     protected final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
-    protected final TreeSet<Task> prioritized = new TreeSet<>(new Comparator<Task>() {
-        @Override
-        public int compare(Task obj1, Task obj2) {
+    protected final TreeSet<Task> prioritized = new TreeSet<>((obj1, obj2) -> {
+
             Optional<ZonedDateTime> t1 = obj1.getStartTime();
             Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -37,7 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 return 0;
             }
-        }
+
     });
 
 

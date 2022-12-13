@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -467,9 +466,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         taskManager.updateRegularTask(updateRegularWithId0);
 
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>((obj1, obj2) -> {
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -482,7 +479,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
+
             });
 
         expected.add(updateRegularWithId0);
@@ -1115,9 +1112,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createRegularTask(rt7);
         taskManager.createRegularTask(rt8);
 
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>((obj1, obj2) ->
+                {
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -1130,7 +1126,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
+
         });
         expected.add(st1);
         expected.add(st3);
@@ -1153,9 +1149,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createRegularTask(rt6);
         taskManager.createRegularTask(rt7);
         taskManager.clearRegularTaskStorage();
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>( (obj1, obj2) -> {
+
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -1168,7 +1163,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
+
         });
 
 
@@ -1188,9 +1183,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createRegularTask(rt6);
         taskManager.createRegularTask(rt7);
         taskManager.removeEpicTask(2);
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>((obj1, obj2) ->{
+
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -1203,7 +1197,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
+
         });
 
 
@@ -1227,9 +1221,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createRegularTask(rt6);
         taskManager.createRegularTask(rt7);
         taskManager.clearEpicTaskStorage();
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>((obj1, obj2) -> {
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -1242,7 +1234,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
         });
 
 
@@ -1266,9 +1257,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createRegularTask(rt6);
         taskManager.createRegularTask(rt7);
         taskManager.removeSubTask(3);
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>( (obj1, obj2) -> {
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -1281,7 +1270,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
         });
 
 
@@ -1313,9 +1301,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         taskManager.updateSubTask(updateSubTaskWithId1);
 
-        TreeSet<Task> expected = new TreeSet<>(new Comparator<Task>() {
-            @Override
-            public int compare(Task obj1, Task obj2) {
+        TreeSet<Task> expected = new TreeSet<>((obj1, obj2) -> {
                 Optional<ZonedDateTime> t1 = obj1.getStartTime();
                 Optional<ZonedDateTime> t2 = obj2.getStartTime();
 
@@ -1328,7 +1314,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 } else {
                     return 0;
                 }
-            }
         });
 
         expected.add(updateSubTaskWithId1);
