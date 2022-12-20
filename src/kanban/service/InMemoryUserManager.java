@@ -50,7 +50,7 @@ public class InMemoryUserManager implements UserManager{
 
     @Override
     public List<Task> getUserTasks(int getUserId) {
-        return taskManager.getPrioritizedTasks()
+        return taskManager.getRegularTaskStorage().values()
                 .stream()
                 .filter(task -> task.getUser().getId() == getUserId)
                 .collect(Collectors.toList());
