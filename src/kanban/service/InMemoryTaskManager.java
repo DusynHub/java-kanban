@@ -124,6 +124,12 @@ public class InMemoryTaskManager implements TaskManager {
         return taskRemover.removeRegularTask(regularId, regularTaskStorage, inMemoryHistoryManager, prioritized);
     }
 
+    @Override
+    public List<Task> getAllRegularTasks() {
+        List<Task> regularTasks = new ArrayList<>(regularTaskStorage.getStorage().values());
+        return regularTasks;
+    }
+
     /**
      * Возвращает список всех эпик задач
      *

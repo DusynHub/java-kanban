@@ -6,7 +6,8 @@ import java.util.Optional;
 
 public class RegularTask extends Task{
 
-    public RegularTask(int id, String name
+    public RegularTask(int id
+                        , String name
                         , String description
                         , StatusName status
                         , TaskType type

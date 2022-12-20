@@ -21,6 +21,7 @@ public interface TaskManager {
     Task getRegularTask(int regularId);
     String updateRegularTask(RegularTask regularTaskToUpdate);
     String removeRegularTask(int regularId);
+    List<Task> getAllRegularTasks();
 //Методы для EpicTask
     HashMap<Integer, Task> getEpicTaskStorage();
     String createEpicTask(EpicTask task);

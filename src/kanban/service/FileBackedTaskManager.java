@@ -9,7 +9,9 @@ import kanban.module.storage.TaskStorage;
 import kanban.util.CSVTaskFormat;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -22,7 +24,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     Path fileToSaveCondition;
 
     public FileBackedTaskManager() {
+        Path pathOfStorage = Paths.get("src/kanban/taskManagerStorageInFile");
+        Path pathOfFile = Paths.get(pathOfStorage.toAbsolutePath() + "/TaskStorage.csv");
 
+        try {
+            Files.deleteIfExists(pathOfFile);
+            Files.deleteIfExists(pathOfStorage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            if (!Files.exists(pathOfStorage)) {
+                Files.createDirectory(pathOfStorage);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при создании директории: ");
+            e.printStackTrace();
+        }
+
+        pathOfFile = Paths.get(pathOfStorage.toAbsolutePath()
+                + "/TaskStorage.csv");
+        try {
+
+            if (!Files.exists(pathOfFile)) {
+                Files.createFile(pathOfFile);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при создании файла хранения FileBackedTaskManager: ");
+            e.printStackTrace();
+        }
+
+        this.fileToSaveCondition = pathOfFile;
     }
 
     public FileBackedTaskManager(Path pathOfFile) {
