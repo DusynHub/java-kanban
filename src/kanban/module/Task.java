@@ -1,5 +1,7 @@
 package kanban.module;
 
+import kanban.module.user.User;
+
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,15 +12,18 @@ import java.util.Optional;
 /**
  * The type Task.
  */
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public abstract class Task {
-    private String name;
-    private String description;
-    private int id;
-    private StatusName status;
-    private TaskType type;
-    private Optional<Duration> duration;
-    private Optional<ZonedDateTime> startTime;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+    protected String name;
+    protected String description;
+    protected int id;
+    protected StatusName status;
+    protected TaskType type;
+    protected Optional<Duration> duration;
+    protected Optional<ZonedDateTime> startTime;
+
+    protected User user;
+    protected final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     public Task(int id
             , String name
@@ -34,6 +39,24 @@ public abstract class Task {
         this.type = type;
         this.duration = duration;
         this.startTime = startTime;
+    }
+
+    public Task(int id
+            , String name
+            , String description
+            , StatusName status
+            , TaskType type
+            , Optional<Duration> duration
+            , Optional<ZonedDateTime> startTime
+            , User user) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.type = type;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.user = user;
     }
 
     public Task(int id, String name, String description, StatusName status, TaskType type) {
@@ -138,5 +161,9 @@ public abstract class Task {
 
     public void setStartTime(Optional<ZonedDateTime> startTime) {
         this.startTime = startTime;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

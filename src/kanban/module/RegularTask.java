@@ -1,5 +1,7 @@
 package kanban.module;
 
+import kanban.module.user.User;
+
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -15,6 +17,18 @@ public class RegularTask extends Task{
                        )
     {
         super(id, name, description, status, type, duration, startTime);
+    }
+
+    public RegularTask(int id, String name
+            , String description
+            , StatusName status
+            , TaskType type
+            , Optional<Duration> duration
+            , Optional<ZonedDateTime> startTime
+            , User user
+    )
+    {
+        super(id, name, description, status, type, duration, startTime, user);
     }
 
     public RegularTask(int id, String name
@@ -57,13 +71,14 @@ public class RegularTask extends Task{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RegularTask)) return false;
-        RegularTask otherTask = (RegularTask) o;
-        return getId() == otherTask.getId()
-                && getName().equals(otherTask.getName())
-                && getDescription().equals(otherTask.getDescription())
-                && getStatus().equals(otherTask.getStatus())
-                && getDuration().equals(otherTask.getDuration())
-                && getStartTime().equals(otherTask.getStartTime());
+        return super.equals(o);
+//        RegularTask otherTask = (RegularTask) o;
+//        return getId() == otherTask.getId()
+//                && getName().equals(otherTask.getName())
+//                && getDescription().equals(otherTask.getDescription())
+//                && getStatus().equals(otherTask.getStatus())
+//                && getDuration().equals(otherTask.getDuration())
+//                && getStartTime().equals(otherTask.getStartTime());
     }
     @Override
     public String toStringForCSV() {

@@ -42,5 +42,4 @@ public class TaskCreator {
     public void setCountId(int countId) {
         this.countId = countId;
     }
-
 }
