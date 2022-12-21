@@ -126,8 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getAllRegularTasks() {
-        List<Task> regularTasks = new ArrayList<>(regularTaskStorage.getStorage().values());
-        return regularTasks;
+        return new ArrayList<>(regularTaskStorage.getStorage().values());
     }
 
     /**

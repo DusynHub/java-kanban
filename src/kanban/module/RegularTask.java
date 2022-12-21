@@ -2,6 +2,7 @@ package kanban.module;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class RegularTask extends Task{
@@ -36,7 +37,7 @@ public class RegularTask extends Task{
 
         String curStartTime;
         if(getStartTime().isPresent()){
-            curStartTime = getStartTime().get().format(getFormatter());
+            curStartTime = getStartTime().get().format(DateTimeFormatter.ISO_DATE_TIME);
         } else {
             curStartTime = "не задано";
         }
@@ -78,7 +79,7 @@ public class RegularTask extends Task{
 
         String curStartTime;
         if(getStartTime().isPresent()){
-            curStartTime = getStartTime().get().format(getFormatter());
+            curStartTime = getStartTime().get().format(DateTimeFormatter.ISO_DATE_TIME);
         } else {
             curStartTime = "не задано";
         }

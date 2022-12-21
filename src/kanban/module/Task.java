@@ -18,7 +18,7 @@ public abstract class Task {
     private TaskType type;
     private Optional<Duration> duration;
     private Optional<ZonedDateTime> startTime;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+    //private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     public Task(int id
             , String name
@@ -128,9 +128,9 @@ public abstract class Task {
         }
     }
 
-    public DateTimeFormatter getFormatter() {
-        return formatter;
-    }
+//    public DateTimeFormatter getFormatter() {
+//        return formatter;
+//    }
 
     public void setDuration(Optional<Duration> duration) {
         this.duration = duration;

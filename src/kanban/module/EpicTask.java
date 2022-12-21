@@ -3,6 +3,7 @@ package kanban.module;
 import kanban.module.storage.SubTaskStorage;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class EpicTask extends Task{
 
         String curStartTime;
         if(getStartTime().isPresent()){
-            curStartTime = getStartTime().get().format(getFormatter());
+            curStartTime = getStartTime().get().format(DateTimeFormatter.ISO_DATE_TIME);
         } else {
             curStartTime = "не задано";
         }
@@ -75,7 +76,7 @@ public class EpicTask extends Task{
 
         String curStartTime;
         if(getStartTime().isPresent()){
-            curStartTime = getStartTime().get().format(getFormatter());
+            curStartTime = getStartTime().get().format(DateTimeFormatter.ISO_DATE_TIME);
         } else {
             curStartTime = "не задано";
         }

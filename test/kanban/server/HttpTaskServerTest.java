@@ -281,8 +281,6 @@ class HttpTaskServerTest {
         );
     }
 
-
-
     @BeforeEach
     void init() throws IOException {
         taskServer = new HttpTaskServer();
@@ -293,6 +291,8 @@ class HttpTaskServerTest {
     @Test
     void ShouldReturnAllRegularTasks() throws IOException, InterruptedException {
         taskManager.createRegularTask(rt0);
+        String ifAlreadyAdded = taskManager.createRegularTask(rt0);
+        System.out.println(ifAlreadyAdded);
         taskManager.createRegularTask(rt1);
         taskManager.createRegularTask(rt2);
         taskServer.start();
@@ -302,12 +302,18 @@ class HttpTaskServerTest {
         HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        Type taskListType = new TypeToken<List<Task>>(){}.getType();
-        List<Task> actual = gson.fromJson(response.body(), taskListType);
+        String result = response.body();
 
-        assertNotNull(actual, "Список обычных задач не возвращается");
-        assertEquals(3, actual.size(), "Не верное количество обычных задач");
-        assertEquals(rt0, actual.get(0));
+        List<Task> expectedList = new ArrayList<>();
+        expectedList.add(rt0);
+        expectedList.add(rt1);
+        expectedList.add(rt2);
+        Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+        List<Task> actual = gson.fromJson(response.body(), listType);
+
+        assertNotNull(result, "Список обычных задач не возвращается");
+
+        assertEquals(expectedList, actual);
     }
 
     @AfterEach
