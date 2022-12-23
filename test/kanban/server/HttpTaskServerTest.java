@@ -54,6 +54,8 @@ class HttpTaskServerTest {
     static EpicTask et2;
     static EpicTask et3;
     static EpicTask et4;
+    public KVServer kVServer;
+
 
     @BeforeAll
     public static void beforeAll(){
@@ -283,9 +285,13 @@ class HttpTaskServerTest {
 
     @BeforeEach
     void init() throws IOException {
+
+        kVServer = new KVServer();
+        kVServer.start();
         taskServer = new HttpTaskServer();
         taskManager = taskServer.getTaskManager();
         gson = Managers.getGson();
+
     }
 
 // Тесты эндпоинтов RegularTask
@@ -799,5 +805,6 @@ class HttpTaskServerTest {
     @AfterEach
     void stopServer() {
         taskServer.stop();
+        kVServer.stop();
     }
 }
