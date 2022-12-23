@@ -288,11 +288,42 @@ class HttpTaskServerTest {
         gson = Managers.getGson();
     }
 
+// Тесты эндпоинтов RegularTask
+    @Test
+    void ShouldReturnResponseCode405ForWrongRequestMethodWithRegularTask() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createRegularTask(rt2);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task");
+        String requestBody  = "test body";
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).PUT(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(405, response.statusCode());
+    }
+
+
+    @Test
+    void ShouldReturn404ForWrongRequest() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskManager.createRegularTask(rt2);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/apai/v1/tasks/task");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(404, response.statusCode());
+    }
+
     @Test
     void ShouldReturnAllRegularTasks() throws IOException, InterruptedException {
         taskManager.createRegularTask(rt0);
-        String ifAlreadyAdded = taskManager.createRegularTask(rt0);
-        System.out.println(ifAlreadyAdded);
         taskManager.createRegularTask(rt1);
         taskManager.createRegularTask(rt2);
         taskServer.start();
@@ -314,6 +345,455 @@ class HttpTaskServerTest {
         assertNotNull(result, "Список обычных задач не возвращается");
 
         assertEquals(expectedList, actual);
+    }
+
+    @Test
+    void ShouldReturnAllRegularTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String result = response.body();
+        Task actual = gson.fromJson(response.body(), Task.class);
+
+        assertNotNull(result, "Список обычных задач не возвращается");
+        assertEquals(rt0, actual, "Ожидаемый список и полученный не равны");
+    }
+
+    @Test
+    void ShouldReturnResponseCodeTaskWithIdInRequestDoesNotExist422() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=100");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(422, response.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldReturnResponseCodeTaskWithIncorrectIdFormat() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=ccdc");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(405, response.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldReturnResponseCodeTaskWithIncorrectId422() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=000001");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(422, response.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldCreateRegularTaskWithId0() throws IOException, InterruptedException {
+        taskServer.start();
+        String requestBody = gson.toJson(rt0);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        assertEquals(201, response.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldUpdateRegularTaskWithId0() throws IOException, InterruptedException {
+
+        taskServer.start();
+        String requestBody = gson.toJson(rt0);
+        String requestBody2 = gson.toJson(rt0);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+        HttpRequest request2 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody2)).build();
+
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response2 =  client.send(request2, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response2.body());
+        assertEquals(200, response2.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldDeleteAllRegularTasks() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).DELETE().build();
+        HttpResponse<String> response1 =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response1.body());
+        assertTrue(taskManager.getRegularTaskStorage().isEmpty(), "Хранилище обычных задач после удаления не пустое");
+    }
+
+
+    @Test
+    void ShouldDeleteRegularTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).DELETE().build();
+        HttpResponse<String> response1 =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response1.body());
+        assertEquals(200, response1.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldNotDeleteRegularTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/task?id=111");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).DELETE().build();
+        HttpResponse<String> response1 =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response1.body());
+        assertEquals(422, response1.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+// Тесты эндпонитов Эпик задач
+
+
+    @Test
+    void ShouldReturnResponseCode405ForWrongRequestMethodWithEpic() throws IOException, InterruptedException {
+        taskServer.start();
+        String requestBody = gson.toJson(et0);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).PUT(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        assertEquals(405,
+                response.statusCode(),
+                "Получен не тот ответ сервера при запросе эпик задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldReturnAllEpicTasks() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskManager.createEpicTask(et1);
+        taskManager.createEpicTask(et2);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String result = response.body();
+
+        List<Task> expectedList = new ArrayList<>();
+        expectedList.add(et0);
+        expectedList.add(et1);
+        expectedList.add(et2);
+        Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+        List<Task> actual = gson.fromJson(response.body(), listType);
+
+        assertNotNull(result, "Список эпик задач не возвращается");
+
+        assertEquals(expectedList, actual);
+    }
+
+    @Test
+    void ShouldReturnEpicTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String result = response.body();
+        Task actual = gson.fromJson(response.body(), Task.class);
+
+        assertNotNull(result, "Список эпик задач не возвращается");
+        assertEquals(et0, actual, "Ожидаемый список эпик задач и полученный не равны");
+    }
+
+    @Test
+    void ShouldCreateEpicTaskWithId0() throws IOException, InterruptedException {
+        taskServer.start();
+        String requestBody = gson.toJson(et0);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        assertEquals(201,
+                    response.statusCode(),
+                    "Получен не тот ответ сервера при запросе эпик задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldUpdateEpicTaskWithId0() throws IOException, InterruptedException {
+
+        taskServer.start();
+        String requestBody = gson.toJson(et0);
+        String requestBody2 = gson.toJson(et0);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+        HttpRequest request2 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody2)).build();
+
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response2 =  client.send(request2, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response2.body());
+        assertEquals(200,
+                        response2.statusCode(),
+                        "Получен не тот ответ сервера при запросе эпик задачи с некорректным id");
+    }
+
+
+    @Test
+    void ShouldDeleteAllEpicTasks() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).DELETE().build();
+        HttpResponse<String> response1 =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response1.body());
+        assertTrue(taskManager.getEpicTaskStorage().isEmpty(),
+                                         "Хранилище эпик задач после удаления не пустое");
+        assertTrue(taskManager.getSubTaskStorage().isEmpty(),
+                    "Хранилище подзадач задач после удаления всех эпик задач не пустое");
+    }
+
+    @Test
+    void ShouldDeleteEpicTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).DELETE().build();
+        HttpResponse<String> response1 =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response1.body());
+        assertEquals(200,
+                    response1.statusCode(),
+                    "Получен не тот ответ сервера при запросе эпик задачи с некорректным id");
+        }
+
+    @Test
+    void ShouldNotDeleteEpicTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/epic?id=111");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).DELETE().build();
+        HttpResponse<String> response1 =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response1.body());
+        assertEquals(422,
+                    response1.statusCode(),
+                    "Получен не тот ответ сервера при запросе эпик задачи с некорректным id");
+    }
+
+    // Тесты эндпоинтов подзадач
+
+
+
+    @Test
+    void ShouldReturnResponseCode405ForWrongRequestMethodWithSubTasks() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskServer.start();
+        String requestBody = gson.toJson(st1);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/subtask?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).PUT(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        assertEquals(405,
+                response.statusCode(),
+                "Получен не 405 ответ при попытке создать подзадачу с неправильным метдом PUT");
+    }
+
+
+    @Test
+    void ShouldReturnAllSubTasks() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/subtask");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String result = response.body();
+
+        List<Task> expectedList = new ArrayList<>();
+        expectedList.add(st1);
+        Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+        List<Task> actual = gson.fromJson(response.body(), listType);
+
+        assertNotNull(result, "Список поздач задач не возвращается");
+
+        assertEquals(expectedList, actual);
+    }
+
+    @Test
+    void ShouldReturnSubTaskWithId1() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskManager.createSubTask(st1);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/subtask?id=1");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        String result = response.body();
+        Task actual = gson.fromJson(response.body(), Task.class);
+
+        assertNotNull(result, "Список эпик задач не возвращается");
+        assertEquals(st1, actual, "Ожидаемый список эпик задач и полученный не равны");
+    }
+
+    @Test
+    void ShouldCreateSubTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskServer.start();
+        String requestBody = gson.toJson(st1);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/subtask?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        assertEquals(1, taskManager.getSubTaskStorage().size());
+        assertEquals(201,
+                response.statusCode(),
+                "Получен не тот ответ сервера создании или обновбении подзадачи с некорректным id");
+    }
+
+    @Test
+    void ShouldUpdateSubTaskWithId0() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskServer.start();
+        String requestBody = gson.toJson(st1);
+        String requestBody2 = gson.toJson(st1);
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/subtask?id=0");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+        HttpRequest request2 = HttpRequest.newBuilder().uri(uri).POST(HttpRequest.BodyPublishers.ofString(requestBody2)).build();
+
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response2 =  client.send(request2, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response2.body());
+        assertEquals(1, taskManager.getSubTaskStorage().size());
+        assertEquals(201,
+                response2.statusCode(),
+                "Получен не тот ответ сервера при запросе задачи с некорректным id");
+    }
+
+    @Test
+    void ShouldReturnEmptyHistory() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskManager.createRegularTask(rt0);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/history");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+
+
+
+        List<Task> ExpectedTaskHistory = new ArrayList<>();
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+        List<Task> actualTaskHistory = gson.fromJson(response.body(), listType);
+
+        assertEquals(ExpectedTaskHistory,
+                actualTaskHistory,
+                "Получен не тот ответ сервера при запросе пустой истории вызовов задач");
+    }
+
+    @Test
+    void ShouldReturnHistoryWithTwoTasks() throws IOException, InterruptedException {
+        taskManager.createEpicTask(et0);
+        taskManager.createRegularTask(rt1);
+        taskManager.getEpicTask(0);
+        taskManager.getRegularTask(1);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/history");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+
+        List<Task> ExpectedTaskHistory = new ArrayList<>();
+        ExpectedTaskHistory.add(et0);
+        ExpectedTaskHistory.add(rt1);
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+        List<Task> actualTaskHistory = gson.fromJson(response.body(), listType);
+
+        assertEquals(ExpectedTaskHistory,
+                actualTaskHistory,
+                "Получен не тот ответ сервера при запросе истории вызовов задач c двумя задачами");
+    }
+
+
+    @Test
+    void ShouldReturnPrioritizedTasksListWithTwoTasks() throws IOException, InterruptedException {
+        taskManager.createRegularTask(rt0);
+        taskManager.createRegularTask(rt1);
+        taskServer.start();
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:" + PORT + "/api/v1/tasks/");
+        HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
+
+        List<Task> ExpectedTaskHistory = new ArrayList<>();
+        ExpectedTaskHistory.add(rt0);
+        ExpectedTaskHistory.add(rt1);
+
+        HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+        Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+        List<Task> actualTaskHistory = gson.fromJson(response.body(), listType);
+
+        assertEquals(ExpectedTaskHistory,
+                actualTaskHistory,
+                "Получен не тот ответ сервера при запросе истории вызовов задач c двумя задачами");
     }
 
     @AfterEach

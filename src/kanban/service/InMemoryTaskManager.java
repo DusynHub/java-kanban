@@ -62,12 +62,12 @@ public class InMemoryTaskManager implements TaskManager {
     public String createRegularTask(RegularTask task) {
         Task taskToSave = taskCreator.createRegularTask(task, prioritized);
         if(taskToSave == null){
-            return "Обычная задача c id = " + task.getId() + " не создана"
-                    + "\n Измените вермя начала или длительность.";
+            return "Обычная задача c id = " + task.getId() + " не создана."
+                    + "\nИзмените время начала или длительность.";
         }
         regularTaskStorage.saveInStorage(taskToSave.getId(), taskToSave);
         prioritized.add(taskToSave);
-        return "Обычная задача c id = " + taskToSave.getId() + " создана";
+        return "Обычная задача c id = " + taskToSave.getId() + " создана.";
     }
 
     /**
@@ -224,6 +224,11 @@ public class InMemoryTaskManager implements TaskManager {
         return taskGetter.getSubTaskFromEpicTask(epicId, epicTaskStorage);
     }
 
+    @Override
+    public List<Task> getAllEpicTasks() {
+        return new ArrayList<>(epicTaskStorage.getStorage().values());
+    }
+
     /**
      * Распечатывает список задач
      *
@@ -259,8 +264,9 @@ public class InMemoryTaskManager implements TaskManager {
     public String createSubTask(SubTask task) {
         SubTask taskToSave = taskCreator.createSubTask(task, epicTaskStorage, prioritized);
         if (taskToSave == null) {
-            return "Подзадача c id" + task.getId() + " не может быть создана. "
-                    + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
+            return "Подзадача c id" + task.getId() + " не может быть создана."
+                    + "\nЭпик задачи для, для которой должна бытьс создана подзадача отсутствует. Позадача не была создана. Возвращено null"
+                    + "\nИли необходимо скорректировать длительность или время начала подзадачи";
         }
         subTaskStorageForTaskManager.saveInStorage(taskToSave.getId(), taskToSave);
         EpicTask epic = (EpicTask) epicTaskStorage.getStorage().get(taskToSave.getEpicId());
@@ -352,6 +358,11 @@ public class InMemoryTaskManager implements TaskManager {
                 , subTaskStorageForTaskManager
                 , inMemoryHistoryManager
                 , prioritized);
+    }
+
+    @Override
+    public List<Task> getAllSubTasks() {
+        return new ArrayList<>(subTaskStorageForTaskManager.getStorage().values());
     }
 
     // Методы HistoryManager

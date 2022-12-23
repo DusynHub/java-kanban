@@ -68,14 +68,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return new FileBackedTaskManager(pathOfFile);
     }
 
-    private void save() {
+    protected void save() {
         writeCondition(regularTaskStorage
                 , epicTaskStorage
                 , subTaskStorageForTaskManager
                 , inMemoryHistoryManager);
     }
 
-    private void writeCondition(RegularTaskStorage regularTaskStorage
+    protected void writeCondition(RegularTaskStorage regularTaskStorage
             , EpicTaskStorage epicTaskStorage
             , SubTaskStorage subTaskStorage
             , HistoryManager inMemoryHistoryManager) throws ManagerSaveException {
@@ -138,7 +138,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private void restoreCondition(Path fileToRestoreCondition) {
+    protected void restoreCondition(Path fileToRestoreCondition) {
         ArrayList<String[]> regularTasks = new ArrayList<>();
         ArrayList<String[]> epicTasks = new ArrayList<>();
         ArrayList<String[]> subTasks = new ArrayList<>();

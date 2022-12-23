@@ -9,5 +9,4 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
     public void beforeEachForInMemoryTaskManagerTest(){
         taskManager = new InMemoryTaskManager();
     }
-
 }

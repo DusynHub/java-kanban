@@ -20,7 +20,7 @@ public class TaskUpdater {
     {
         if(!StartDateValidator.validateStartDate(regularTaskToUpdate, prioritized, true)){
             return "Время выполнения обновлённого RegularTask пересекается с имеющимися заданиями"
-                    + "Здача не была обновлена";
+                    + "Здача не была обновлена. Изменити длительность или время начала";
 
         }
 

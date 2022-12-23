@@ -18,8 +18,6 @@ public class TaskGetter {
 
         HashMap<Integer, Task> storage = regularTaskStorage.getStorage();
 
-        if(storage.get(regularId) == null) {
-        }
         return storage.get(regularId);
     }
 

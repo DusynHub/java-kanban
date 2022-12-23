@@ -411,7 +411,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         String expectedMessage
                 = "Время выполнения обновлённого RegularTask пересекается с имеющимися заданиями"
-                + "Здача не была обновлена";
+                + "Здача не была обновлена. Изменити длительность или время начала";
 
         String messageIfTaskToUpgradeDoesNotExist
                 = taskManager.updateRegularTask(updateRegularWithId0);
@@ -501,8 +501,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnMessageOnDeleteIfRegularTaskStorageIsEmpty() {
 
-        String expected = "Задача с id = '" + 1
-                + "' отсутствует. Сначала создайте задачу с соответвующим regularId. "
+        String expected = "Задача с id = " + 1
+                + " отсутствует. Сначала создайте задачу с соответвующим regularId. "
                 + "Удаление невозможно";
 
         String messageIfRegularTaskToDeleteDoNotExist = taskManager.removeRegularTask(1);
@@ -516,8 +516,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldReturnMessageIfRegularTaskToDeleteDoNotExist() {
 
         taskManager.createRegularTask(rt0);
-        String expected = "Задача с id = '" + 1
-                + "' отсутствует. Сначала создайте задачу с соответвующим regularId. "
+        String expected = "Задача с id = " + 1
+                + " отсутствует. Сначала создайте задачу с соответвующим regularId. "
                 + "Удаление невозможно";
 
         String messageIfRegularTaskToDeleteDoNotExist = taskManager.removeRegularTask(1);
@@ -804,8 +804,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnMessageOnCreatingSubTaskIfEpicTaskDoNotExist() {
         String expected =
-                "Подзадача c id" + st1.getId() + " не может быть создана. "
-                        + "Такой эпик задачи нет. Позадача не была создана. Возвращено null";
+
+                "Подзадача c id" + st1.getId()+ " не может быть создана."
+                        + "\nЭпик задачи для, для которой должна бытьс создана подзадача отсутствует. Позадача не была создана. Возвращено null"
+                        + "\nИли необходимо скорректировать длительность или время начала подзадачи";
+
 
         String result = taskManager.createSubTask(st1);
         assertEquals(expected

@@ -35,9 +35,9 @@ public class TaskRemover {
             prioritized.remove(regularTaskStorage.getStorage().get(regularId));
             historyManager.remove(storage.get(regularId));
             storage.remove(regularId);
-            return "Задача  с id = '" + regularId + "' удалена";
+            return "Задача  с id = " + regularId + " удалена";
         } else {
-            return "Задача с id = '" + regularId + "' отсутствует. Сначала создайте задачу с соответвующим regularId. " +
+            return "Задача с id = " + regularId + " отсутствует. Сначала создайте задачу с соответвующим regularId. " +
                     "Удаление невозможно";
         }
     }
