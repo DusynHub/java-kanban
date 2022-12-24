@@ -11,7 +11,7 @@ public class Managers {
 
     public static TaskManager getDefault(){
 
-        return new FileBackedTaskManager();
+        return new HttpTaskManager("http://localhost");
     }
 
     public static HistoryManager getDefaultHistory(){

@@ -10,15 +10,12 @@ import java.util.*;
 
 public class HttpTaskManager extends FileBackedTaskManager {
 
-    Gson gson = Managers.getGson();
-    String URL;
-    KVClient kVClient;
-    public HttpTaskManager() {
+    private Gson gson = Managers.getGson();
 
-    }
+    private KVClient kVClient;
+
     public HttpTaskManager(String URL) {
         try{
-            this.URL = URL;
             this.kVClient = new KVClient(URL);
             this.restoreConditionFromServer();
         } catch(IOException | InterruptedException e) {
@@ -57,21 +54,21 @@ public class HttpTaskManager extends FileBackedTaskManager {
         Type hashMapType = new TypeToken<HashMap<Integer, Task>>() {}.getType();
 
         HashMap<Integer, Task> regularTaskStorageFromServer = gson.fromJson(kVClient.load("regularTasks"), hashMapType);
-        if(!(regularTaskStorageFromServer == null) && !regularTaskStorageFromServer.isEmpty()){
+        if( regularTaskStorageFromServer != null && !regularTaskStorageFromServer.isEmpty()){
             for(Map.Entry<Integer, Task> entry: regularTaskStorageFromServer.entrySet()){
                 regularTaskStorage.getStorage().put(entry.getKey(), entry.getValue());
             }
         }
 
         HashMap<Integer, Task> epicTaskStorageFromServer = gson.fromJson(kVClient.load("epicTasks"), hashMapType);
-        if(!(epicTaskStorageFromServer == null) &&!epicTaskStorageFromServer.isEmpty()){
+        if(epicTaskStorageFromServer != null &&!epicTaskStorageFromServer.isEmpty()){
             for(Map.Entry<Integer, Task> entry: epicTaskStorageFromServer.entrySet()){
                 epicTaskStorage.getStorage().put(entry.getKey(), entry.getValue());
             }
         }
 
         HashMap<Integer, Task> subTaskStorageFromServer = gson.fromJson(kVClient.load("subTasks"), hashMapType);
-        if(!(subTaskStorageFromServer == null) && !subTaskStorageFromServer.isEmpty()){
+        if( subTaskStorageFromServer != null && !subTaskStorageFromServer.isEmpty()){
             for(Map.Entry<Integer, Task> entry: subTaskStorageFromServer.entrySet()){
                 subTaskStorageForTaskManager.getStorage().put(entry.getKey(), entry.getValue());
             }

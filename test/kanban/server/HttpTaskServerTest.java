@@ -330,8 +330,8 @@ class HttpTaskServerTest {
     @Test
     void ShouldReturnAllRegularTasks() throws IOException, InterruptedException {
         taskManager.createRegularTask(rt0);
-        taskManager.createRegularTask(rt1);
-        taskManager.createRegularTask(rt2);
+//        taskManager.createRegularTask(rt1);
+//        taskManager.createRegularTask(rt2);
         taskServer.start();
 
         HttpClient client = HttpClient.newHttpClient();
@@ -343,8 +343,8 @@ class HttpTaskServerTest {
 
         List<Task> expectedList = new ArrayList<>();
         expectedList.add(rt0);
-        expectedList.add(rt1);
-        expectedList.add(rt2);
+//        expectedList.add(rt1);
+//        expectedList.add(rt2);
         Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
         List<Task> actual = gson.fromJson(response.body(), listType);
 
@@ -419,7 +419,7 @@ class HttpTaskServerTest {
 
         HttpResponse<String> response =  client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println(response.body());
-        assertEquals(201, response.statusCode(), "Получен не тот ответ сервера при запросе задачи с некорректным id");
+        assertEquals(201, response.statusCode(), " Получен не тот ответ сервера при создании задачи");
     }
 
     @Test

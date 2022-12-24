@@ -42,7 +42,7 @@ public class HttpTaskServer {
         t.start();
     }
     public HttpTaskServer() throws IOException {
-        this(new HttpTaskManager("http://localhost"));
+        this(Managers.getDefault());
     }
     public HttpTaskServer(TaskManager defaultTaskManager) throws IOException {
         this.taskManager = defaultTaskManager;
